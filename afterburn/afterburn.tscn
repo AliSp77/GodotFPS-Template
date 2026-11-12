@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://afterburn/game.gd" id="1_game"]
+[ext_resource type="PackedScene" path="res://afterburn/district.tscn" id="2_district"]
+
+[node name="Afterburn" type="Node3D"]
+script = ExtResource("1_game")
+
+[node name="FreightDistrict" parent="." instance=ExtResource("2_district")]
