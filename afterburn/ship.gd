@@ -1,9 +1,17 @@
 extends StaticBody3D
 
-var game: Node
+const HULL_MATERIALS := {
+	"striker": preload("res://afterburn/materials/cartoon_mint.tres"),
+	"sniper": preload("res://afterburn/materials/cartoon_coral.tres"),
+	"guardian": preload("res://afterburn/materials/cartoon_orange.tres"),
+	"interceptor": preload("res://afterburn/materials/cartoon_purple.tres"),
+	"boss": preload("res://afterburn/materials/cartoon_orange.tres"),
+}
+
+@export var game: Node
 var kind: String = "striker"
 var hp: float = 150.0
-var max_hp: float = 150.0
+@export var max_hp: float = 150.0
 var boss: bool = false
 var age: float = 0.0
 var shot_timer: float = 2.0
@@ -36,11 +44,7 @@ func _ready() -> void:
 	var factor: float = width / bounds.size.x
 	visual.scale = Vector3.ONE * factor
 	visual.position = -bounds.get_center() * factor
-	var material := StandardMaterial3D.new()
-	material.albedo_color = Color("#c4cbd0").lerp(tint, 0.22)
-	material.metallic = 0.6
-	material.roughness = 0.35
-	visual.material_override = material
+	visual.material_override = HULL_MATERIALS.get(kind, HULL_MATERIALS["striker"])
 	add_child(visual)
 	radius = 4.6 if boss else (2.0 if kind == "guardian" else 1.5)
 	var collider := CollisionShape3D.new()
@@ -87,6 +91,8 @@ func _physics_process(delta: float) -> void:
 	global_position = global_position.lerp(desired, minf(1.0, delta * 5.0))
 	look_at(Vector3(player_position.x, global_position.y - 0.25, player_position.z))
 	visual.rotation.z = sin(age * movement_speed) * 0.12
+	if is_instance_valid(game.enemy_corridor):
+		game.enemy_corridor.constrain_ship(self)
 	if boss:
 		var next_phase: int = 3 if hp < max_hp * 0.33 else (2 if hp < max_hp * 0.67 else 1)
 		if next_phase != phase:

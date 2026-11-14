@@ -1,0 +1,45 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://afterburn/obstacles/solid_barrier.tscn" id="1_q3vn5"]
+[ext_resource type="Script" path="res://afterburn/obstacle.gd" id="2_eil1s"]
+[ext_resource type="PackedScene" path="res://afterburn/obstacles/breakable_barrier.tscn" id="3_0hl1m"]
+[ext_resource type="PackedScene" path="res://afterburn/obstacles/low_beam.tscn" id="4_o0o5v"]
+[ext_resource type="PackedScene" path="res://afterburn/obstacles/laser_fence.tscn" id="5_xnr27"]
+
+[node name="RunnerHazards" type="Node3D" unique_id=1454247486]
+
+[node name="Row1_solid_barrier_1" type="StaticBody3D" parent="." unique_id=571248362 instance=ExtResource("1_q3vn5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.14, 8)
+collision_layer = 5
+collision_mask = 0
+script = ExtResource("2_eil1s")
+
+[node name="Row1_breakable_barrier_2" type="StaticBody3D" parent="." unique_id=1466079074 instance=ExtResource("3_0hl1m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.14, 8)
+collision_layer = 5
+collision_mask = 0
+script = ExtResource("2_eil1s")
+kind = "breakable barrier"
+
+[node name="Row2_LowBeam" type="StaticBody3D" parent="." unique_id=1750214795 instance=ExtResource("4_o0o5v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -18)
+collision_layer = 5
+collision_mask = 0
+script = ExtResource("2_eil1s")
+kind = "low beam"
+
+[node name="Row3_LaserFence_1" type="Area3D" parent="." unique_id=305541075 instance=ExtResource("5_xnr27")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -44)
+collision_layer = 16
+monitorable = false
+script = ExtResource("2_eil1s")
+kind = "laser fence"
+contact_damage = 25.0
+
+[node name="Row3_LaserFence_2" type="Area3D" parent="." unique_id=1335136934 instance=ExtResource("5_xnr27")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -44)
+collision_layer = 16
+monitorable = false
+script = ExtResource("2_eil1s")
+kind = "laser fence"
+contact_damage = 25.0

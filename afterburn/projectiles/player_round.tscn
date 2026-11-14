@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://afterburn/projectiles/player_round.gd" id="1_script"]
+
+[sub_resource type="StandardMaterial3D" id="Material_round"]
+shading_mode = 0
+albedo_color = Color(0.64, 1, 0.8, 1)
+emission_enabled = true
+emission = Color(0.64, 1, 0.8, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="SphereMesh" id="Mesh_round"]
+material = SubResource("Material_round")
+radius = 0.065
+height = 0.13
+
+[sub_resource type="BoxMesh" id="Mesh_trail"]
+material = SubResource("Material_round")
+size = Vector3(0.035, 0.035, 0.7)
+
+[node name="PlayerRound" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Round" type="MeshInstance3D" parent="."]
+mesh = SubResource("Mesh_round")
+
+[node name="Trail" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0, 0.35)
+mesh = SubResource("Mesh_trail")

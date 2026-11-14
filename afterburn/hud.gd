@@ -197,7 +197,9 @@ func button(parent: Node, text: String, pos: Vector2, dimensions: Vector2, callb
 
 func new_overlay() -> Control:
 	if is_instance_valid(overlay):
-		overlay.free()
+		# A button in this overlay may still be emitting its pressed signal.
+		overlay.hide()
+		overlay.queue_free()
 	for child in root.get_children():
 		if child is CanvasItem:
 			child.hide()
@@ -214,10 +216,11 @@ func new_overlay() -> Control:
 
 func clear_overlay() -> void:
 	if is_instance_valid(overlay):
+		overlay.hide()
 		overlay.queue_free()
 		overlay = null
 	for child in root.get_children():
-		if child is CanvasItem:
+		if child is CanvasItem and not child.is_queued_for_deletion():
 			child.show()
 
 func menu() -> void:

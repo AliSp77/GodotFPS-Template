@@ -1,0 +1,107 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://afterburn/enemies/charger.gd" id="1_utgtx"]
+[ext_resource type="ArrayMesh" path="res://resources/spaceships/ship2.obj" id="2_1bvyc"]
+[ext_resource type="Material" path="res://afterburn/materials/cartoon_coral.tres" id="3_cartoon"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_u6oxy"]
+radius = 1.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x1wsd"]
+shading_mode = 0
+albedo_color = Color(1, 0.21176471, 0.34509805, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_chrnm"]
+radius = 0.28
+height = 0.56
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_this8"]
+shading_mode = 0
+albedo_color = Color(1, 0.40392157, 0.18431373, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3amet"]
+size = Vector3(0.22, 0.22, 1.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_25d75"]
+size = Vector3(0.22, 0.22, 1.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6mkgb"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.08, 0.18, 0.22)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8qhiw"]
+size = Vector3(1, 0.025, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3d74p"]
+shading_mode = 0
+albedo_color = Color(1, 0.21176471, 0.34509805, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_c3eqa"]
+size = Vector3(0.018, 0.045, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mtoso"]
+size = Vector3(0.018, 0.045, 1)
+
+[node name="Charger" type="StaticBody3D" unique_id=885311081 groups=["afterburn_chargers", "afterburn_enemies"]]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_utgtx")
+max_hp = 195.0
+
+[node name="Hull" type="MeshInstance3D" parent="." unique_id=318157021]
+transform = Transform3D(-1.2318628, 0, -1.0769286e-07, 0, 1.2318628, 0, 1.0769286e-07, 0, -1.2318628, -3.882914e-09, -0.36497447, -0.044415362)
+material_override = ExtResource("3_cartoon")
+mesh = ExtResource("2_1bvyc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1540983856]
+shape = SubResource("SphereShape3D_u6oxy")
+
+[node name="WarningBeacon" type="MeshInstance3D" parent="." unique_id=1182681967]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+material_override = SubResource("StandardMaterial3D_x1wsd")
+mesh = SubResource("SphereMesh_chrnm")
+
+[node name="EngineLeft" type="MeshInstance3D" parent="." unique_id=1849598778]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0, -1)
+material_override = SubResource("StandardMaterial3D_this8")
+mesh = SubResource("BoxMesh_3amet")
+
+[node name="EngineRight" type="MeshInstance3D" parent="." unique_id=1137292654]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0, -1)
+material_override = SubResource("StandardMaterial3D_this8")
+mesh = SubResource("BoxMesh_25d75")
+
+[node name="HealthLabel" type="Label3D" parent="." unique_id=267841259]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+pixel_size = 0.01
+billboard = 1
+modulate = Color(1, 0.50980395, 0.57254905, 1)
+text = "CHARGER // 195"
+font_size = 36
+
+[node name="AttackStatus" type="Label3D" parent="." unique_id=302903598]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+pixel_size = 0.01
+billboard = 1
+modulate = Color(1, 0.50980395, 0.57254905, 1)
+text = "RED PATH // STRAFE CLEAR"
+font_size = 36
+
+[node name="WarningPath" type="Node3D" parent="." unique_id=69675576]
+transform = Transform3D(3.2, 0, 0, 0, 1, 0, 0, 0, 100, 0, 0.09, 50)
+top_level = true
+
+[node name="DangerStrip" type="MeshInstance3D" parent="WarningPath" unique_id=1393978987]
+material_override = SubResource("StandardMaterial3D_6mkgb")
+mesh = SubResource("BoxMesh_8qhiw")
+
+[node name="LeftEdge" type="MeshInstance3D" parent="WarningPath" unique_id=1046625496]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.01, 0)
+material_override = SubResource("StandardMaterial3D_3d74p")
+mesh = SubResource("BoxMesh_c3eqa")
+
+[node name="RightEdge" type="MeshInstance3D" parent="WarningPath" unique_id=1626404346]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.01, 0)
+material_override = SubResource("StandardMaterial3D_3d74p")
+mesh = SubResource("BoxMesh_mtoso")

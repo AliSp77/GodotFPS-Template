@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://afterburn/enemy_corridor.gd" id="1_corridor"]
+
+[sub_resource type="BoxShape3D" id="Bounds_shape"]
+size = Vector3(16, 10, 120)
+
+[node name="EnemyFlightCorridor" type="Area3D"]
+position = Vector3(0, 4, -6)
+collision_layer = 0
+collision_mask = 0
+monitoring = false
+monitorable = false
+script = ExtResource("1_corridor")
+
+[node name="Bounds" type="CollisionShape3D" parent="."]
+shape = SubResource("Bounds_shape")
+
+[node name="SpawnPoints" type="Node3D" parent="."]
+
+[node name="LeftNear" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(-4, -0.8, 14)
+
+[node name="RightMiddle" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(4, -0.4, 10)
+
+[node name="LeftHigh" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(-2, 0.5, 6)
+
+[node name="RightNear" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(2, -0.2, 12)
+
+[node name="CenterHigh" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(0, 1, 4)
+
+[node name="RightLow" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(4, -1, 16)
+
+[node name="BossSpawn" type="Marker3D" parent="."]
+position = Vector3(0, 1.5, 4)

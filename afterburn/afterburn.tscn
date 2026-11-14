@@ -1,9 +1,24 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://afterburn/game.gd" id="1_game"]
 [ext_resource type="PackedScene" path="res://afterburn/district.tscn" id="2_district"]
+[ext_resource type="PackedScene" path="res://afterburn/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://afterburn/enemy_corridor.tscn" id="4_corridor"]
 
 [node name="Afterburn" type="Node3D"]
 script = ExtResource("1_game")
 
 [node name="FreightDistrict" parent="." instance=ExtResource("2_district")]
+
+[node name="Player" parent="." node_paths=PackedStringArray("game") instance=ExtResource("3_player")]
+position = Vector3(0, 0.1, 24)
+game = NodePath("..")
+
+[node name="EnemyFlightCorridor" parent="." node_paths=PackedStringArray("follow_target") instance=ExtResource("4_corridor")]
+follow_target = NodePath("../Player")
+
+[editable path="Player"]
+
+[editable path="FreightDistrict"]
+
+[editable path="EnemyFlightCorridor"]

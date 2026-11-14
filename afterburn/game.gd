@@ -1,8 +1,9 @@
 extends Node3D
 
-const PLAYER_SCENE := preload("res://player/player.tscn")
-const PLAYER_SCRIPT := preload("res://afterburn/player.gd")
+const PLAYER_SCENE := preload("res://afterburn/player.tscn")
 const SHIP_SCRIPT := preload("res://afterburn/ship.gd")
+const CHARGER_SCENE := preload("res://afterburn/enemies/charger.tscn")
+const ENEMY_CORRIDOR_SCENE := preload("res://afterburn/enemy_corridor.tscn")
 const BOLT_SCRIPT := preload("res://afterburn/bolt.gd")
 const HUD_SCRIPT := preload("res://afterburn/hud.gd")
 const INPUT_SCRIPT := preload("res://afterburn/input.gd")
@@ -21,6 +22,7 @@ const MODS := [
 
 var state: String = "boot"
 var player: CharacterBody3D
+var enemy_corridor: Area3D
 var hud: CanvasLayer
 var boss_ship: Node3D
 var encounter: int = 0
@@ -39,6 +41,8 @@ var profile: Dictionary = {"credits": 0, "runs": 0, "best": 0, "wins": 0, "tier"
 var materials: Dictionary = {}
 var prop_meshes: Dictionary = {}
 var base_damage: Dictionary = {}
+var base_weapon_timing: Dictionary = {}
+var player_start_transform: Transform3D
 var map: Node3D
 var rng := RandomNumberGenerator.new()
 var course_scene: PackedScene
@@ -59,6 +63,12 @@ func _ready() -> void:
 			build_map()
 	_init_course()
 	_create_player()
+	enemy_corridor = get_node_or_null("EnemyFlightCorridor")
+	if not enemy_corridor:
+		enemy_corridor = ENEMY_CORRIDOR_SCENE.instantiate()
+		add_child(enemy_corridor)
+	enemy_corridor.follow_target = player
+	enemy_corridor.sync_to_player()
 	var input := Node.new()
 	input.set_script(INPUT_SCRIPT)
 	input.game = self
@@ -73,35 +83,28 @@ func _ready() -> void:
 	hud.menu()
 
 func _create_player() -> void:
-	player = PLAYER_SCENE.instantiate()
-	player.set_script(PLAYER_SCRIPT)
+	# Use the player authored in the scene. The fallback supports isolated fixtures.
+	player = get_node_or_null("Player")
+	if not player:
+		player = PLAYER_SCENE.instantiate()
+		player.position = Vector3(0, 0.1, 24)
+		add_child(player)
 	player.game = self
-	player.sensitivity = 0.0025
-	player.position = Vector3(0, 0.1, 24)
-	add_child(player)
+	player_start_transform = player.transform
 	player.camera.make_current()
-	player.camera.far = 170.0
-	player.get_node("WeaponSubViewport").mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for weapon in player.weapons_manager.weapons_array:
 		base_damage[weapon.name] = weapon.damage
-		if not weapon.is_melee_weapon:
-			weapon.firing_distance = 150.0
-			weapon.burst_mode = weapon.name != "Pistol"
-	for weapon in player.weapons_manager.weapons_array:
-		weapon.deactivate()
-	player.weapons_manager.current_weapon_index = 2
-	player.weapons_manager.current_weapon = player.weapons_manager.weapons_array[2]
-	player.weapons_manager.current_weapon.activate(false)
+		base_weapon_timing[weapon.name] = Vector2(weapon.cooldown, weapon.reload_time)
 
 func start_run() -> void:
 	get_tree().paused = false
 	_clear_combat()
 	_reset_course()
-	if is_instance_valid(player):
-		remove_child(player)
-		player.free()
-	base_damage.clear()
-	_create_player()
+	player.reset_for_run(player_start_transform)
+	for weapon in player.weapons_manager.weapons_array:
+		var timing: Vector2 = base_weapon_timing[weapon.name]
+		weapon.cooldown = timing.x
+		weapon.reload_time = timing.y
 	encounter = 0
 	spawned = 0
 	spawn_timer = 2.0
@@ -115,9 +118,9 @@ func start_run() -> void:
 	scored_distance = 0
 	build_names.clear()
 	profile.runs += 1
-	player.vital_capacity = 100.0 + int(profile.ranks[0]) * 10.0
+	player.vital_capacity = player.starting_health + int(profile.ranks[0]) * 10.0
 	player.current_health = player.vital_capacity
-	player.armor = 50.0 + int(profile.ranks[3]) * 10.0
+	player.armor = player.starting_armor + int(profile.ranks[3]) * 10.0
 	player.mobility = 1.0 + int(profile.ranks[2]) * 0.04
 	for weapon in player.weapons_manager.weapons_array:
 		weapon.damage = float(base_damage[weapon.name]) * (1.0 + int(profile.ranks[1]) * 0.06)
@@ -132,7 +135,7 @@ func _process(delta: float) -> void:
 	if state != "play":
 		return
 	run_time += delta
-	distance_run = maxf(distance_run, 24.0 - player.position.z)
+	distance_run = maxf(distance_run, player_start_transform.origin.z - player.position.z)
 	var distance_points: int = floori(distance_run)
 	if distance_points > scored_distance:
 		score += (distance_points - scored_distance) * 2
@@ -177,21 +180,41 @@ func _spawn_enemy(kind_override: String = "") -> Node3D:
 		available.append("sniper")
 	if encounter >= 2:
 		available.append("guardian")
+	var charger_active: bool = false
+	for active in get_tree().get_nodes_in_group("afterburn_chargers"):
+		if not active.dying:
+			charger_active = true
+	if not charger_active:
+		available.append("charger")
 	var kind: String = kind_override if kind_override != "" else available[rng.randi_range(0, available.size() - 1)]
-	var ship := StaticBody3D.new()
-	ship.set_script(SHIP_SCRIPT)
+	# Introduce the new attack early and guarantee a readable first encounter.
+	if kind_override == "" and encounter == 0:
+		if spawned == 0:
+			kind = "striker"
+		elif spawned == 1 and not charger_active:
+			kind = "charger"
+	var ship: StaticBody3D
+	if kind == "charger":
+		ship = CHARGER_SCENE.instantiate()
+	else:
+		ship = StaticBody3D.new()
+		ship.set_script(SHIP_SCRIPT)
 	ship.game = self
 	ship.kind = kind
 	ship.boss = kind == "boss"
-	var health: float = {"striker": 145.0, "sniper": 130.0, "guardian": 320.0, "interceptor": 180.0, "boss": 2900.0}.get(kind, 150.0)
+	var health: float = ship.max_hp if kind == "charger" else {"striker": 145.0, "sniper": 130.0, "guardian": 320.0, "interceptor": 180.0, "boss": 2900.0}.get(kind, 150.0)
 	ship.max_hp = health * (1.0 + (int(profile.tier) - 1) * 0.18)
 	ship.hp = ship.max_hp
-	var spawn_positions := [
-		Vector3(-13, 5.5, -17), Vector3(13, 5.0, -23),
-		Vector3(-11, 6.0, -12), Vector3(11, 5.5, -14),
-		Vector3(-7, 7.0, -31), Vector3(7, 4.5, -9)]
-	ship.position = (Vector3(0, 7, -22) if ship.boss else spawn_positions[spawned % spawn_positions.size()]) + Vector3(0, 0, player.position.z - 18.0)
+	if kind == "charger":
+		var lane_x: float = clampf(roundf(player.position.x / 6.0) * 6.0, -6.0, 6.0)
+		ship.position = Vector3(lane_x, 1.25, player.position.z - ship.spawn_distance)
+	else:
+		ship.position = to_local(enemy_corridor.spawn_position(spawned, ship.boss))
 	add_child(ship)
+	if kind != "charger":
+		enemy_corridor.constrain_ship(ship)
+		ship.anchor = ship.position
+		ship.route_offset = ship.global_position.z - player.global_position.z
 	return ship
 
 func spawn_escort() -> void:
@@ -360,9 +383,11 @@ func _save_profile() -> void:
 		file.store_string(JSON.stringify(profile))
 
 func _clear_bolts() -> void:
-	for bolt in get_tree().get_nodes_in_group("afterburn_bolts"):
-		remove_child(bolt)
-		bolt.queue_free()
+	for group in ["afterburn_bolts", "afterburn_player_rounds"]:
+		for bolt in get_tree().get_nodes_in_group(group):
+			if bolt.get_parent():
+				bolt.get_parent().remove_child(bolt)
+			bolt.queue_free()
 
 func _clear_combat() -> void:
 	boss_ship = null
@@ -654,52 +679,25 @@ func _prepare_chunk(chunk: Node3D, index: int) -> void:
 					body.set_script(OBSTACLE_SCRIPT)
 					body.game = self
 					body.destruct_root = child
+					body.kind = "solid barrier"
 					body.add_to_group("runner_obstacles")
+	# Obstacles are authored as scene instances; spawning chooses a saved layout.
+	var variant: int = posmod(index, 4)
+	var path: String = "res://afterburn/obstacles/route_pattern_%d.tscn" % variant
+	var layout: Node3D = chunk.get_node_or_null("RunnerHazards")
+	if layout and layout.scene_file_path != path:
+		chunk.remove_child(layout)
+		layout.free()
+		layout = null
+	if not layout:
+		layout = load(path).instantiate()
+		layout.name = "RunnerHazards"
+		chunk.add_child(layout)
 	for row in range(3):
-		var open_lane: int = posmod(index + row + 1, 3)
+		var open_lane: int = posmod(variant + 1, 3)
 		var z: float = 8.0 - row * 26.0
-		if posmod(index + row, 4) == 2:
-			var beam: Node3D = _runner_prop(chunk, "block", Vector3(0, 1.25, z), Vector3(6.15, 0.24, 0.3))
-			beam.kind = "low beam"
-			var clearance_sign := Label3D.new()
-			clearance_sign.text = "LOW CLEARANCE // SLIDE"
-			clearance_sign.font_size = 44
-			clearance_sign.pixel_size = 0.009
-			clearance_sign.position.y = 1.2
-			clearance_sign.modulate = Color("#ffaf74")
-			beam.add_child(clearance_sign)
-		else:
-			for lane in range(3):
-				if lane != open_lane:
-					var kind: String = "crate" if posmod(row + lane + index, 2) == 0 else "block"
-					_runner_prop(chunk, kind, Vector3((lane - 1) * 6.0, 0.14, z), Vector3.ONE if kind == "crate" else Vector3(0.85, 0.48, 0.45))
 		if index >= 0:
 			add_pickup(["ammo", "health", "armor"][posmod(row + index, 3)], Vector3((open_lane - 1) * 6.0, 0.7, z - 9), chunk)
-
-func _runner_prop(chunk: Node3D, kind: String, pos: Vector3, mesh_scale: Vector3) -> Node3D:
-	var body := StaticBody3D.new()
-	body.set_script(OBSTACLE_SCRIPT)
-	body.game = self
-	body.destruct_root = body
-	body.kind = kind
-	body.position = pos
-	body.collision_layer = 5
-	body.collision_mask = 0
-	body.add_to_group("runner_obstacles")
-	var mesh := MeshInstance3D.new()
-	mesh.mesh = prop_meshes[kind]
-	var bounds: AABB = mesh.mesh.get_aabb()
-	mesh.scale = mesh_scale
-	mesh.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * mesh_scale
-	body.add_child(mesh)
-	var shape := CollisionShape3D.new()
-	var box := BoxShape3D.new()
-	box.size = bounds.size * mesh_scale
-	shape.shape = box
-	shape.position.y = box.size.y * 0.5
-	body.add_child(shape)
-	chunk.add_child(body)
-	return body
 
 func _stream_course() -> void:
 	var current: int = floori((43.0 - player.position.z) / 100.0)
@@ -712,8 +710,8 @@ func _stream_course() -> void:
 			course_chunks.erase(index)
 			chunk.queue_free()
 	for obstacle in get_tree().get_nodes_in_group("runner_obstacles"):
-		if obstacle.kind == "low beam" and not obstacle.spent and not obstacle.has_meta("warned"):
+		if obstacle.kind in ["low beam", "laser fence", "low laser", "high laser"] and not obstacle.spent and not obstacle.has_meta("warned"):
 			var gap: float = player.position.z - obstacle.global_position.z
 			if gap > 0.0 and gap < 15.0:
 				obstacle.set_meta("warned", true)
-				hud.notify("LOW CLEARANCE // HOLD S OR CTRL TO SLIDE", 2.0)
+				hud.notify({"low beam": "LOW CLEARANCE // HOLD S OR CTRL TO SLIDE", "laser fence": "LASER FENCE // FIND THE GAP", "low laser": "LOW LASER // JUMP", "high laser": "HIGH LASER // HOLD S OR CTRL TO SLIDE"}[obstacle.kind], 2.0)

@@ -3,8 +3,9 @@ extends Node3D
 @export_group("weapon settings")
 @export var is_melee_weapon: bool = false
 
-#NOTE: projectiles work independetly/ see below for node paths
 @export var is_projectile: bool = false
+@export var projectile_scene: PackedScene
+@export var projectile_speed: float = 90.0
 @export var firing_distance: float = 20.0
 
 @export var fps_arms_root:Node3D
@@ -162,8 +163,10 @@ func fire_weapon() -> void:
 		var muzzle_instance = firing_vfx.instantiate()
 		muzzle_flash_position.add_child(muzzle_instance)
 
-	# Perform raycast hit detection
-	if weapon_ray_cast and ray_cast_origin:
+	# Projectile weapons only launch here. Damage happens when the round arrives.
+	if is_projectile and not is_melee_weapon:
+		_launch_projectile()
+	elif weapon_ray_cast and ray_cast_origin:
 		# Apply recoil/spread rotation
 		var recoil_angle = focused_aim_angle if is_aimed else standard_aim_angle
 		ray_cast_origin.rotation_degrees = Vector3(
@@ -204,6 +207,39 @@ func fire_weapon() -> void:
 	
 	# Camera shake
 	Global.camera_shake.emit()
+
+func _launch_projectile() -> void:
+	if not projectile_scene or not main_camera or not Global.player:
+		push_error("Projectile weapon needs a Projectile Scene, camera, and player.")
+		return
+	var player_body: CharacterBody3D = Global.player
+	var recoil_angle: float = focused_aim_angle if is_aimed else standard_aim_angle
+	var aim_basis: Basis = main_camera.global_basis.rotated(main_camera.global_basis.y, deg_to_rad(randf_range(-recoil_angle, recoil_angle)))
+	aim_basis = aim_basis.rotated(main_camera.global_basis.x, deg_to_rad(randf_range(-recoil_angle, recoil_angle)))
+	var aim_direction: Vector3 = -aim_basis.z.normalized()
+	var origin: Vector3 = main_camera.global_position
+	var aim_point: Vector3 = origin + aim_direction * firing_distance
+	var space := get_world_3d().direct_space_state
+	var exclusions: Array[RID] = [player_body.get_rid()]
+	# The aim query chooses convergence; it never applies damage.
+	var target := space.intersect_ray(PhysicsRayQueryParameters3D.create(origin, aim_point, 7, exclusions))
+	if not target.is_empty():
+		aim_point = target.position
+	var launch_position: Vector3 = muzzle_flash_position.global_position if muzzle_flash_position else origin
+	var cover := space.intersect_ray(PhysicsRayQueryParameters3D.create(origin, launch_position, 7, exclusions))
+	if not cover.is_empty():
+		launch_position = cover.position + cover.normal * 0.03
+	var round_node: Node3D = projectile_scene.instantiate()
+	round_node.game = player_body.game
+	round_node.speed = projectile_speed
+	round_node.max_distance = firing_distance
+	round_node.damage = damage
+	round_node.shooter = player_body.get_rid()
+	round_node.direction = (aim_point - launch_position).normalized()
+	# Parent it to the game, never to the moving gun or its SubViewport.
+	round_node.game.add_child(round_node)
+	round_node.global_position = launch_position
+	round_node.look_at(launch_position + round_node.direction, Vector3.UP if absf(round_node.direction.y) < 0.99 else Vector3.RIGHT)
 
 func start_reload() -> void:
 	if is_reloading or not reload_required:

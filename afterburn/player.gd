@@ -1,6 +1,8 @@
 extends "res://player/player.gd"
 
-var game: Node
+@export var game: Node
+@export var starting_health: float = 100.0
+@export var starting_armor: float = 50.0
 var armor: float = 50.0
 var vital_capacity: float = 100.0
 @export var run_speed: float = 16.0
@@ -20,6 +22,13 @@ var damage_resistance: float = 1.0
 var invulnerability: float = 0.0
 var is_sliding: bool = false
 var capsule: CapsuleShape3D
+var initial_pivot_transform: Transform3D
+var initial_holder_transform: Transform3D
+var initial_camera_transform: Transform3D
+var initial_manager_transform: Transform3D
+var initial_shape_transform: Transform3D
+var initial_capsule_height: float
+var initial_skeleton_poses: Array[Dictionary] = []
 
 func _ready() -> void:
 	super._ready()
@@ -28,9 +37,74 @@ func _ready() -> void:
 	camera_rest_position = camera.position
 	camera_rest_roll = camera.rotation.z
 	Global.player_sprinting_changed.emit(true)
-	jump_velocity = 7.5
 	capsule = $CollisionShape3D.shape.duplicate()
 	$CollisionShape3D.shape = capsule
+	initial_pivot_transform = camera_pivot.transform
+	initial_holder_transform = camera_holder.transform
+	initial_camera_transform = camera.transform
+	initial_manager_transform = weapons_manager.transform
+	initial_shape_transform = $CollisionShape3D.transform
+	initial_capsule_height = capsule.height
+	for skeleton in weapons_manager.find_children("*", "Skeleton3D", true, false):
+		var poses: Array[Dictionary] = []
+		for bone in skeleton.get_bone_count():
+			poses.append({"position": skeleton.get_bone_pose_position(bone),
+				"rotation": skeleton.get_bone_pose_rotation(bone), "scale": skeleton.get_bone_pose_scale(bone)})
+		initial_skeleton_poses.append({"skeleton": skeleton, "poses": poses})
+
+func reset_for_run(start_transform: Transform3D) -> void:
+	# Keep the authored scene instance and restore only transient gameplay state.
+	Global.aim_mode_changed.emit(false)
+	if camera_pivot.shake_tween:
+		camera_pivot.shake_tween.kill()
+	transform = start_transform
+	velocity = Vector3.ZERO
+	is_alive = true
+	is_aiming = false
+	was_on_floor = false
+	footstep_timer = 0.0
+	run_phase = 0.0
+	dash_time = 0.0
+	dash_cooldown = 0.0
+	dash_vector = Vector3.ZERO
+	invulnerability = 0.0
+	is_sliding = false
+	mobility = 1.0
+	damage_resistance = 1.0
+	hit_shake_time = 0.0
+	hit_shake_strength = 0.0
+	camera_pivot.transform = initial_pivot_transform
+	camera_holder.transform = initial_holder_transform
+	camera.transform = initial_camera_transform
+	weapons_manager.transform = initial_manager_transform
+	$CollisionShape3D.transform = initial_shape_transform
+	capsule.height = initial_capsule_height
+	for weapon_node in weapons_manager.weapons_array:
+		weapon_node.cooldown_timer.stop()
+		weapon_node.reload_timer.stop()
+		if weapon_node.aim_tween:
+			weapon_node.aim_tween.kill()
+		if weapon_node.animation_player:
+			weapon_node.animation_player.stop()
+		weapon_node.can_fire = true
+		weapon_node.is_reloading = false
+		weapon_node.is_aimed = false
+		weapon_node.played_empty_sound_this_press = false
+		weapon_node.fps_arms_root.transform = weapon_node.standard_aim_position.transform
+	# Restore the saved weapon grip, including after a partial reload animation.
+	for entry in initial_skeleton_poses:
+		for bone in entry.poses.size():
+			var pose: Dictionary = entry.poses[bone]
+			entry.skeleton.set_bone_pose_position(bone, pose.position)
+			entry.skeleton.set_bone_pose_rotation(bone, pose.rotation)
+			entry.skeleton.set_bone_pose_scale(bone, pose.scale)
+	for audio in find_children("*", "AudioStreamPlayer3D", true, false):
+		audio.stop()
+	weapons_manager.equip_starting_weapon()
+	Global.player_sprinting_changed.emit(true)
+	camera.fov = camera_pivot.target_fov
+	set_physics_process(true)
+	weapons_manager.set_process(true)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if game and game.state == "play" and is_alive:
@@ -125,4 +199,3 @@ func _update_hit_shake(delta: float) -> void:
 	var amplitude: float = hit_shake_strength * envelope
 	camera.position = camera_rest_position + Vector3(sin(elapsed * 83.0) * amplitude, cos(elapsed * 67.0) * amplitude, 0.0)
 	camera.rotation.z = camera_rest_roll + sin(elapsed * 57.0) * amplitude * 0.4
-

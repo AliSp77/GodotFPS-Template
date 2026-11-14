@@ -1,0 +1,83 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://afterburn/obstacle.gd" id="1_ger43"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x8a8h"]
+size = Vector3(18, 0.33, 0.28)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bxvbh"]
+albedo_color = Color(0.2, 0.27058825, 0.32156864, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5i3ks"]
+material = SubResource("StandardMaterial3D_bxvbh")
+size = Vector3(0.12, 0.6, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7vta2"]
+albedo_color = Color(0.2, 0.27058825, 0.32156864, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f10na"]
+material = SubResource("StandardMaterial3D_7vta2")
+size = Vector3(0.12, 0.6, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iakbb"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_s85hy"]
+material = SubResource("StandardMaterial3D_iakbb")
+size = Vector3(18, 0.065, 0.09)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n3ff5"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fqec0"]
+material = SubResource("StandardMaterial3D_n3ff5")
+size = Vector3(18, 0.04, 0.07)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s0fak"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xirkh"]
+material = SubResource("StandardMaterial3D_s0fak")
+size = Vector3(18, 0.04, 0.07)
+
+[node name="LowLaser" type="Area3D" unique_id=1504179371]
+collision_layer = 16
+monitorable = false
+script = ExtResource("1_ger43")
+kind = "low laser"
+contact_damage = 25.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=699061802]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.285, 0)
+shape = SubResource("BoxShape3D_x8a8h")
+
+[node name="Emitter" type="MeshInstance3D" parent="." unique_id=1927118787]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0.3, 0)
+mesh = SubResource("BoxMesh_5i3ks")
+
+[node name="@MeshInstance3D@15" type="MeshInstance3D" parent="." unique_id=411181801]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.3, 0)
+mesh = SubResource("BoxMesh_f10na")
+
+[node name="LaserCore" type="MeshInstance3D" parent="." unique_id=1744522224]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.285, 0)
+mesh = SubResource("BoxMesh_s85hy")
+
+[node name="LaserRail" type="MeshInstance3D" parent="." unique_id=177852687]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+mesh = SubResource("BoxMesh_fqec0")
+
+[node name="@MeshInstance3D@16" type="MeshInstance3D" parent="." unique_id=1103511195]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
+mesh = SubResource("BoxMesh_xirkh")
+
+[node name="Instruction" type="Label3D" parent="." unique_id=1299054989]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+pixel_size = 0.008
+billboard = 1
+modulate = Color(1, 0.26666668, 0.4745098, 1)
+text = "LOW LASER // JUMP"
+font_size = 36

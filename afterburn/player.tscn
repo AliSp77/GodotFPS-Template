@@ -1,0 +1,160 @@
+[gd_scene format=3 uid="uid://bbwhnybnp55e7"]
+
+[ext_resource type="PackedScene" uid="uid://cdbipjyx57al2" path="res://player/player.tscn" id="1_player"]
+[ext_resource type="Script" uid="uid://d3ts6tr6rudgj" path="res://afterburn/player.gd" id="2_runner"]
+[ext_resource type="Script" uid="uid://chflmoi1xvdd" path="res://afterburn/weapons_manager.gd" id="3_loadout"]
+[ext_resource type="PackedScene" path="res://afterburn/projectiles/player_round.tscn" id="4_round"]
+[ext_resource type="Material" path="res://afterburn/materials/cartoon_gun.tres" id="5_gun"]
+
+[node name="Player" unique_id=206312335 instance=ExtResource("1_player")]
+script = ExtResource("2_runner")
+starting_health = 100.0
+starting_armor = 50.0
+run_speed = 16.0
+strafe_speed = 9.0
+jump_velocity = 7.5
+sensitivity = 0.0025
+
+[node name="MainCamera" parent="CameraPivot/CameraHolder" parent_id_path=PackedInt32Array(1406019789) index="0" unique_id=2031709982]
+current = true
+fov = 85.0
+far = 170.0
+
+[node name="WeaponsManager" parent="." index="2" unique_id=1444023138]
+script = ExtResource("3_loadout")
+starting_weapon = NodePath("AssualtRifle")
+
+[node name="TestTarget" parent="WeaponsManager/Knife" parent_id_path=PackedInt32Array(171239475) index="4" unique_id=758220933]
+visible = false
+
+[node name="fps_demo_arms" parent="WeaponsManager/Knife" parent_id_path=PackedInt32Array(171239475) index="6" unique_id=1804116874]
+transform = Transform3D(0.99619466, 0.0075961226, 0.086824074, 0, 0.9961947, -0.08715573, -0.08715573, 0.08682408, 0.99240386, -0.05, 0, 0.25)
+
+[node name="TestCamera" parent="WeaponsManager/Knife" parent_id_path=PackedInt32Array(171239475) index="7" unique_id=1259688317]
+visible = false
+
+[node name="Pistol" parent="WeaponsManager" index="2" unique_id=1058031305]
+visible = true
+is_projectile = true
+projectile_scene = ExtResource("4_round")
+projectile_speed = 80.0
+firing_distance = 150.0
+
+[node name="TestTarget" parent="WeaponsManager/Pistol" index="4" unique_id=758220933]
+visible = false
+
+[node name="fps_demo_arms" parent="WeaponsManager/Pistol" index="6" unique_id=1804116874]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0.15, -0.02, -0.1)
+
+[node name="pistol_ammo" parent="WeaponsManager/Pistol/fps_demo_arms/Armature/Skeleton3D/Holder_R" parent_id_path=PackedInt32Array(1058031305, 1804116874, 228534147) index="6" unique_id=1985440232]
+material_override = ExtResource("5_gun")
+
+[node name="MeshInstance3D" parent="WeaponsManager/Pistol/fps_demo_arms/Armature/Skeleton3D/Holder_R/pistol_ammo" index="0" unique_id=1756966256]
+visible = false
+
+[node name="pistol" parent="WeaponsManager/Pistol/fps_demo_arms/Armature/Skeleton3D/hand_R" parent_id_path=PackedInt32Array(1058031305, 1804116874, 559829896) index="5" unique_id=1249635716]
+material_override = ExtResource("5_gun")
+
+[node name="MeshInstance3D" parent="WeaponsManager/Pistol/fps_demo_arms/Armature/Skeleton3D/hand_R/pistol" index="0" unique_id=1038764311]
+visible = false
+
+[node name="TestCamera" parent="WeaponsManager/Pistol" index="7" unique_id=1259688317]
+visible = false
+
+[node name="AssualtRifle" parent="WeaponsManager" index="3" unique_id=240215704]
+is_projectile = true
+projectile_scene = ExtResource("4_round")
+firing_distance = 150.0
+burst_mode = true
+
+[node name="TestTarget" parent="WeaponsManager/AssualtRifle" index="4" unique_id=758220933]
+visible = false
+
+[node name="fps_demo_arms" parent="WeaponsManager/AssualtRifle" index="6" unique_id=1804116874]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0.25, -0.05, 0.05)
+
+[node name="assualt_ammo" parent="WeaponsManager/AssualtRifle/fps_demo_arms/Armature/Skeleton3D/Holder_R" parent_id_path=PackedInt32Array(240215704, 1804116874, 228534147) index="0" unique_id=1577141919]
+material_override = ExtResource("5_gun")
+
+[node name="MeshInstance3D" parent="WeaponsManager/AssualtRifle/fps_demo_arms/Armature/Skeleton3D/Holder_R/assualt_ammo" index="0" unique_id=743872745]
+visible = false
+
+[node name="assualt" parent="WeaponsManager/AssualtRifle/fps_demo_arms/Armature/Skeleton3D/hand_R" parent_id_path=PackedInt32Array(240215704, 1804116874, 559829896) index="0" unique_id=1805786114]
+material_override = ExtResource("5_gun")
+
+[node name="MeshInstance3D" parent="WeaponsManager/AssualtRifle/fps_demo_arms/Armature/Skeleton3D/hand_R/assualt" index="0" unique_id=1322082805]
+visible = false
+
+[node name="TestCamera" parent="WeaponsManager/AssualtRifle" index="7" unique_id=1259688317]
+visible = false
+
+[node name="AssualtBurstRifle" parent="WeaponsManager" index="4" unique_id=13097583]
+is_projectile = true
+projectile_scene = ExtResource("4_round")
+projectile_speed = 110.0
+firing_distance = 150.0
+
+[node name="TestTarget" parent="WeaponsManager/AssualtBurstRifle" index="4" unique_id=758220933]
+visible = false
+
+[node name="fps_demo_arms" parent="WeaponsManager/AssualtBurstRifle" index="6" unique_id=1804116874]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0.25, -0.025, 0.15)
+
+[node name="assualt_burst_ammo" parent="WeaponsManager/AssualtBurstRifle/fps_demo_arms/Armature/Skeleton3D/Holder_R" parent_id_path=PackedInt32Array(13097583, 1804116874, 228534147) index="1" unique_id=630589402]
+material_override = ExtResource("5_gun")
+
+[node name="MeshInstance3D" parent="WeaponsManager/AssualtBurstRifle/fps_demo_arms/Armature/Skeleton3D/Holder_R/assualt_burst_ammo" index="0" unique_id=1158726842]
+visible = false
+
+[node name="assualt_burst" parent="WeaponsManager/AssualtBurstRifle/fps_demo_arms/Armature/Skeleton3D/hand_R" parent_id_path=PackedInt32Array(13097583, 1804116874, 559829896) index="1" unique_id=1952725815]
+material_override = ExtResource("5_gun")
+
+[node name="MeshInstance3D" parent="WeaponsManager/AssualtBurstRifle/fps_demo_arms/Armature/Skeleton3D/hand_R/assualt_burst" index="0" unique_id=856656027]
+visible = false
+
+[node name="TestCamera" parent="WeaponsManager/AssualtBurstRifle" index="7" unique_id=1259688317]
+visible = false
+
+[node name="LMG" parent="WeaponsManager" index="5" unique_id=635718025]
+is_projectile = true
+projectile_scene = ExtResource("4_round")
+projectile_speed = 85.0
+firing_distance = 150.0
+
+[node name="TestTarget" parent="WeaponsManager/LMG" index="4" unique_id=758220933]
+visible = false
+
+[node name="fps_demo_arms" parent="WeaponsManager/LMG" index="6" unique_id=1804116874]
+transform = Transform3D(0.99619466, 0.0075961226, 0.086824074, 0, 0.9961947, -0.08715573, -0.08715573, 0.08682408, 0.99240386, 0.4, -0.05, 0.2)
+
+[node name="lmg_ammo" parent="WeaponsManager/LMG/fps_demo_arms/Armature/Skeleton3D/Holder_R" parent_id_path=PackedInt32Array(635718025, 1804116874, 228534147) index="5" unique_id=1203736002]
+material_override = ExtResource("5_gun")
+
+[node name="MeshInstance3D" parent="WeaponsManager/LMG/fps_demo_arms/Armature/Skeleton3D/Holder_R/lmg_ammo" index="0" unique_id=1517338083]
+visible = false
+
+[node name="lmg" parent="WeaponsManager/LMG/fps_demo_arms/Armature/Skeleton3D/hand_R" parent_id_path=PackedInt32Array(635718025, 1804116874, 559829896) index="4" unique_id=1959016698]
+material_override = ExtResource("5_gun")
+
+[node name="MeshInstance3D" parent="WeaponsManager/LMG/fps_demo_arms/Armature/Skeleton3D/hand_R/lmg" index="0" unique_id=993535234]
+visible = false
+
+[node name="TestCamera" parent="WeaponsManager/LMG" index="7" unique_id=1259688317]
+visible = false
+
+[node name="WeaponSubViewport" parent="." index="3" unique_id=884807026]
+mouse_filter = 2
+
+[node name="SubViewport" parent="WeaponSubViewport" index="0" unique_id=870436344]
+size = Vector2i(1280, 720)
+
+[editable path="WeaponsManager/Knife"]
+[editable path="WeaponsManager/Knife/fps_demo_arms"]
+[editable path="WeaponsManager/Pistol"]
+[editable path="WeaponsManager/Pistol/fps_demo_arms"]
+[editable path="WeaponsManager/AssualtRifle"]
+[editable path="WeaponsManager/AssualtRifle/fps_demo_arms"]
+[editable path="WeaponsManager/AssualtBurstRifle"]
+[editable path="WeaponsManager/AssualtBurstRifle/fps_demo_arms"]
+[editable path="WeaponsManager/LMG"]
+[editable path="WeaponsManager/LMG/fps_demo_arms"]

@@ -13,6 +13,9 @@ func _ready() -> void:
 	start_run()
 	if scenario == "reward":
 		complete_encounter()
+	elif scenario == "charger":
+		spawn_timer = 99999.0
+		_spawn_enemy("charger")
 	else:
 		encounter = 6
 		boss_ship = _spawn_enemy("boss")

@@ -3,6 +3,8 @@
 [ext_resource type="FontFile" path="res://resources/fonts/ShareTech-Regular.ttf" id="1_dq2o8"]
 [ext_resource type="Material" path="res://resources/materials/fps_demo_mat.material" id="2_xgt0u"]
 
+[ext_resource type="PackedScene" path="res://afterburn/obstacles/route_pattern_0.tscn" id="3_hazards"]
+
 [sub_resource type="Environment" id="Environment_2sxml"]
 background_mode = 1
 background_color = Color(0.078431375, 0.13725491, 0.21176471, 1)
@@ -2753,3 +2755,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14.7, -44)
 material_override = SubResource("StandardMaterial3D_w2uvc")
 mesh = SubResource("BoxMesh_gin7e")
 metadata/role = "GantryLight"
+
+[node name="RunnerHazards" parent="." instance=ExtResource("3_hazards")]
+
+[editable path="RunnerHazards"]

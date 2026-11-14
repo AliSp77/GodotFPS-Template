@@ -1,0 +1,1417 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Afterburn Game Design and Editing Guide</title>
+<meta name="description" content="Complete design reference and editing manual for the Afterburn Godot endless FPS runner.">
+<style>
+:root{color-scheme:light;--ink:#172331;--muted:#50606e;--line:#d9dfe4;--soft:#f2f5f7;--accent:#186052}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:30px}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 'Segoe UI',Arial,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #378e7b;outline-offset:3px}
+.skip{position:fixed;left:15px;top:-90px;z-index:50;background:white;padding:10px}.skip:focus{top:12px}
+aside{position:fixed;left:0;top:0;bottom:0;width:290px;padding:28px 22px;background:#f5f7f8;border-right:1px solid var(--line);overflow:auto}
+.brand{margin:0;font-size:15px;font-weight:800;letter-spacing:2px;color:#000}.edition{margin:5px 0 24px;color:var(--muted);font-size:12px}
+label{font-size:12px;font-weight:600;display:block;margin-bottom:6px}input{width:100%;padding:10px 11px;border:1px solid #a7b5bf;border-radius:5px;background:white;font:14px 'Segoe UI',Arial,sans-serif;color:#172331}
+.filter-status{font-size:12px;color:var(--muted);min-height:20px;margin:8px 0 12px}nav ol{list-style:none;padding:0;margin:0}nav li{margin:1px 0}nav a{display:block;padding:7px 8px;text-decoration:none;color:#344554;font-size:13px;line-height:1.45;border-radius:4px}nav a:hover{background:#e7eeec}nav a[aria-current=true]{background:#e2eee9;color:#154e42;font-weight:650}
+main{margin-left:290px;padding:32px 55px 90px;max-width:1400px}.toolbar{display:flex;justify-content:flex-end;gap:12px;margin-bottom:22px}.toolbar a,.toolbar button{font:13px 'Segoe UI',Arial,sans-serif;line-height:1.5;padding:8px 13px;border:1px solid #bdc9d0;border-radius:5px;background:white;color:#304d4b;text-decoration:none;cursor:pointer}
+h1,h2,h3{color:#000;line-height:1.2;font-weight:650}h1{font-size:39px;letter-spacing:-1.1px;max-width:820px;margin:10px 0 23px}h2{font-size:26px;letter-spacing:-.35px;margin:0 0 20px}h3{font-size:19px;margin:31px 0 13px}p{margin:0 0 17px}section{margin-top:48px;padding-top:4px}.opening>p:first-of-type{font-size:20px;color:#46596b;margin-bottom:9px}.opening>p:nth-of-type(2){font-size:13px;color:#697783;margin-bottom:26px}
+strong{font-weight:650}ul,ol{padding-left:25px;margin:14px 0 22px}li{padding-left:3px;margin-bottom:8px}code{font:13px/1.55 Consolas,'Cascadia Code',monospace;background:#eef2f4;padding:2px 4px;border-radius:3px;overflow-wrap:anywhere}
+pre{position:relative;margin:20px 0 25px;padding:42px 18px 18px;border:1px solid #dbe2e6;background:#f4f6f8;border-radius:5px;overflow:auto;line-height:1.55}pre code{background:transparent;padding:0;white-space:pre;overflow-wrap:normal;display:block;color:#1e3546}
+.copy{position:absolute;top:8px;right:10px;padding:3px 9px;border:1px solid #aebfc8;background:#fff;color:#39525d;border-radius:4px;font:12px 'Segoe UI',Arial,sans-serif;cursor:pointer}
+.table-scroll{overflow-x:auto;margin:21px 0 27px}table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.5}th,td{border:1px solid #d9d9d9;padding:11px 12px;text-align:left;vertical-align:middle}th{background:#233c50;color:white;font-weight:600}tbody tr:nth-child(even){background:#f3f6f8}td code,th code{font-size:12px}th code{color:#fff;background:transparent}td:first-child{min-width:100px}table p{margin:0}
+.endnote{margin-top:45px;color:#60727f;font-size:12px}button:hover{background:#edf4f1}.nav-toggle{display:none}
+@media(min-width:1500px){main{padding-left:80px;padding-right:80px}}@media(max-width:1000px){aside{width:250px;padding:24px 16px}main{margin-left:250px;padding:26px 30px 65px}h1{font-size:33px}body{font-size:15px}}
+@media(max-width:720px){aside{position:relative;width:auto;max-height:none;border-right:0;border-bottom:1px solid var(--line);padding:20px}.edition{margin-bottom:12px}.nav-toggle{display:inline-block;border:1px solid #afc1be;background:#fff;border-radius:4px;padding:7px 12px;font:13px 'Segoe UI',Arial,sans-serif;margin-bottom:10px}nav{max-height:260px;overflow:auto}aside[data-collapsed=true] .nav-content{display:none}main{margin:0;padding:22px 20px 55px}h1{font-size:31px}h2{font-size:23px}section{margin-top:37px}.toolbar{justify-content:flex-start;margin-bottom:24px}table{min-width:560px}.opening>p:first-of-type{font-size:18px}}
+@page{size:A4;margin:18mm 16mm}@media print{html{scroll-behavior:auto}aside,.toolbar,.copy,.skip{display:none!important}body{font:10.5pt/1.45 Arial,sans-serif;color:#111}main{margin:0;padding:0;max-width:none}h1{font-size:25pt}h2{font-size:17pt;break-after:avoid}h3{font-size:12.5pt;break-after:avoid}section{margin-top:24pt}p,li{orphans:3;widows:3}a{color:#111;text-decoration:none}pre{padding:10pt;white-space:pre-wrap;break-inside:auto}pre code{white-space:pre-wrap;overflow-wrap:anywhere;font-size:8pt}.table-scroll{overflow:visible}table{min-width:0!important;font-size:9pt}th,td{padding:6pt 7pt}thead{display:table-header-group}tr{break-inside:avoid}th{background:#e8edf1!important;color:#000}code{font-size:8.5pt}.endnote{display:none}}
+</style></head><body>
+<a class="skip" href="#guide">Skip to guide</a>
+<aside data-collapsed="true"><p class="brand">AFTERBURN</p><p class="edition">Design and editing manual · 14 November 2026</p>
+<button class="nav-toggle" type="button" aria-expanded="false">Show contents</button>
+<div class="nav-content"><label for="filter">Find a section by topic or filename</label><input id="filter" type="search" placeholder="Try shake, map, or ammo"><p class="filter-status" role="status">24 sections</p><nav aria-label="Guide contents"><ol><li><a href="#1-start-here">1 Start here</a></li>
+<li><a href="#2-game-design-and-current-scope">2 Game design and current scope</a></li>
+<li><a href="#3-controls-and-input-routing">3 Controls and input routing</a></li>
+<li><a href="#4-files-and-scene-architecture">4 Files and scene architecture</a></li>
+<li><a href="#5-run-lifecycle-and-pause-behavior">5 Run lifecycle and pause behavior</a></li>
+<li><a href="#6-automatic-running-and-movement-tuning">6 Automatic running and movement tuning</a></li>
+<li><a href="#7-camera-movement-and-damage-feedback">7 Camera movement and damage feedback</a></li>
+<li><a href="#8-health-armor-and-invulnerability">8 Health armor and invulnerability</a></li>
+<li><a href="#9-endless-route-streaming">9 Endless route streaming</a></li>
+<li><a href="#10-editing-the-saved-map-and-supplied-props">10 Editing the saved map and supplied props</a></li>
+<li><a href="#11-obstacle-patterns-and-destruction">11 Obstacle patterns and destruction</a></li>
+<li><a href="#12-fps-weapons-and-ammunition">12 FPS weapons and ammunition</a></li>
+<li><a href="#13-spaceship-enemy-classes">13 Spaceship enemy classes</a></li>
+<li><a href="#14-ship-attacks-and-projectile-collision">14 Ship attacks and projectile collision</a></li>
+<li><a href="#15-encounters-boss-phases-and-threat-tiers">15 Encounters boss phases and threat tiers</a></li>
+<li><a href="#16-temporary-field-upgrades">16 Temporary field upgrades</a></li>
+<li><a href="#17-pickups-score-and-momentum">17 Pickups score and momentum</a></li>
+<li><a href="#18-permanent-upgrades-and-saves">18 Permanent upgrades and saves</a></li>
+<li><a href="#19-hud-menus-and-presentation">19 HUD menus and presentation</a></li>
+<li><a href="#20-audio-visual-effects-and-rendering-layers">20 Audio visual effects and rendering layers</a></li>
+<li><a href="#21-practical-editing-recipes">21 Practical editing recipes</a></li>
+<li><a href="#22-testing-and-diagnosing-edits">22 Testing and diagnosing edits</a></li>
+<li><a href="#23-current-limitations-and-useful-next-refactors">23 Current limitations and useful next refactors</a></li>
+<li><a href="#24-source-map-and-maintenance-checklist">24 Source map and maintenance checklist</a></li></ol></nav></div></aside>
+<main id="guide"><div class="toolbar"><a href="Afterburn_Design_and_Editing_Guide.md" download>Markdown source</a><button id="print" type="button">Print guide</button></div><div class="opening"><h1 id="afterburn-game-design-and-editing-guide">Afterburn Game Design and Editing Guide</h1>
+<p>Implementation reference and practical maintenance manual</p>
+<p>Updated 14 November 2026</p>
+<p>This guide explains the playable Afterburn implementation, every added system, and the files you need to change to maintain it yourself. It reflects the current code, including automatic running at 16 meters per second, damage screen shake, travelling player rounds, indestructible cover, breakable panels, and laser hazards. Values below describe the stock player before permanent or temporary upgrades.</p>
+<p>The Godot project is <code>D:/Soltanpoor/PersonalFiles/GODOT/GodotFPS-Template</code>. Open its <code>project.godot</code>. The similarly named <code>NeonRun/NeonRush</code> project is a separate project and does not contain this implementation.</p>
+<p>All paths beginning with <code>res://</code> are relative to the Godot project root. Use the FileSystem dock to open them. Function names are included as stable search targets because line numbers change as you edit.</p>
+</div>
+<section data-guide-section><h2 id="1-start-here">1 Start here</h2>
+<p>Press <strong>F5</strong> to run the project. The configured main scene is <code>res://afterburn/afterburn.tscn</code>. Start a run from the title screen. The character runs forward automatically; W has no movement or boost function in Afterburn.</p>
+<p>The project configuration declares Godot 4.8 with the Forward Plus renderer. All added gameplay scripts are GDScript. Keep a known working engine version when making a backup, since this project was developed with a beta build and engine upgrades can change imports or rendering behavior.</p>
+<p>The most useful starting files are <code>afterburn/player.gd</code> for movement and damage feedback, <code>afterburn/game.gd</code> for game rules and spawning, <code>afterburn/district.tscn</code> for the saved road section, and <code>afterburn/hud.gd</code> for every menu and HUD element.</p>
+<p>Before a substantial edit, save a version of the working project. Change one system, run the isolated test scene, then play the real main scene. Start a new run when checking an edit to player defaults: the run resets the saved player instance and applies permanent ranks again. Stop and rerun the scene after changing Inspector defaults so the initial values are captured again.</p>
+<h3 id="common-edits-at-a-glance">Common edits at a glance</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>What you want to change</th>
+<th>File or scene</th>
+<th>Search for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Automatic running speed</td>
+<td><code>afterburn/player.tscn</code> &gt; Player Inspector</td>
+<td>Run Speed</td>
+</tr>
+<tr>
+<td>Strafing speed or horizontal limits</td>
+<td><code>afterburn/player.gd</code></td>
+<td><code>strafe_speed</code>, <code>clampf(position.x</code></td>
+</tr>
+<tr>
+<td>Jump, slide, or dash</td>
+<td><code>afterburn/player.gd</code></td>
+<td><code>_ready</code>, <code>_physics_process</code></td>
+</tr>
+<tr>
+<td>Running camera bob or footstep cadence</td>
+<td><code>afterburn/player.gd</code></td>
+<td><code>RUN_STEP_INTERVAL</code>, <code>run_phase</code></td>
+</tr>
+<tr>
+<td>Damage screen shake</td>
+<td><code>afterburn/player.gd</code></td>
+<td><code>HIT_SHAKE_DURATION</code>, <code>_update_hit_shake</code></td>
+</tr>
+<tr>
+<td>Starting health and armor</td>
+<td><code>afterburn/player.tscn</code> &gt; Player Inspector</td>
+<td>Starting Health, Starting Armor</td>
+</tr>
+<tr>
+<td>Starting weapon</td>
+<td>Player &gt; WeaponsManager Inspector</td>
+<td>Starting Weapon (node path)</td>
+</tr>
+<tr>
+<td>Road appearance and permanent prop placement</td>
+<td><code>afterburn/district.tscn</code></td>
+<td>Edit the saved scene</td>
+</tr>
+<tr>
+<td>Road obstacle placement and laser hazards</td>
+<td><code>afterburn/obstacles/route_pattern_0.tscn</code> through <code>route_pattern_3.tscn</code></td>
+<td>Saved obstacle instances in the 3D editor</td>
+</tr>
+<tr>
+<td>Breakable health and impact damage</td>
+<td>Obstacle prefab root Inspector</td>
+<td>Kind, Hp, Contact Damage</td>
+</tr>
+<tr>
+<td>Player round speed and visuals</td>
+<td>Player weapon Inspector; <code>afterburn/projectiles/player_round.tscn</code></td>
+<td>Projectile Speed, Projectile Scene; saved Round and Trail meshes</td>
+</tr>
+<tr>
+<td>Encounter sizes and enemy availability</td>
+<td><code>afterburn/game.gd</code></td>
+<td><code>QUOTAS</code>, <code>_spawn_enemy</code></td>
+</tr>
+<tr>
+<td>Ship meshes, movement, attack timing, and boss phases</td>
+<td><code>afterburn/ship.gd</code></td>
+<td><code>_ready</code>, <code>_physics_process</code>, <code>_fire</code></td>
+</tr>
+<tr>
+<td>Weapon damage, ammo, animations, and reloads</td>
+<td><code>weapons/*.tscn</code>, <code>common/weapon/weapon.gd</code></td>
+<td>Root weapon properties; check runtime overrides too</td>
+</tr>
+<tr>
+<td>Rewards and permanent upgrades</td>
+<td><code>afterburn/game.gd</code></td>
+<td><code>MODS</code>, <code>choose_upgrade</code>, <code>start_run</code></td>
+</tr>
+<tr>
+<td>Save file and profile format</td>
+<td><code>afterburn/game.gd</code></td>
+<td><code>SAVE_PATH</code>, <code>_load_profile</code>, <code>_save_profile</code></td>
+</tr>
+<tr>
+<td>UI text, colors, layout, or controls legend</td>
+<td><code>afterburn/hud.gd</code></td>
+<td><code>_ready</code>, <code>menu</code>, <code>workshop</code>, <code>rewards</code></td>
+</tr>
+</tbody></table></div>
+</section>
+<section data-guide-section><h2 id="2-game-design-and-current-scope">2 Game design and current scope</h2>
+<p>Afterburn is a first person roguelite runner through a repeated industrial freight district. The player balances continuous movement, dodging road obstacles, collecting supplies, and shooting spaceships that keep pace with the runner. Distance and kills earn score. Ship kills bank credits that survive death. Between encounters, the player chooses one temporary upgrade.</p>
+<p>The <strong>road streams indefinitely</strong>, but the current combat run has <strong>six encounters followed by one boss</strong>. Killing the boss ends that run in victory and raises the next run&#39;s threat tier. It is not currently an infinite sequence of combat waves after the boss. There is no fixed time or distance that clears an encounter: its quota must spawn, and all living ships must be destroyed.</p>
+<p>The HTML reference supplied the runner and roguelite direction. The implemented Godot game uses the existing FPS player, weapons, supplied props, and spaceship meshes. It has no W boost, fuel meter, weapon heat system, touch controls, or HTML save import and export interface.</p>
+<h3 id="player-loop">Player loop</h3>
+<ol>
+<li>Start a run with the assault rifle, full magazines and reserves, and purchased permanent bonuses.</li>
+<li>Run continuously along negative Z. Strafe, jump, slide, or dash while aiming and shooting.</li>
+<li>Destroy ships, collect supplies, and keep the kill multiplier active.</li>
+<li>Clear an encounter and choose one of three paused upgrade cards.</li>
+<li>Repeat through six encounters, then fight the three phase Civic Enforcer.</li>
+<li>Keep earned credits after death or victory, purchase permanent ranks, and start another run.</li>
+</ol>
+</section>
+<section data-guide-section><h2 id="3-controls-and-input-routing">3 Controls and input routing</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Current behavior</th>
+<th>Action or handler</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>No movement key</td>
+<td>Run forward automatically</td>
+<td>Player physics process</td>
+</tr>
+<tr>
+<td>A and D</td>
+<td>Continuous left and right strafing</td>
+<td><code>left</code>, <code>right</code></td>
+</tr>
+<tr>
+<td>Space</td>
+<td>Jump while grounded</td>
+<td><code>jump</code></td>
+</tr>
+<tr>
+<td>S or Ctrl</td>
+<td>Hold to slide while grounded</td>
+<td><code>backward</code>, <code>crouch</code></td>
+</tr>
+<tr>
+<td>Shift or Q</td>
+<td>Dash when ready</td>
+<td><code>sprint</code>, <code>afterburn_dash</code></td>
+</tr>
+<tr>
+<td>Mouse movement</td>
+<td>Aim the camera</td>
+<td>Player unhandled input</td>
+</tr>
+<tr>
+<td>Right mouse button</td>
+<td>Hold sights</td>
+<td><code>aim_mode</code></td>
+</tr>
+<tr>
+<td>Left mouse button</td>
+<td>Fire; hold for automatic weapons</td>
+<td><code>fire</code></td>
+</tr>
+<tr>
+<td>R</td>
+<td>Reload a ranged weapon</td>
+<td><code>reload</code></td>
+</tr>
+<tr>
+<td>Mouse wheel</td>
+<td>Previous or next weapon</td>
+<td><code>weapon_change_prev</code>, <code>weapon_change_next</code></td>
+</tr>
+<tr>
+<td>Escape</td>
+<td>Pause or resume</td>
+<td>HUD input handler using <code>exit</code></td>
+</tr>
+<tr>
+<td>Enter</td>
+<td>Start from the initial menu or result state</td>
+<td>HUD key handler</td>
+</tr>
+<tr>
+<td>1, 2, or 3</td>
+<td>Select a reward card</td>
+<td>HUD key handler</td>
+</tr>
+</tbody></table></div>
+<p>Change ordinary bindings under <strong>Project Settings &gt; Input Map</strong>. The action named <code>sprint</code> now triggers Shift dash; it does not control running speed. The old <code>forward</code> action can remain mapped to W for compatibility with other template scenes, but the Afterburn controller does not read it.</p>
+<p><code>afterburn/input.gd</code> sends aim, fire, reload, and weapon switching through <code>Global</code> signals only during <code>play</code>. The player reads movement actions directly. The HUD reads Escape and reward shortcuts and keeps processing while the scene tree is paused. The inherited weapons manager handles held automatic fire.</p>
+</section>
+<section data-guide-section><h2 id="4-files-and-scene-architecture">4 Files and scene architecture</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>afterburn/afterburn.tscn</code></td>
+<td>Entry scene; saved FreightDistrict, Player, and EnemyFlightCorridor instances</td>
+</tr>
+<tr>
+<td><code>afterburn/enemy_corridor.gd</code> and <code>.tscn</code></td>
+<td>Invisible flight width, close spawn markers, and forward combat distance limits</td>
+</tr>
+<tr>
+<td><code>afterburn/player.tscn</code></td>
+<td>Saved inherited FPS player with runner script, movement defaults, weapon overrides, and editable children</td>
+</tr>
+<tr>
+<td><code>afterburn/weapons_manager.gd</code></td>
+<td>Inspector starting weapon, editor weapon preview, and runtime selection; extends the original manager</td>
+</tr>
+<tr>
+<td><code>afterburn/game.gd</code></td>
+<td>Run lifecycle, enemy director, route streaming, obstacles, pickups, upgrades, score, saves, and optional map builder</td>
+</tr>
+<tr>
+<td><code>afterburn/district.tscn</code></td>
+<td>Saved, editable 100 meter route section</td>
+</tr>
+<tr>
+<td><code>afterburn/player.gd</code></td>
+<td>Runner controller extending the original player; health, armor, dash, slide, run bob, footsteps, and hit shake</td>
+</tr>
+<tr>
+<td><code>afterburn/ship.gd</code></td>
+<td>Four ranged ship classes and the boss; shared damage, rewards, and labels</td>
+</tr>
+<tr>
+<td><code>afterburn/enemies/charger.gd</code> and <code>.tscn</code></td>
+<td>Saved charge ship, red warning path, fixed-line rush, and swept contact damage</td>
+</tr>
+<tr>
+<td><code>afterburn/bolt.gd</code></td>
+<td>Visible enemy bolt, swept collision, damage, impact effect, and lifetime</td>
+</tr>
+<tr>
+<td><code>afterburn/obstacle.gd</code></td>
+<td>Solid impacts, laser overlaps, and breakable-only destruction</td>
+</tr>
+<tr>
+<td><code>afterburn/obstacles/*.tscn</code></td>
+<td>Six saved obstacle prefabs and four saved route patterns</td>
+</tr>
+<tr>
+<td><code>afterburn/projectiles/player_round.gd</code> and <code>.tscn</code></td>
+<td>Travelling player rounds, swept collision, lifetime by range, and saved visual meshes</td>
+</tr>
+<tr>
+<td><code>afterburn/hud.gd</code></td>
+<td>Runtime HUD, title, workshop, rewards, pause, results, notifications, and shortcuts</td>
+</tr>
+<tr>
+<td><code>afterburn/input.gd</code></td>
+<td>Game state aware routing to the template weapon signals</td>
+</tr>
+<tr>
+<td><code>afterburn/README.md</code></td>
+<td>Short controls and launch reference</td>
+</tr>
+<tr>
+<td><code>afterburn/tests/integration.gd</code> and <code>.tscn</code></td>
+<td>Isolated gameplay regression suite</td>
+</tr>
+<tr>
+<td><code>afterburn/tests/preview.gd</code></td>
+<td>Base for isolated visual fixtures; disables profile loading and writing</td>
+</tr>
+<tr>
+<td><code>afterburn/tests/boss_preview.tscn</code></td>
+<td>Starts directly in a boss fight</td>
+</tr>
+<tr>
+<td><code>afterburn/tests/reward_preview.tscn</code></td>
+<td>Starts directly at the upgrade screen</td>
+</tr>
+</tbody></table></div>
+<h3 id="what-is-reused-from-the-fps-template">What is reused from the FPS template</h3>
+<p><code>res://afterburn/player.tscn</code> inherits <code>res://player/player.tscn</code>, which supplies the collision capsule, camera hierarchy, arms and weapons, dedicated weapon viewport, and audio manager. The runner script is attached in the saved scene. <code>afterburn/game.gd::_create_player()</code> binds the existing Player child; it only instantiates the same saved prefab when an isolated fixture has no Player. No runtime script replacement is needed. The runner extends <code>res://player/player.gd</code>, preserving mouse look, inherited references, aiming state, and <code>Global.player</code> registration.</p>
+<p>In <code>afterburn.tscn</code>, expand <strong>Player</strong> in the Local scene tree. Select Player and press <strong>F</strong> in the 3D viewport to focus its spawn at <code>(0, 0.1, 24)</code>. The original FPS asset has arms and weapons, rather than a complete third person body mesh; the capsule and camera gizmos show the player body position. Open <code>afterburn/player.tscn</code> to edit reusable defaults. Its root exposes <strong>Run Speed</strong>, <strong>Strafe Speed</strong>, <strong>Jump Velocity</strong>, <strong>Sensitivity</strong>, <strong>Starting Health</strong>, and <strong>Starting Armor</strong>. The original Walk Speed and Sprint Speed fields are inherited but automatic movement uses Run Speed.</p>
+<h3 id="runtime-structure">Runtime structure</h3>
+<pre><code class="language-text">Afterburn                         game.gd
+  CourseLighting                  extracted world environment and directional lights
+  Route sections                  current section plus three neighbors
+    Saved district meshes         district.tscn
+    RunnerHazards                 saved route_pattern_N.tscn
+      Barriers and lasers         saved prefab instances using obstacle.gd
+    Route pickups                 created by game.gd
+  Player                          saved afterburn/player.tscn instance
+    CollisionShape3D
+    CameraPivot                   inherited mouse yaw and active_camera.gd
+      CameraHolder                mouse pitch, running bob, gun recoil
+        MainCamera                independent damage shake
+    WeaponsManager                starting weapon Inspector + inherited switching/firing
+      Knife, Pistol, AssualtRifle, AssualtBurstRifle, LMG
+    WeaponSubViewport             separate weapon rendering camera
+    AudioManager                  inherited surface and footstep audio
+  Input router                    input.gd
+  HUD                             hud.gd
+  Ships, bolts, and effects        added as the run proceeds
+</code></pre>
+<p>Player and FreightDistrict are saved children of the main scene. Player has editable children enabled; expand WeaponsManager to see the five existing weapon nodes. The selected starting weapon is previewed in the editor by the Afterburn manager tool script. Obstacle rows are saved in four editable route pattern scenes, with pattern 0 instanced in district.tscn for editor inspection. Ships, additional streamed sections, pickups, and HUD controls are created at runtime. Inspect those in the <strong>Remote</strong> tree; Remote edits are temporary.</p>
+</section>
+<section data-guide-section><h2 id="5-run-lifecycle-and-pause-behavior">5 Run lifecycle and pause behavior</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>State</th>
+<th>Simulation</th>
+<th>How it is entered or left</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>boot</code></td>
+<td>Initialization</td>
+<td><code>_ready()</code> builds references, route, player, input, and HUD</td>
+</tr>
+<tr>
+<td><code>menu</code></td>
+<td>Tree paused; mouse visible</td>
+<td>Initial title screen; Start calls <code>start_run()</code></td>
+</tr>
+<tr>
+<td><code>play</code></td>
+<td>Simulation active; mouse captured</td>
+<td>Running, combat, pickups, route streaming, and score</td>
+</tr>
+<tr>
+<td><code>reward</code></td>
+<td>Tree paused; mouse visible</td>
+<td>Cleared encounter; selecting a card calls <code>choose_upgrade()</code></td>
+</tr>
+<tr>
+<td><code>pause</code></td>
+<td>Tree paused; mouse visible</td>
+<td>Escape; Resume calls <code>resume_run()</code></td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td>Tree paused; mouse visible</td>
+<td>Death, abandoning from pause, or boss victory</td>
+</tr>
+</tbody></table></div>
+<p>The workshop is a HUD overlay, not a separate state string. Likewise, drawing the title menu from the result screen does not itself change <code>game.state</code>. When adding a new screen, handle the state, pause flag, mouse capture, and overlay visibility together rather than only drawing a panel.</p>
+<p><code>start_run()</code> clears combat objects and the old route, creates fresh sections, resets the existing player to its authored transform, cancels weapon timers and animation state, restores the saved weapon grip, resets temporary stats, increments the started run counter, applies permanent ranks, refills ammunition, and resumes play. <code>finish_run()</code> records the best score, applies a victory tier increase if appropriate, saves the profile, pauses the tree, and shows results.</p>
+<p>The HUD has <code>PROCESS_MODE_ALWAYS</code>. Keep this when changing its node structure, or its paused menu buttons and input may stop working.</p>
+</section>
+<section data-guide-section><h2 id="6-automatic-running-and-movement-tuning">6 Automatic running and movement tuning</h2>
+<p>The runner moves through the world along negative Z. The world is not moved backward around a stationary character. Aiming rotates the view while the route direction remains fixed. Strafing is in world X and is not relative to the camera&#39;s yaw.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Stock value</th>
+<th>Location and effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Forward run</td>
+<td>16 m/s</td>
+<td>Player Inspector &gt; Run Speed; multiplied by <code>mobility</code></td>
+</tr>
+<tr>
+<td>Strafe target speed</td>
+<td>9 m/s</td>
+<td><code>strafe_speed</code>; multiplied by <code>mobility</code></td>
+</tr>
+<tr>
+<td>Strafe smoothing</td>
+<td>15</td>
+<td>Physics interpolation factor before clamping</td>
+</tr>
+<tr>
+<td>Horizontal center limits</td>
+<td>-9 to +9 m</td>
+<td>Final X clamp after movement</td>
+</tr>
+<tr>
+<td>Jump velocity</td>
+<td>7.5 m/s upward</td>
+<td>Player Inspector &gt; Jump Velocity, saved in <code>afterburn/player.tscn</code></td>
+</tr>
+<tr>
+<td>Gravity</td>
+<td>-20 m/s squared</td>
+<td>Inherited <code>GRAVITY</code> constant in <code>player/player.gd</code></td>
+</tr>
+<tr>
+<td>Standing capsule</td>
+<td>1.85 m high, 0.2 m radius</td>
+<td>Original scene; height reapplied by runner physics</td>
+</tr>
+<tr>
+<td>Sliding capsule</td>
+<td>0.9 m high</td>
+<td>Grounded S or Ctrl; collider center is half its height</td>
+</tr>
+<tr>
+<td>Standing eye height</td>
+<td>1.7 m</td>
+<td>Camera pivot target height</td>
+</tr>
+<tr>
+<td>Sliding eye height</td>
+<td>0.85 m</td>
+<td>Camera pivot target height</td>
+</tr>
+<tr>
+<td>Mouse sensitivity</td>
+<td>0.0025</td>
+<td>Player Inspector &gt; Sensitivity, saved in <code>afterburn/player.tscn</code></td>
+</tr>
+<tr>
+<td>Yaw limit</td>
+<td>-1.25 to +1.25 radians</td>
+<td>About 72 degrees either side of forward</td>
+</tr>
+<tr>
+<td>Pitch limit</td>
+<td>-60 to +60 degrees</td>
+<td>Inherited mouse look</td>
+</tr>
+</tbody></table></div>
+<p>Normal forward speed is <code>run_speed * mobility</code>. Holding W, releasing W, or aiming does not change it. The runner emits the inherited sprint signal on creation to select the wider running FOV, but this signal no longer chooses movement speed.</p>
+<p>At stock gravity and jump velocity, the ideal jump rises about 1.41 meters and returns to its starting height after about 0.75 seconds. At 16 m/s this covers roughly 12 meters, before accounting for geometry or dash. Use these relationships when adjusting obstacle heights and spacing.</p>
+<p>Sliding lasts while S or Ctrl is held and the character is on the floor. There is no separate slide duration or cost. Releasing under a low obstacle does not perform an explicit head clearance check; standing can collide with it. The collision capsule is duplicated for each player so changing its height does not alter the imported scene&#39;s shared shape resource.</p>
+<h3 id="dash">Dash</h3>
+<p>Dash lasts 0.2 seconds, has a 3 second cooldown, and grants 0.24 seconds of invulnerability. With no strafe input, it travels forward at 30 m/s. With strafing, <code>Vector3(strafe * 1.4, 0, -1).normalized()</code> chooses the direction; X uses a 25 m/s scale and Z uses a 30 m/s scale.</p>
+<p>Dash values are fixed rather than multiplied by Mobility. At very high stacked Mobility, normal running can exceed the dash&#39;s forward speed. If you want dash to remain faster at every upgrade level, scale its velocities with Mobility or derive them from <code>run_speed</code>. Update the HUD&#39;s hardcoded 3 second dash meter if you change the cooldown.</p>
+</section>
+<section data-guide-section><h2 id="7-camera-movement-and-damage-feedback">7 Camera movement and damage feedback</h2>
+<p>Three different systems contribute to camera feedback. They use different transforms, so tune them in the correct file.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Effect</th>
+<th>Implementation</th>
+<th>Main tuning values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Running bob</td>
+<td><code>afterburn/player.gd</code> changes <code>CameraHolder.position</code></td>
+<td>X amplitude 0.035 m; Y amplitude 0.055 m; phase uses <code>RUN_STEP_INTERVAL</code></td>
+</tr>
+<tr>
+<td>Weapon firing shake</td>
+<td>Inherited <code>common/utils/active_camera.gd</code> changes holder rotation through a tween</td>
+<td><code>shake_intensity</code> 0.02 radians; <code>shake_duration</code> 0.1 s</td>
+</tr>
+<tr>
+<td>Damage shake</td>
+<td><code>afterburn/player.gd</code> changes <code>MainCamera.position</code> and local roll</td>
+<td><code>HIT_SHAKE_DURATION</code> 0.34 s; strength and decay below</td>
+</tr>
+<tr>
+<td>Damage tint and hit marker</td>
+<td><code>afterburn/hud.gd</code></td>
+<td>Damage alpha 0.23, fading at 0.7 per second; hit marker 0.12 s</td>
+</tr>
+</tbody></table></div>
+<p>Damage shake starts only after a hit is accepted by <code>get_damage()</code>. Its strength is the greater of the current strength and <code>clamp(applied_damage * 0.003, 0.045, 0.11)</code>. The remaining time resets to 0.34 seconds. A squared decay envelope reduces translation and roll to their cached resting values. The player&#39;s yaw and pitch holder rotations are not changed by this damage shake.</p>
+<p>To shorten the effect, reduce <code>HIT_SHAKE_DURATION</code>. To soften it, reduce the strength multiplier and both clamp bounds. To disable only damage shake, assign <code>hit_shake_strength = 0.0</code> where damage sets its strength. Removing the red HUD tint requires changing <code>damage_flash()</code> separately. Weapon recoil is controlled separately by the inherited camera script.</p>
+<p>Normal running targets an 85 degree FOV. Sights take priority and use the weapon&#39;s <code>focused_aim_fov</code>; the inherited base fallback is 75 degrees. Change FOV constants in <code>common/utils/active_camera.gd</code> and weapon aim FOVs in the weapon scenes. This shared camera script also affects other template scenes.</p>
+</section>
+<section data-guide-section><h2 id="8-health-armor-and-invulnerability">8 Health armor and invulnerability</h2>
+<p>The stock player starts with 100 health and 50 armor. <code>start_run()</code> replaces those values using permanent Hull and Armor ranks. The runner&#39;s maximum is <code>vital_capacity</code>; changing the inherited <code>MAX_HEALTH</code> constant alone does not tune the new system.</p>
+<p>An accepted hit follows these steps:</p>
+<pre><code class="language-text">applied damage = incoming damage * damage_resistance
+armor absorption = min(current armor, applied damage * 0.7)
+new armor = current armor - armor absorption
+new health = max(0, current health - (applied damage - armor absorption))
+</code></pre>
+<p>For example, 20 damage against an unmodified player with enough armor removes 14 armor and 6 health. With no armor, all 20 reaches health. Accepted damage grants 0.15 seconds of invulnerability, emits the inherited health signal, flashes the HUD, and starts hit shake. Exactly zero health ends the run.</p>
+<p>Dash grants 0.24 seconds of protection. Obstacle impact raises the remaining protection to at least 0.7 seconds. Selecting a field upgrade grants 2 seconds before the next encounter. Hits during invulnerability are ignored before armor, health, tint, and shake are updated.</p>
+<p>Falling below Y = -10 moves the player back to Y = 1 and attempts to deal 25 damage. This recovery does not rebuild or rewind the route.</p>
+</section>
+<section data-guide-section><h2 id="9-endless-route-streaming">9 Endless route streaming</h2>
+<p>Each saved district section is 100 meters long. Section index <code>i</code> is placed at Z = <code>-i * 100</code>. At startup and after restarting, sections -1, 0, 1, and 2 are loaded.</p>
+<p>The current section is calculated as <code>floor((43 - player.position.z) / 100)</code>. The streamer keeps the previous section, the current section, and two sections ahead. Missing sections are instantiated; out of range sections are queued for deletion. The offset 43 comes from the saved section&#39;s bounds: its ground runs from local Z = -57 to +43.</p>
+<p>Only four section instances are tracked. This is not an object pool: sections are freed and recreated. The world&#39;s coordinates keep increasing in magnitude; there is no floating origin reset. Very long uninterrupted sessions may eventually encounter floating point precision limits.</p>
+<h3 id="geometry-rules-for-a-seamless-section">Geometry rules for a seamless section</h3>
+<p>The saved foundation is 72 meters wide and 100 meters long, centered at Z = -7. The visible central road is 18 meters wide. Keep a collidable surface continuous across both ends. Avoid closing the ends with walls. Most playable action happens inside X = -9 to +9.</p>
+<p>Changing section length requires coordinated edits to placement in <code>_spawn_chunk()</code>, section calculation and retention in <code>_stream_course()</code>, the saved floor and apron geometry, and the obstacle and pickup positions in <code>_prepare_chunk()</code>. Changing only the floor size creates gaps or overlaps.</p>
+<p>World environment and directional lights are moved out of the initial section into <code>CourseLighting</code>. Fresh sections have those root children removed to avoid multiplying the lighting. Local point lights remain in every section. Keep those global environment and directional light nodes as direct children if you want this extraction logic to recognize them.</p>
+</section>
+<section data-guide-section><h2 id="10-editing-the-saved-map-and-supplied-props">10 Editing the saved map and supplied props</h2>
+<p>Open <strong><code>res://afterburn/district.tscn</code> directly</strong> to change the road&#39;s permanent geometry, cargo placement, wrecks, signs, lights, and skyline. Save the scene and restart the run. Every newly instantiated section uses that saved template.</p>
+<p><code>game.gd::build_map()</code> was used to create the saved section. Editing that function does not automatically overwrite <code>district.tscn</code>. Treat the saved scene as the live map source unless you deliberately rebuild it using the recipe later in this guide. A rebuild replaces manual scene edits. The main scene also has an external reference to the district, and <code>_init_course()</code> loads it directly, so deleting the scene is not a reliable way to trigger regeneration.</p>
+<p>The prop source is <code>res://resources/props/fps_demo_props.glb</code>. It contains named meshes including cargo, crate, barrel, block, and wreck. Saved barrier prefabs reuse the supplied crate and concrete block meshes. The optional map builder also looks up those names; update it if the asset names change.</p>
+<p>Saved prop meshes created by <code>_prop()</code> belong to the persistent <code>supplied_props</code> group. For direct child meshes in that group with <code>abs(local X) &lt; 10</code>, <code>_prepare_chunk()</code> attaches the obstacle script to direct StaticBody3D children and sets their destruction root to the mesh. These inner road props are solid impact obstacles. They survive both shots and player collisions; only the dedicated breakable barrier prefab can be destroyed. Decorative outer props remain ordinary cover.</p>
+<p>To add a matching road prop manually, use a mesh with a direct StaticBody3D child and CollisionShape3D, add the mesh to <code>supplied_props</code>, and put it inside the inner road. Keep the floor outside that group. Props are generally fitted with simple box collision based on mesh bounds, not exact mesh collision. These boxes can block shots through visually empty parts of a wreck.</p>
+<p>The current barrels are props or generic obstacles. They do not use the template&#39;s separate exploding barrel scene.</p>
+</section>
+<section data-guide-section><h2 id="11-obstacle-patterns-and-destruction">11 Obstacle patterns and destruction</h2>
+<p>Open <strong>afterburn/obstacles/route_pattern_0.tscn</strong> through <strong>route_pattern_3.tscn</strong> to edit obstacle placement in the 3D editor. The district contains a saved RunnerHazards instance of pattern 0. Streaming selects <code>posmod(section_index, 4)</code>; it retains pattern 0 where appropriate and loads the other saved patterns for other sections. Editing a pattern changes every future section that uses it.</p>
+<p>The three rows are at local Z = 8, -18, and -44, with lane centers at X = -6, 0, and +6. The first row leaves one lane clear. The second row requires jumping or sliding. The third row has laser fences with a clear neighboring lane, or a high sweep that can be slid under. Rows are 26 meters apart, about 1.63 seconds at stock speed. Low and high lasers span the 18 meter road. Full-height fences occupy 5.4 meters of a single lane, leaving the open lane accessible.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Saved prefab</th>
+<th>Behavior</th>
+<th>How to pass</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>solid_barrier.tscn</td>
+<td>Indestructible concrete prop; blocks movement and rounds</td>
+<td>Strafe into the open lane</td>
+</tr>
+<tr>
+<td>breakable_barrier.tscn</td>
+<td>Mint strips; 130 HP; the only destructible obstacle type</td>
+<td>Shoot it or collide with it; two stock rifle shots break it</td>
+</tr>
+<tr>
+<td>low_beam.tscn</td>
+<td>Indestructible supplied block mesh raised to Y = 1.25 by the pattern</td>
+<td>Slide under it</td>
+</tr>
+<tr>
+<td>low_laser.tscn</td>
+<td>Pink Area3D hazard from Y = 0.12 to 0.45</td>
+<td>Jump; sliding does not avoid it</td>
+</tr>
+<tr>
+<td>high_laser.tscn</td>
+<td>Pink Area3D hazard from Y = 1.15 to 1.70</td>
+<td>Slide</td>
+</tr>
+<tr>
+<td>laser_fence.tscn</td>
+<td>Pink grid from Y = 0.05 to 3.40</td>
+<td>Strafe into the gap; a normal jump does not clear it</td>
+</tr>
+</tbody></table></div>
+<p>Static barriers use player movement collisions. Laser fields use actual Area3D overlap with the player&#39;s capsule; they deal damage without blocking movement or bullets. Lasers and beams remain intact after contact and shots. Existing inner road props remain solid as well.</p>
+<p>The root Inspector exposes <strong>Kind</strong>, <strong>Hp</strong>, and <strong>Contact Damage</strong>. Kind must be <strong>breakable barrier</strong> for either shots or contact to destroy it. Body impacts attempt 20 damage; laser overlaps attempt 25. Accepted impacts reset combo and grant at least 0.7 seconds of contact protection. A protected dash can still break the breakable panel. Enemy shots cannot destroy panels. Destroying a panel with player damage awards 35 score; ramming it awards no score. The knife retains its short melee hit and can damage a breakable panel.</p>
+<p><code>get_damage()</code> ignores damage to all other obstacle kinds. <code>_break()</code> also verifies the kind before freeing its destruction root. Avoid giving arbitrary scenery the breakable kind. Edit a prefab to change all its instances, or enable Editable Children on an instance for a local visual or collision override.</p>
+<p>Warnings appear when a beam or laser is within 15 meters ahead. Increasing speed should be followed by a reaction time playtest. When editing patterns, preserve an open route: gaps for full-height fences, jumping clearance for low lasers, and sliding clearance for high lasers and beams.</p>
+</section>
+<section data-guide-section><h2 id="12-fps-weapons-and-ammunition">12 FPS weapons and ammunition</h2>
+<p>The player uses the existing <code>common/weapon/weapon.gd</code> and <code>common/managers/weapons_manager.gd</code>. Weapons are children of the original player scene. Their array order is <strong>Knife, Pistol, AssualtRifle, AssualtBurstRifle, LMG</strong>. Existing files and node names spell assault as <code>assualt</code>; preserve these identifiers unless you update all references.</p>
+<p>Select <strong>Player &gt; WeaponsManager</strong> and set <strong>Starting Weapon</strong> to an existing weapon child, for example <code>AssualtRifle</code> (default) or <code>Pistol</code>. Use the Inspector node picker. <code>afterburn/weapons_manager.gd</code> previews that existing weapon in the editor and equips it on each new run. The path must identify a member of Weapons Array. An invalid path warns and falls back to the first entry.</p>
+<h3 id="saved-weapon-overrides">Saved weapon overrides</h3>
+<p>The Afterburn player scene saves every ranged weapon&#39;s <strong>Is Projectile</strong> as enabled, <strong>Projectile Scene</strong> as afterburn/projectiles/player_round.tscn, <strong>Firing Distance</strong> as <strong>150 meters</strong>, and <strong>Burst Mode</strong> as enabled except for Pistol. Change these fields on the weapon child in <code>afterburn/player.tscn</code>; startup respects them. These are inherited scene overrides, so changing the original weapon scene may be masked by the saved Afterburn override. The field <code>burst_mode</code> means held repeated firing; the named burst rifle is not a distinct three shot burst implementation.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Weapon</th>
+<th>Base damage</th>
+<th>Shot cooldown</th>
+<th>Magazine</th>
+<th>Reload time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Knife</td>
+<td>100</td>
+<td>1.0 s</td>
+<td>Melee, no ammo consumption</td>
+<td>Not used</td>
+</tr>
+<tr>
+<td>Pistol</td>
+<td>100</td>
+<td>0.25 s</td>
+<td>12</td>
+<td>1.5 s</td>
+</tr>
+<tr>
+<td>AssualtRifle</td>
+<td>65</td>
+<td>0.1 s</td>
+<td>40</td>
+<td>1.5 s</td>
+</tr>
+<tr>
+<td>AssualtBurstRifle</td>
+<td>100</td>
+<td>0.1 s</td>
+<td>40</td>
+<td>1.5 s</td>
+</tr>
+<tr>
+<td>LMG</td>
+<td>60</td>
+<td>0.1 s</td>
+<td>250</td>
+<td>4.0 s</td>
+</tr>
+</tbody></table></div>
+<p>These are inherited script defaults plus scene overrides, before upgrades. Edit a weapon scene&#39;s root properties for damage, cooldown, magazine, reload, animation names, spread, sound, and aim FOV. Edit weapon child Inspector overrides in <code>afterburn/player.tscn</code> for range and automatic fire policy. Melee keeps its scene&#39;s one meter range.</p>
+<h3 id="shot-and-reload-flow">Shot and reload flow</h3>
+<p>Input emits Global.fire_input. The manager calls the active weapon&#39;s try_fire(). An accepted shot consumes magazine ammo and plays the existing animation, sound, muzzle effect, cooldown, and recoil. Ranged Afterburn weapons call <code>_launch_projectile()</code> rather than applying immediate damage. A camera query finds the aim point for muzzle convergence; a short camera-to-muzzle query prevents firing through nearby cover. Neither query damages anything.</p>
+<p>The round is parented to the game, so it moves independently of the running player and weapon viewport. Its next physics step sweeps only that frame&#39;s travel segment. On impact it calls get_damage() once, creates a spark, and frees itself. Solid world geometry stops rounds even if it has no damage method. Laser Areas do not stop rounds. The round disappears after travelling Firing Distance. The knife remains a short-range melee query.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Weapon</th>
+<th>Projectile Speed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Pistol</td>
+<td>80 m/s</td>
+</tr>
+<tr>
+<td>AssualtRifle</td>
+<td>90 m/s</td>
+</tr>
+<tr>
+<td>AssualtBurstRifle</td>
+<td>110 m/s</td>
+</tr>
+<tr>
+<td>LMG</td>
+<td>85 m/s</td>
+</tr>
+</tbody></table></div>
+<p>Change Projectile Speed on a weapon child in afterburn/player.tscn. Edit player_round.tscn for its mint Round and Trail meshes and materials. The generic weapon script keeps its hitscan path available to other template scenes whose Is Projectile is false. Keep Is Projectile enabled and Projectile Scene assigned on Afterburn ranged weapons. Damage and upgrades are copied into each round when fired; moving targets can dodge rounds already in flight.</p>
+<p>Ammo reserves live in <code>common/autoloads/bullets.gd</code>. Reloading transfers reserves to the magazine; reserves are not reduced for each shot fired from a magazine. Starting a run or selecting any field upgrade fills every magazine and every finite reserve to its maximum. A pickup adds 80 to each finite reserve without filling magazines. The knife uses infinite ammo.</p>
+<p>Both rifle nodes use the same assault reserve. Its maximum is 480, pistol reserve maximum is 120, and LMG reserve maximum is 400. Change reserve limits in <code>Bullets.ammo_inventory</code>, not just the weapon&#39;s magazine property.</p>
+</section>
+<section data-guide-section><h2 id="13-spaceship-enemy-classes">13 Spaceship enemy classes</h2>
+<p>Enemy availability and threat-tier scaling are in game.gd::_spawn_enemy(). Four ranged classes and the boss use ship.gd. The Charger uses a saved enemies/charger.tscn prefab and charger.gd, extending shared ship damage and reward handling. Its base health and attack tuning are Inspector properties on that prefab.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Mesh file</th>
+<th>Tier 1 health</th>
+<th>Attack</th>
+<th>Projectile</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Striker</td>
+<td><code>ship1.obj</code></td>
+<td>145</td>
+<td>One bolt; 0.8 s telegraph</td>
+<td>15 m/s, 14 damage</td>
+</tr>
+<tr>
+<td>Sniper</td>
+<td><code>ship3.obj</code></td>
+<td>130</td>
+<td>One bolt; 1.1 s telegraph</td>
+<td>21 m/s, 24 damage</td>
+</tr>
+<tr>
+<td>Guardian</td>
+<td><code>ship4.obj</code></td>
+<td>320</td>
+<td>Three bolt spread; 0.8 s telegraph</td>
+<td>15 m/s, 14 damage each</td>
+</tr>
+<tr>
+<td>Interceptor</td>
+<td><code>ship7.obj</code></td>
+<td>180</td>
+<td>One bolt; faster, wider side motion</td>
+<td>15 m/s, 14 damage</td>
+</tr>
+<tr>
+<td>Charger</td>
+<td><code>ship2.obj</code></td>
+<td>195</td>
+<td>1.6 s red warning, then a straight 125 m/s rush</td>
+<td>Contact: 80 base damage</td>
+</tr>
+<tr>
+<td>Civic Enforcer</td>
+<td><code>ship5.obj</code></td>
+<td>2900</td>
+<td>Two to four bolts according to phase</td>
+<td>15 m/s, 14 damage each</td>
+</tr>
+</tbody></table></div>
+<p>All mesh paths are under <code>res://resources/spaceships/</code>. OBJ files load as Mesh resources. The Charger has a saved Hull MeshInstance3D; the other ship classes assign their visual nodes at runtime. Replacing an OBJ with a GLB PackedScene requires adapting the loader, not only changing a file extension.</p>
+<p>Visual width is normalized from mesh bounds: ordinary ships are 2.9 meters, Guardians 4 meters, and the boss 10.5 meters. Spherical hit radii are 1.5, 2.0, and 4.6 meters respectively. Change visual size and hit size together if you want accurate looking hits.</p>
+<p>These ships are StaticBody3D nodes moved directly by code. The following hover description applies to the ranged ships and boss. They do not use navigation meshes, rigid body simulation, or collision avoidance. They retain their spawn X anchor and a forward offset from the runner while adding sinusoidal motion. Interceptors use more aggressive lateral motion. The boss has a wider sweep.</p>
+<h3 id="enemy-flight-corridor-and-closer-spawn-points">Enemy flight corridor and closer spawn points</h3>
+<p>The saved main scene includes <strong>Afterburn &gt; EnemyFlightCorridor</strong>. Open <strong>afterburn/enemy_corridor.tscn</strong> to edit its reusable defaults, or expand the instance in the main scene. It contains an invisible Area3D, a Bounds CollisionShape3D, six Marker3D children under SpawnPoints, and a separate BossSpawn marker. No runtime mesh is needed to display this volume; select Bounds to inspect the box gizmo in the editor.</p>
+<p>The default Bounds box is 16 meters wide, slightly narrower than the 18 meter road. Its horizontal limits are X = -8 to +8. The movement rule reserves space for each ship&#39;s current rotated hull, its spherical hitbox, and a 0.15 meter edge margin. Banking and turning therefore cannot move the hull or hitbox through the side limits. Regular ships and the boss use this constraint after every movement update. The Charger is constrained before its red path is locked, then keeps that fixed X throughout the charge.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Setting or node</th>
+<th>Default</th>
+<th>Edit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bounds &gt; Shape &gt; Size X</td>
+<td>16 m</td>
+<td>Width of the invisible enemy corridor</td>
+</tr>
+<tr>
+<td>SpawnPoints</td>
+<td>Six saved markers</td>
+<td>Position regular enemy arrivals in the 3D editor</td>
+</tr>
+<tr>
+<td>BossSpawn</td>
+<td>26 m ahead, Y = 5.5</td>
+<td>Boss arrival marker</td>
+</tr>
+<tr>
+<td>Near Distance</td>
+<td>12 m</td>
+<td>Closest forward center distance for ranged enemies</td>
+</tr>
+<tr>
+<td>Far Distance</td>
+<td>30 m</td>
+<td>Farthest forward center distance for ranged enemies</td>
+</tr>
+<tr>
+<td>Edge Margin</td>
+<td>0.15 m</td>
+<td>Extra horizontal clearance outside the full ship extent</td>
+</tr>
+<tr>
+<td>Follow Offset</td>
+<td>30 m</td>
+<td>Corridor origin follows this far ahead of the player</td>
+</tr>
+</tbody></table></div>
+<p>Default regular markers spawn enemies 14 to 26 meters ahead, at X = -4 to +4 and Y = 3 to 5. These replace the old off-road spawn positions and extra forward offset. Regular enemy movement stays 12 to 30 meters ahead, including after dashes or large advances, so ships cannot be left behind the camera.</p>
+<p>Marker positions are local to the moving corridor. With Follow Offset = 30, local marker Z = 14 gives a 16 meter forward distance. Increasing marker Z brings that spawn closer. Corridor Y = 4 plus local marker Y gives the world altitude. Keep marker distances inside Near/Far Distance and keep the corridor unrotated for the current straight negative-Z road. The box&#39;s Y/Z dimensions provide editor context; horizontal Bounds width and the separate Near/Far settings enforce combat limits.</p>
+<p>The Area has collision layer 0, collision mask 0, and monitoring disabled. It does not block the player, projectiles, or ships through physics collisions; enemy movement explicitly applies its limits. Charger rushes may pass the player as part of their attack.</p>
+<h3 id="charger-red-path-rush">Charger: red-path rush</h3>
+<p>Open <strong>res://afterburn/enemies/charger.tscn</strong> to inspect and edit the ship. Its Local scene tree contains Hull, CollisionShape3D, WarningBeacon, EngineLeft, EngineRight, HealthLabel, AttackStatus, and WarningPath with its DangerStrip and two red edges. These nodes are saved in the prefab. The source mesh is the supplied ship2.obj, centered and scaled to 3.2 meters wide. Its spherical hit radius is 1.4 meters.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Root Inspector property</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Max Hp</td>
+<td>195</td>
+<td>Three stock rifle hits at tier 1; the normal tier health multiplier still applies</td>
+</tr>
+<tr>
+<td>Spawn Distance</td>
+<td>60 m</td>
+<td>Closer warning arrival, inside the 150 m weapon range and 170 m camera far plane</td>
+</tr>
+<tr>
+<td>Warning Duration</td>
+<td>1.6 s</td>
+<td>Stationary, visible warning before acceleration into the rush</td>
+</tr>
+<tr>
+<td>Charge Speed</td>
+<td>125 m/s</td>
+<td>World speed toward positive Z, against the runner&#39;s negative-Z travel</td>
+</tr>
+<tr>
+<td>Ram Damage</td>
+<td>80</td>
+<td>Raw tier-1 impact damage before ordinary armor, resistance, and invulnerability</td>
+</tr>
+<tr>
+<td>Pass Distance</td>
+<td>24 m</td>
+<td>Frees the ship once it has passed this far behind the current player</td>
+</tr>
+</tbody></table></div>
+<p>The spawn picks the nearest lane center at X = -6, 0, or +6. It locks that X immediately. The red ground strip and edges mark a fixed world-space flight path; strafing does not retarget it. Warning width includes the ship radius plus the player&#39;s capsule radius. WarningPath is a top-level Node3D, so its position stays fixed while its parent ship rushes forward.</p>
+<p>The collider remains on enemy layer 2 throughout the warning and charge. There is no shield or invulnerability phase: travelling player rounds can damage and destroy it even at the initial 60 m distance. Cover still blocks player rounds. Destroying the Charger immediately hides its red warning, cancels the rush, and awards the normal ship reward.</p>
+<p>The ship sweeps a sphere against the player&#39;s capsule using relative movement over the whole physics frame. A fast rush therefore cannot skip a player between ticks. It attempts damage at most once. Armor, resistance, dash invulnerability, and hit screen shake use the normal player damage path. At tier 1, 80 raw damage leaves a full-health unarmored player at 20 health. With 50 armor, it removes that armor and 30 health.</p>
+<p>Strafing out of the red path lets the Charger pass. Passing removes the ship and warning without granting a kill or credits. It does not block encounter completion. The charge is not a projectile and ordinary road cover does not stop its flight path; the marked line remains the dodge cue.</p>
+<p>The director introduces a Charger as the second spawn in the first encounter and includes it in later random selections. Automatic spawning allows only one active Charger at a time. Explicit debug spawns can bypass that limit.</p>
+<p>For an isolated test, open <strong>afterburn/tests/charger_preview.tscn</strong> and press F6. It starts a run with one immediate Charger and no scheduled follow-up enemies; the fixture disables profile reads and writes. Its normal warning lasts 1.6 seconds, so prepare to strafe or shoot as the scene starts.</p>
+</section>
+<section data-guide-section><h2 id="14-ship-attacks-and-projectile-collision">14 Ship attacks and projectile collision</h2>
+<p>The ranged ship classes begin with a random 2.0 to 3.6 second shot timer. The Charger uses the separate warning-and-rush sequence above. After each ordinary salvo, the timer resets randomly to 2.5 to 4.0 seconds. A telegraph follows the timer, so the total interval between attacks includes both durations.</p>
+<p>During a telegraph, the core pulses and the ship records the player&#39;s X and target height. When firing, it updates the forward target using the runner&#39;s current Z velocity and an approximate travel time. This gives the player a chance to dodge the locked lateral aim while the projectile leads forward motion. It is an approximation, not a full intercept solver.</p>
+<p><code>game.gd::fire_bolt()</code> creates a bolt and applies threat tier damage scaling. Each physics frame, <code>bolt.gd</code> raycasts from the old position to the next position, avoiding ordinary tunneling from checking only the endpoint. It excludes its shooter, checks physics bit 1, attempts damage on the first hit, spawns a spark, and frees itself. Missed bolts expire after 5 seconds.</p>
+<p>Bolt sphere and tail dimensions, tint, emission, and lifetime are in <code>bolt.gd</code>. Attack damage and speed are passed from <code>ship.gd::_fire()</code>, so changing the bolt script&#39;s default damage alone will not rebalance spawned attacks.</p>
+</section>
+<section data-guide-section><h2 id="15-encounters-boss-phases-and-threat-tiers">15 Encounters boss phases and threat tiers</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Displayed encounter</th>
+<th>Name</th>
+<th>Ship quota</th>
+<th>Simultaneous cap</th>
+<th>Available classes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Freight Arrival</td>
+<td>5</td>
+<td>4</td>
+<td>Striker, Interceptor, Charger; second spawn is a Charger</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Signal Jam</td>
+<td>7</td>
+<td>4</td>
+<td>Adds Sniper</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Container Siege</td>
+<td>8</td>
+<td>5</td>
+<td>Adds Guardian</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Dead Frequency</td>
+<td>9</td>
+<td>5</td>
+<td>All five ordinary classes</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Redline</td>
+<td>10</td>
+<td>6</td>
+<td>All five ordinary classes</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Last Transmission</td>
+<td>12</td>
+<td>6</td>
+<td>All five ordinary classes</td>
+</tr>
+</tbody></table></div>
+<p>There are 51 scheduled ordinary ships before the boss. The first run delay is 2 seconds; subsequent encounter delays are 2.3 seconds. Normal spawn spacing is 1.8 seconds, subject to the living ship cap. The internal encounter index starts at zero.</p>
+<p>All six encounter clears offer an upgrade, including the sixth clear before the boss. Completion requires the full quota to have spawned and no living enemies to remain.</p>
+<h3 id="civic-enforcer">Civic Enforcer</h3>
+<p>The boss starts after encounter index reaches 6. Phase 2 begins below 67 percent health and phase 3 below 33 percent. Each phase change attempts to spawn one Interceptor escort if fewer than five enemies are alive.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Bolts per salvo</th>
+<th>Shot timer after firing</th>
+<th>Telegraph</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>2</td>
+<td>2.15 s</td>
+<td>0.8 s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>3</td>
+<td>1.8 s</td>
+<td>0.8 s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+<td>1.45 s</td>
+<td>0.8 s</td>
+</tr>
+</tbody></table></div>
+<p>Killing the boss immediately wins the run; remaining escorts do not need to be cleared. There is no later endless combat cycle in the current director.</p>
+<p>Winning increases the profile tier by one, capped at 10. Tier is automatically used on the next run; there is no current tier selection menu. Health is multiplied by <code>1 + (tier - 1) * 0.18</code>. Enemy bolt damage and Charger ram damage are multiplied by <code>1 + (tier - 1) * 0.12</code>. Health scaling is applied in _spawn_enemy(); damage scaling is applied in fire_bolt() or charger.gd::_sweep_player().</p>
+<p>Changing the number of encounters requires more than editing <code>QUOTAS</code>. Update <code>ENCOUNTERS</code>, comparisons against 6 in the director and HUD, the six HUD segments, the name clamp to 0 through 5, progress text, and tests. A later refactor could derive these limits from the quota array length.</p>
+</section>
+<section data-guide-section><h2 id="16-temporary-field-upgrades">16 Temporary field upgrades</h2>
+<p>On an encounter clear, <code>MODS</code> is copied, shuffled, and reduced to three choices. The player installs one. All effects last only until a new run and can be chosen repeatedly across encounters.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Upgrade ID</th>
+<th>Display name</th>
+<th>Implemented effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>damage</code></td>
+<td>Hot Chamber</td>
+<td>Every weapon&#39;s damage multiplied by 1.25</td>
+</tr>
+<tr>
+<td><code>armor</code></td>
+<td>Reactive Shell</td>
+<td>Adds 40 armor, capped at 150; damage resistance multiplied by 0.9</td>
+</tr>
+<tr>
+<td><code>health</code></td>
+<td>Second Heart</td>
+<td>Adds 25 maximum health and fully repairs health</td>
+</tr>
+<tr>
+<td><code>speed</code></td>
+<td>Ghost Drive</td>
+<td>Mobility multiplied by 1.15, affecting running and strafing</td>
+</tr>
+<tr>
+<td><code>reload</code></td>
+<td>Quick Feed</td>
+<td>Reload time multiplied by 0.75</td>
+</tr>
+<tr>
+<td><code>rate</code></td>
+<td>Overclock</td>
+<td>Shot cooldown multiplied by 0.82</td>
+</tr>
+</tbody></table></div>
+<p>Every selection also repairs 30 health up to maximum, adds 20 armor up to 150, fills magazines and reserves, clears live enemy bolts, and grants 2 seconds of invulnerability. Reactive Shell therefore adds up to 60 armor when combined with this common resupply. Choosing health is already a full repair. These shared effects are below the <code>match</code> block in <code>choose_upgrade()</code>.</p>
+<p>Overclock&#39;s code reduces the interval by 18 percent; this corresponds to about 22 percent more shots per second. Repeated multiplier upgrades compound. Three Hot Chambers produce <code>1.25 * 1.25 * 1.25</code> times the pre-upgrade damage, rather than adding 75 percentage points.</p>
+<p>To add a new field upgrade, add its ID, name, and description to <code>MODS</code>, implement that ID in <code>choose_upgrade()</code>, ensure any new per-run variable resets when a new player is created or in <code>start_run()</code>, and add a gameplay check. Do not change only the card text.</p>
+</section>
+<section data-guide-section><h2 id="17-pickups-score-and-momentum">17 Pickups score and momentum</h2>
+<h3 id="supplies">Supplies</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Pickup</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Repair</td>
+<td>Adds 30 health up to <code>vital_capacity</code></td>
+</tr>
+<tr>
+<td>Armor</td>
+<td>Adds 30 armor up to 150</td>
+</tr>
+<tr>
+<td>Ammo</td>
+<td>Adds 80 to every finite reserve, up to each reserve&#39;s limit</td>
+</tr>
+</tbody></table></div>
+<p>Route supplies are placed 9 meters after each procedural row, at the nominal open lane, cycling among ammo, health, and armor. Low beam rows still use the calculated nominal lane for the following pickup. Supplies rotate and bob, and collect automatically within a 2 meter radius of the player&#39;s mid-body target.</p>
+<p>Ordinary ship deaths have a 65 percent pickup chance. The drop type cycles using the total kill count. Its X is clamped into the running corridor. Route supplies are children of their section and disappear with it. Ship drops are children of the game root and have no age or distance expiry, so uncollected drops can accumulate during a very long run.</p>
+<p>Add a pickup type consistently in the color map, label map, <code>_collect()</code> behavior, and whichever drop lists should use it. <code>add_pickup()</code> alone only creates its presentation.</p>
+<h3 id="score-and-credits">Score and credits</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Score</th>
+<th>Banked credits</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>One new whole meter traveled</td>
+<td>2</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Ordinary ship kill</td>
+<td><code>round(250 * combo)</code></td>
+<td>25 before Salvage; Guardian uses 40</td>
+</tr>
+<tr>
+<td>Boss kill</td>
+<td><code>round(5000 * combo)</code></td>
+<td>500, not multiplied by Salvage</td>
+</tr>
+<tr>
+<td>Obstacle destroyed through damage</td>
+<td>35</td>
+<td>None</td>
+</tr>
+</tbody></table></div>
+<p>Each ship kill first adds 0.25 to combo, up to 5, then uses that updated multiplier for scoring. A kill refreshes a 6 second combo timer. Once the timer expires, combo moves toward 1 at 0.6 per second. Obstacle impact immediately resets it to 1. Distance points are not multiplied by combo.</p>
+<p>Ordinary kill credits are <code>round(base_credit * (1 + Salvage_rank * 0.08))</code>. They are written immediately to the profile. Score and banked credits are separate currencies: spending workshop credits does not reduce score.</p>
+</section>
+<section data-guide-section><h2 id="18-permanent-upgrades-and-saves">18 Permanent upgrades and saves</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Rank array index</th>
+<th>Workshop name</th>
+<th>Effect per rank</th>
+<th>Application</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>Hull</td>
+<td>+10 starting maximum health</td>
+<td><code>start_run()</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td>Ballistics</td>
+<td>+6 percent base weapon damage</td>
+<td><code>start_run()</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Mobility</td>
+<td>+4 percent starting Mobility</td>
+<td><code>start_run()</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Armor</td>
+<td>+10 starting armor</td>
+<td><code>start_run()</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Salvage</td>
+<td>+8 percent ordinary kill credits</td>
+<td><code>ship_destroyed()</code></td>
+</tr>
+</tbody></table></div>
+<p>Each track has 10 ranks. The next rank costs <code>100 + current_rank * 90</code> credits. Buying changes the saved rank; character stat bonuses are reapplied on the next run. The rank array&#39;s order is part of the save format. Reordering the workshop labels without migrating ranks gives existing players the wrong bonuses.</p>
+<p>The save file is <code>user://afterburn_profile_v1.json</code>. On the current Windows project configuration it normally resolves below <code>%APPDATA%/Godot/app_userdata/fps-demo/</code>. You can confirm or open Godot&#39;s user data folder from the editor instead of guessing its location.</p>
+<pre><code class="language-json">{
+  &quot;credits&quot;: 0,
+  &quot;runs&quot;: 0,
+  &quot;best&quot;: 0,
+  &quot;wins&quot;: 0,
+  &quot;tier&quot;: 1,
+  &quot;ranks&quot;: [0, 0, 0, 0, 0]
+}
+</code></pre>
+<p>This saves the profile, not a resumable run. Temporary upgrades, current health, active encounter, road position, and live enemies are not restored after quitting. The run counter counts starts. Best score is updated on a normal finish or abandon; a forced process close can keep kill credits without recording the latest best score.</p>
+<p>Loading clamps numeric counters, tier 1 through 10, and five ranks 0 through 10. A missing or invalid profile falls back to defaults where the loader handles it. Writes replace the JSON file directly; there is no atomic replacement or built-in backup. If you extend the format, supply defaults for new fields and plan migrations before changing <code>ranks</code> or the save filename.</p>
+<p>To reset your own test progress, stop the game, back up this specific JSON file, then rename or remove that file. Do not remove the whole <code>fps-demo</code> user data folder: other project data and Ziva data can live alongside it. Renaming the project can change the user data path and make the existing profile appear missing.</p>
+</section>
+<section data-guide-section><h2 id="19-hud-menus-and-presentation">19 HUD menus and presentation</h2>
+<p>The interface is built in <code>afterburn/hud.gd</code>; there is no saved HUD layout scene for Afterburn. <code>_ready()</code> builds gameplay elements, while <code>menu()</code>, <code>workshop()</code>, <code>rewards()</code>, <code>paused()</code>, and <code>result()</code> build overlays. <code>new_overlay()</code> hides gameplay elements and creates the backdrop. <code>clear_overlay()</code> restores the gameplay elements.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Color</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>INK</code></td>
+<td><code>#10141b</code></td>
+<td>Dark UI background and primary button text</td>
+</tr>
+<tr>
+<td><code>PAPER</code></td>
+<td><code>#f1eddf</code></td>
+<td>Main text</td>
+</tr>
+<tr>
+<td><code>MINT</code></td>
+<td><code>#a4ffcb</code></td>
+<td>Health, primary actions, and highlights</td>
+</tr>
+<tr>
+<td><code>ORANGE</code></td>
+<td><code>#ffaf74</code></td>
+<td>Warnings, rewards, and momentum</td>
+</tr>
+<tr>
+<td><code>MUTED</code></td>
+<td><code>#98a7ad</code></td>
+<td>Supporting text</td>
+</tr>
+</tbody></table></div>
+<p>The font is <code>resources/fonts/ShareTech-Regular.ttf</code>. The logical UI reference is 1280 by 720, with <code>canvas_items</code> stretch in Project Settings. Some controls use anchors, but many menu dimensions and offsets are fixed pixels. Longer labels, more cards, or a different aspect ratio require a layout check.</p>
+<p>The top HUD shows distance and speed, encounter segments, live hostiles, score, and credits. The bottom shows health, armor, momentum, dash readiness, and current weapon ammunition. Sights hide the normal crosshair. Boss health uses a separate bar and phase label.</p>
+<p>When changing dash cooldown, update both <code>player.gd</code> and the HUD&#39;s <code>dash_bar.max_value</code> and subtraction. When changing encounter count, update segment creation and the HUD&#39;s fixed boss checks. Keep progress bar style padding at zero; button style padding is larger and can force meters to become unexpectedly thick.</p>
+</section>
+<section data-guide-section><h2 id="20-audio-visual-effects-and-rendering-layers">20 Audio visual effects and rendering layers</h2>
+<p>Footstep assets and AudioStreamPlayer3D volumes are in <code>player/player.tscn</code> under <code>AudioManager</code>. The new runner&#39;s cadence is 0.27 seconds divided by <code>sqrt(mobility)</code>. Footsteps stop during slides; landing uses the existing jump and landing sound. Surface detection comes from <code>common/managers/audio_manager.gd</code> and tests the collider&#39;s <code>metal</code> group. The inherited metal branch currently plays the ground sound alongside the metal sound.</p>
+<p>Existing weapon sounds, muzzle effects, and reload animations are reused. Player projectile impacts use spark effects; the generic hitscan path in other template scenes can still create decals. <code>game.gd::spark()</code> adds six emissive fragments with tweens and removes their parent after 0.6 seconds. The template bullet decal script removes decals after 5 seconds.</p>
+<h3 id="physics-layers-and-render-layers-are-different-systems">Physics layers and render layers are different systems</h3>
+<p>Physics masks are integer bitmasks. A value of 5 means bits for layers 1 and 3, not physics layer 5.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Object or query</th>
+<th>Physics configuration</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Player</td>
+<td>Layer 1; original default floor mask</td>
+<td>Stand on the road and receive enemy bolt hits</td>
+</tr>
+<tr>
+<td>Ships</td>
+<td>Layer 2; mask 0</td>
+<td>Receive player rounds without physical movement collision</td>
+</tr>
+<tr>
+<td>Road, solid cover, and breakable panels</td>
+<td>Layer value 5, meaning layers 1 and 3</td>
+<td>Block player movement and both factions&#39; rounds</td>
+</tr>
+<tr>
+<td>Laser Areas</td>
+<td>Layer value 16 (physics layer 5), mask 1</td>
+<td>Detect the player without blocking rounds</td>
+</tr>
+<tr>
+<td>Player round sweep and aim queries</td>
+<td>Mask value 7; exclude player RID</td>
+<td>Detect world, cover, and ships; apply damage only on round impact</td>
+</tr>
+<tr>
+<td>Player weapon ray</td>
+<td>Mask value 6, meaning layers 2 and 3</td>
+<td>Hit ships and cover while ignoring the player layer</td>
+</tr>
+<tr>
+<td>Enemy bolt ray</td>
+<td>Mask value 1</td>
+<td>Hit player and world; pass through ships</td>
+</tr>
+</tbody></table></div>
+<p>Render layer 1 is the world and render layer 2 is used by first person weapon visuals. The main camera excludes the weapon render layer. The transparent weapon SubViewport camera renders layer 2 and copies the main camera transform. Keep its container&#39;s stretch behavior; manually assigning a SubViewport size while its parent stretches it is rejected by Godot.</p>
+<p>The district directional lights use render layer value 3 so they are available in both world and weapon views. If the weapon goes dark while the map looks correct, check those light visibility layers and the two camera cull masks before replacing materials.</p>
+</section>
+<section data-guide-section><h2 id="21-practical-editing-recipes">21 Practical editing recipes</h2>
+<h3 id="make-the-runner-faster-or-slower">Make the runner faster or slower</h3>
+<p>Change Run Speed on the root Inspector in afterburn/player.tscn. Review the minimum speed assertion in the integration test if you deliberately go below 16. Playtest the 26 meter obstacle spacing, 15 meter beam warning, strafe response, jump distance, and fixed dash speed. A slower footstep interval means a larger <code>RUN_STEP_INTERVAL</code>; bob and cadence both use it.</p>
+<h3 id="make-hit-shake-gentler-without-changing-aiming">Make hit shake gentler without changing aiming</h3>
+<p>Reduce <code>HIT_SHAKE_DURATION</code>, the <code>applied * 0.003</code> multiplier, and the 0.045 to 0.11 strength limits in <code>get_damage()</code>. Leave the cached rest position and roll reset in <code>_update_hit_shake()</code> intact. Test a hit during mouse movement, repeated hits, an invulnerable hit, and the return to rest. The gun recoil effect is a different script.</p>
+<h3 id="add-a-new-spaceship-class">Add a new spaceship class</h3>
+<ol>
+<li>Add or import the mesh under <code>resources/spaceships</code>.</li>
+<li>Add its class key and health to <code>_spawn_enemy()</code> and include it in the availability list when desired.</li>
+<li>Extend <code>ship.gd</code> mesh and tint maps. The current mesh lookup builds <code>ship%d.obj</code>; alter that loader if your asset uses another naming or resource type.</li>
+<li>Define its width, hit radius, movement, telegraph, salvo, damage, and speed rather than relying accidentally on the default branches.</li>
+<li>Decide its score, credit value, and drop behavior in <code>ship_destroyed()</code> if it differs from ordinary ships.</li>
+<li>Test it with the original weapon ray and with the moving runner. Check health scaling at later tiers.</li>
+</ol>
+<h3 id="add-a-weapon-or-change-the-starting-weapon">Add a weapon or change the starting weapon</h3>
+<ol>
+<li>Duplicate a compatible weapon scene and set its root properties and arms, animation, sound, and muzzle references.</li>
+<li>Add the new instance under WeaponsManager in <code>afterburn/player.tscn</code> (or the original player scene if it should be shared with other template scenes).</li>
+<li>Add it to the manager&#39;s exported <code>weapons_array</code> in the desired wheel order.</li>
+<li>Add or reuse an ammo type in <code>Bullets</code> and check reserve limits.</li>
+<li>Set Firing Distance, Burst Mode, Is Projectile, Projectile Scene, and Projectile Speed on the new weapon child in the Afterburn player scene.</li>
+<li>Select WeaponsManager and choose the new child in Starting Weapon. Verify the editor preview, starting selection, switching, and reloading. Update the stock rifle test if you intentionally change the project default.</li>
+</ol>
+<h3 id="change-map-art-without-changing-the-runner-course">Change map art without changing the runner course</h3>
+<p>Edit <code>district.tscn</code>, keep the 100 meter seams and center corridor, then restart. Move background props, retint cargo, adjust local lights, or replace signs there. Keep low road collision shapes aligned with their visual meshes. Edit obstacle rows in the four saved afterburn/obstacles/route_pattern_N.tscn scenes. Their saved instances are visible in the Local scene tree. Pattern 0 is also instanced under district.tscn &gt; RunnerHazards.</p>
+<h3 id="rebuild-the-district-from-code">Rebuild the district from code</h3>
+<p>Use this only when you want <code>build_map()</code> to replace the saved map. Save a copy of <code>district.tscn</code> first. Create a temporary EditorScript in Godot, paste the code below, and run it from the Script editor&#39;s Run command. Run it with gameplay stopped, then reload the saved district scene.</p>
+<pre><code class="language-gdscript">@tool
+extends EditorScript
+
+func _run() -&gt; void:
+	var builder := Node3D.new()
+	builder.set_script(load(&quot;res://afterburn/game.gd&quot;))
+	var district: Node3D = builder.build_map()
+	_assign_owner(district, district)
+	var packed := PackedScene.new()
+	var result := packed.pack(district)
+	if result == OK:
+		result = ResourceSaver.save(packed, &quot;res://afterburn/district.tscn&quot;)
+	print(&quot;District rebuild result: &quot;, result)
+	builder.free()
+
+func _assign_owner(node: Node, scene_root: Node) -&gt; void:
+	for child in node.get_children():
+		child.owner = scene_root
+		_assign_owner(child, scene_root)
+</code></pre>
+<p>Assigning owners is necessary so generated children are included in the packed scene. Do not call the game&#39;s <code>_ready()</code> to perform a rebake: it initializes a playable run and UI rather than only map geometry.</p>
+<h3 id="make-combat-endless-after-the-boss">Make combat endless after the boss</h3>
+<p>This is a design extension, not a current toggle. Replace the boss death path that calls <code>finish_run(true)</code> with an explicit cycle transition. Reset wave counters, clean remaining escorts and bolts according to your rules, decide which temporary upgrades persist, and update the tier and HUD. Keep arrays and the fixed encounter checks consistent. Do not simply increment the encounter index indefinitely: normal quota indexing and the HUD assume six encounters.</p>
+</section>
+<section data-guide-section><h2 id="22-testing-and-diagnosing-edits">22 Testing and diagnosing edits</h2>
+<p>Open <code>res://afterburn/tests/integration.tscn</code> and run that scene, or use the command below from the project root with your Godot executable on PATH. If it is not on PATH, replace <code>godot</code> with the full executable path.</p>
+<pre><code class="language-text">godot --headless --path . res://afterburn/tests/integration.tscn
+</code></pre>
+<p>The last successful suite reported <strong>83 of 83 checks passed</strong>. It checks the saved scene contains the runner and visible rifle before startup, the saved game reference, reuse and revival of the same player, Inspector starting weapon changes, clearing temporary weapon stats and timers, projectile launch without instant damage, visible travel and delayed ship damage, intact solid cover stopping rounds, breakable-only shots and ramming, enemy fire leaving panels intact, laser overlap damage and jump/slide/gap clearance, projectile hits and cover blocking, armor, death at zero health, immediate damage shake and return without aim drift, rewards, pause and resume, pickups, six encounter transitions, boss phases and victory, permanent ranks, automatic running, slide collision height, unchanged speed while W is held or sights are used, distant route streaming, road collision, ship following, the Charger&#39;s saved scene, projectile vulnerability at the closer spawn distance, warning delay, fixed flight path, charge vulnerability, safe strafing, 80-damage swept impact, one-hit limit, screen shake, pause, rewards, cleanup, saved corridor and spawn markers, closer arrivals, full hull and hitbox containment while moving, forward distance limits, and following the endless route.</p>
+<p>The integration fixture overrides profile load and save, and mutes player audio streams. It does not alter your banked credits. The boss, reward, and charger preview scenes also disable profile loading and writing; they use stock preview progress. Run the actual main scene afterward to check real progression and saves.</p>
+<h3 id="manual-checks-after-a-meaningful-edit">Manual checks after a meaningful edit</h3>
+<ol>
+<li>Start without holding W and confirm continuous running and the expected speed display.</li>
+<li>Cross road seams, strafe around solids and full-height laser fences, jump low lasers, and slide under high lasers and beams.</li>
+<li>Shoot a ship and a mint breakable panel; confirm delayed projectile impacts. Shoot and collide with solid cover and verify it stays intact. Reload, aim, and switch weapons.</li>
+<li>Take damage, observe armor and health, and confirm hit shake settles while you continue aiming.</li>
+<li>Clear an encounter, choose an upgrade, pause, resume, and restart after death.</li>
+<li>Use previews to inspect long UI text and the boss. Verify a workshop purchase on a disposable or backed up profile when changing save logic.</li>
+</ol>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>First places to check</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Changing walk speed has no effect</td>
+<td>Edit runner <code>run_speed</code>; original player movement is overridden</td>
+</tr>
+<tr>
+<td>A weapon still fires automatically or has unexpected range</td>
+<td>Saved child overrides under WeaponsManager in <code>afterburn/player.tscn</code></td>
+</tr>
+<tr>
+<td>Map code edits do not appear</td>
+<td>Saved <code>district.tscn</code> still used; edit the scene or deliberately rebake</td>
+</tr>
+<tr>
+<td>New prop is not breakable</td>
+<td>Expected for ordinary scenery; use breakable_barrier.tscn for the only destructible obstacle type</td>
+</tr>
+<tr>
+<td>No projectile appears</td>
+<td>Ranged weapon Is Projectile, Projectile Scene, and Projectile Speed in the Afterburn player scene</td>
+</tr>
+<tr>
+<td>A laser is missing</td>
+<td>Saved route pattern selection and RunnerHazards instance; keep its meshes visible and Area mask 1</td>
+</tr>
+<tr>
+<td>Bullets pass through a ship or cover</td>
+<td>Physics bitmask values and <code>get_damage()</code> method on the hit body</td>
+</tr>
+<tr>
+<td>Bolt passes through the player</td>
+<td>Player physics layer and bolt mask 1; exclude only the shooter</td>
+</tr>
+<tr>
+<td>A road seam catches or drops the player</td>
+<td>Section length, the 43 meter offset, floor collision bounds, and section transform</td>
+</tr>
+<tr>
+<td>Menus stop responding while paused</td>
+<td>HUD process mode and input state routing</td>
+</tr>
+<tr>
+<td>Hit shake never appears</td>
+<td>Accepted damage path, invulnerability, strength assignment, player process state</td>
+</tr>
+<tr>
+<td>Damage shake leaves a camera offset</td>
+<td>Cached rest transform and zero-time reset in <code>_update_hit_shake()</code></td>
+</tr>
+<tr>
+<td>Wrong persistent bonuses appear</td>
+<td>Five rank array indices and any save migration</td>
+</tr>
+<tr>
+<td>Weapon view is black</td>
+<td>Directional light render layers and camera cull masks</td>
+</tr>
+<tr>
+<td>Ziva live preview fails to connect</td>
+<td>Run F5 directly; an external tool connection error does not by itself prove a game error</td>
+</tr>
+</tbody></table></div>
+</section>
+<section data-guide-section><h2 id="23-current-limitations-and-useful-next-refactors">23 Current limitations and useful next refactors</h2>
+<p>The road repeats one saved district with deterministic procedural obstacle variations. It is not a library of independently authored biomes or randomized section scenes. Sections instantiate synchronously; adding much more geometry or scripts can cause a hitch when a new section loads. Profile and measure before introducing pooling or background loading.</p>
+<p>The four section limit bounds section instances, not every possible object in the game. Uncollected ship drops have no expiry. Effects, decals, enemy bolts, and active enemy counts use their own cleanup or limits. Add distance cleanup for ship drops if you expand the game into much longer survival sessions.</p>
+<p>Several rules are duplicated as literals: six encounters, 100 meter sections, the 43 meter boundary offset, three second dash cooldown, and lane boundaries. Centralizing these into configuration resources would make future editing safer. Enemy definitions and upgrade data are currently dictionaries and branches rather than custom Resources edited in the Inspector.</p>
+<p>There is no floating origin, resumable active run, tier selection screen, dedicated accessibility menu, multiplayer system, or touch control implementation in Afterburn. A shake toggle would be a useful addition if you want players to control the new damage effect. The inherited FPS files remain shared with the original template, so edits there can change both experiences.</p>
+</section>
+<section data-guide-section><h2 id="24-source-map-and-maintenance-checklist">24 Source map and maintenance checklist</h2>
+<p>The implementation described here was checked against the files on 14 November 2026. For future changes, source code and saved scenes take precedence over this snapshot. Update this guide whenever you change rules or expose a new tuning variable.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Authoritative source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Startup and player construction</td>
+<td><code>afterburn/game.gd::_ready</code>, <code>_create_player</code>, <code>start_run</code></td>
+</tr>
+<tr>
+<td>Route streaming and obstacle pattern</td>
+<td><code>game.gd::_init_course</code>, <code>_spawn_chunk</code>, <code>_prepare_chunk</code>, <code>_stream_course</code></td>
+</tr>
+<tr>
+<td>Saved map and builder</td>
+<td><code>afterburn/district.tscn</code>, <code>game.gd::build_map</code></td>
+</tr>
+<tr>
+<td>Motion and accepted damage</td>
+<td><code>afterburn/player.gd::_physics_process</code>, <code>get_damage</code>, <code>_update_hit_shake</code></td>
+</tr>
+<tr>
+<td>Camera FOV and gun recoil</td>
+<td><code>common/utils/active_camera.gd</code></td>
+</tr>
+<tr>
+<td>Weapon rules</td>
+<td><code>afterburn/player.tscn</code>, <code>afterburn/weapons_manager.gd</code>, <code>common/weapon/weapon.gd</code>, <code>common/managers/weapons_manager.gd</code>, <code>weapons/*.tscn</code></td>
+</tr>
+<tr>
+<td>Ammo reserves</td>
+<td><code>common/autoloads/bullets.gd</code></td>
+</tr>
+<tr>
+<td>Global event contract</td>
+<td><code>common/autoloads/global.gd</code></td>
+</tr>
+<tr>
+<td>Enemy identity and health</td>
+<td><code>game.gd::_spawn_enemy</code>, <code>ship.gd::_ready</code></td>
+</tr>
+<tr>
+<td>Enemy spawn placement and flight limits</td>
+<td><code>afterburn/enemy_corridor.tscn</code> and <code>.gd</code>; <code>ship.gd::_physics_process</code></td>
+</tr>
+<tr>
+<td>Enemy movement and attacks</td>
+<td><code>ship.gd::_physics_process</code>, <code>_fire</code>; <code>bolt.gd::_physics_process</code>; <code>enemies/charger.gd</code> and <code>.tscn</code></td>
+</tr>
+<tr>
+<td>Barrier rules and placement</td>
+<td><code>afterburn/obstacle.gd</code>, <code>afterburn/obstacles/*.tscn</code>, <code>game.gd::_prepare_chunk</code></td>
+</tr>
+<tr>
+<td>Player rounds</td>
+<td><code>common/weapon/weapon.gd::_launch_projectile</code>, <code>afterburn/projectiles/player_round.gd</code> and <code>.tscn</code></td>
+</tr>
+<tr>
+<td>Rewards score pickups and persistence</td>
+<td><code>game.gd::choose_upgrade</code>, <code>ship_destroyed</code>, <code>_collect</code>, <code>_load_profile</code>, <code>_save_profile</code></td>
+</tr>
+<tr>
+<td>UI and menu input</td>
+<td><code>afterburn/hud.gd</code>, <code>afterburn/input.gd</code></td>
+</tr>
+<tr>
+<td>Regression checks and preview fixtures</td>
+<td><code>afterburn/tests/</code></td>
+</tr>
+</tbody></table></div>
+<p>After an edit, check the changed default, any runtime override, any matching HUD text or meter, any serialized save field, and the corresponding test. This catches the most common cases where the game appears to ignore a change or the UI describes an older rule.</p>
+</section>
+<p class="endnote">Offline document. No network connection is required. The Markdown copy contains the same guide and is the editable source.</p></main>
+<script>
+const navLinks=[...document.querySelectorAll('nav a')];
+const searchable=navLinks.map(link=>({link,section:document.getElementById(link.hash.slice(1)).closest('section')}));
+document.getElementById('filter').addEventListener('input',event=>{const term=event.target.value.trim().toLowerCase();let count=0;for(const item of searchable){const match=item.section.textContent.toLowerCase().includes(term);item.link.parentElement.hidden=!match;if(match)count++;}document.querySelector('.filter-status').textContent=count+' matching section'+(count===1?'':'s');});
+document.getElementById('print').addEventListener('click',()=>window.print());
+document.querySelector('.nav-toggle').addEventListener('click',event=>{const aside=document.querySelector('aside');const expanded=aside.dataset.collapsed==='true';aside.dataset.collapsed=expanded?'false':'true';event.target.setAttribute('aria-expanded',String(expanded));event.target.textContent=expanded?'Hide contents':'Show contents';});
+for(const pre of document.querySelectorAll('pre')){const button=document.createElement('button');button.className='copy';button.type='button';button.textContent='Copy';button.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(pre.querySelector('code').textContent);button.textContent='Copied';setTimeout(()=>button.textContent='Copy',1300);}catch{button.textContent='Select text to copy';}});pre.appendChild(button);}
+const updateNav=()=>{let current=searchable[0];for(const item of searchable){if(item.section.getBoundingClientRect().top<=innerHeight*.6)current=item;}for(const item of searchable)item.link.setAttribute('aria-current',String(item===current));};window.addEventListener('scroll',updateNav,{passive:true});updateNav();
+</script></body></html>

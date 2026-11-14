@@ -1,0 +1,215 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://afterburn/obstacle.gd" id="1_qpjgm"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jsgx2"]
+size = Vector3(5.4, 3.35, 0.28)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i45mi"]
+albedo_color = Color(0.2, 0.27058825, 0.32156864, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fq6y6"]
+material = SubResource("StandardMaterial3D_i45mi")
+size = Vector3(0.12, 3.55, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jn5qd"]
+albedo_color = Color(0.2, 0.27058825, 0.32156864, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_g640g"]
+material = SubResource("StandardMaterial3D_jn5qd")
+size = Vector3(0.12, 3.55, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_afltp"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bx2tc"]
+material = SubResource("StandardMaterial3D_afltp")
+size = Vector3(5.4, 0.065, 0.09)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_npd8k"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dwhea"]
+material = SubResource("StandardMaterial3D_npd8k")
+size = Vector3(0.035, 3.35, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ihgq1"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p4v70"]
+material = SubResource("StandardMaterial3D_ihgq1")
+size = Vector3(0.035, 3.35, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_seqb6"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wd88a"]
+material = SubResource("StandardMaterial3D_seqb6")
+size = Vector3(0.035, 3.35, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nvft4"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gnau5"]
+material = SubResource("StandardMaterial3D_nvft4")
+size = Vector3(0.035, 3.35, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_on6v4"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wqw68"]
+material = SubResource("StandardMaterial3D_on6v4")
+size = Vector3(0.035, 3.35, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_drdbu"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hq084"]
+material = SubResource("StandardMaterial3D_drdbu")
+size = Vector3(0.035, 3.35, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ly5gt"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_l76v0"]
+material = SubResource("StandardMaterial3D_ly5gt")
+size = Vector3(0.035, 3.35, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ni3bv"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ggcyf"]
+material = SubResource("StandardMaterial3D_ni3bv")
+size = Vector3(0.035, 3.35, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_smehm"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ldudl"]
+material = SubResource("StandardMaterial3D_smehm")
+size = Vector3(0.035, 3.35, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_go5os"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qct22"]
+material = SubResource("StandardMaterial3D_go5os")
+size = Vector3(0.035, 3.35, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0elg5"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_j2y1s"]
+material = SubResource("StandardMaterial3D_0elg5")
+size = Vector3(0.035, 3.35, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qqfao"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gtyhw"]
+material = SubResource("StandardMaterial3D_qqfao")
+size = Vector3(5.4, 0.04, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_38sv1"]
+shading_mode = 0
+albedo_color = Color(1, 0.26666668, 0.4745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mbmgf"]
+material = SubResource("StandardMaterial3D_38sv1")
+size = Vector3(5.4, 0.04, 0.06)
+
+[node name="LaserFence" type="Area3D" unique_id=305541075]
+collision_layer = 16
+monitorable = false
+script = ExtResource("1_qpjgm")
+kind = "laser fence"
+contact_damage = 25.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=396474252]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.725, 0)
+shape = SubResource("BoxShape3D_jsgx2")
+
+[node name="Emitter" type="MeshInstance3D" parent="." unique_id=1146842676]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7, 1.775, 0)
+mesh = SubResource("BoxMesh_fq6y6")
+
+[node name="@MeshInstance3D@3" type="MeshInstance3D" parent="." unique_id=1710757214]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7, 1.775, 0)
+mesh = SubResource("BoxMesh_g640g")
+
+[node name="LaserCore" type="MeshInstance3D" parent="." unique_id=1484283384]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.725, 0)
+mesh = SubResource("BoxMesh_bx2tc")
+
+[node name="LaserGrid" type="MeshInstance3D" parent="." unique_id=1075866242]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7, 1.725, 0)
+mesh = SubResource("BoxMesh_dwhea")
+
+[node name="@MeshInstance3D@4" type="MeshInstance3D" parent="." unique_id=820770578]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.16, 1.725, 0)
+mesh = SubResource("BoxMesh_p4v70")
+
+[node name="@MeshInstance3D@5" type="MeshInstance3D" parent="." unique_id=1767467996]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.62, 1.725, 0)
+mesh = SubResource("BoxMesh_wd88a")
+
+[node name="@MeshInstance3D@6" type="MeshInstance3D" parent="." unique_id=710160533]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.08, 1.725, 0)
+mesh = SubResource("BoxMesh_gnau5")
+
+[node name="@MeshInstance3D@7" type="MeshInstance3D" parent="." unique_id=915699676]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.54, 1.725, 0)
+mesh = SubResource("BoxMesh_wqw68")
+
+[node name="@MeshInstance3D@8" type="MeshInstance3D" parent="." unique_id=1407210043]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.725, 0)
+mesh = SubResource("BoxMesh_hq084")
+
+[node name="@MeshInstance3D@9" type="MeshInstance3D" parent="." unique_id=2134954065]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.54, 1.725, 0)
+mesh = SubResource("BoxMesh_l76v0")
+
+[node name="@MeshInstance3D@10" type="MeshInstance3D" parent="." unique_id=1682834771]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.08, 1.725, 0)
+mesh = SubResource("BoxMesh_ggcyf")
+
+[node name="@MeshInstance3D@11" type="MeshInstance3D" parent="." unique_id=2001917004]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.62, 1.725, 0)
+mesh = SubResource("BoxMesh_ldudl")
+
+[node name="@MeshInstance3D@12" type="MeshInstance3D" parent="." unique_id=336575979]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.16, 1.725, 0)
+mesh = SubResource("BoxMesh_qct22")
+
+[node name="@MeshInstance3D@13" type="MeshInstance3D" parent="." unique_id=1390969758]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7, 1.725, 0)
+mesh = SubResource("BoxMesh_j2y1s")
+
+[node name="LaserRail" type="MeshInstance3D" parent="." unique_id=2143256535]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
+mesh = SubResource("BoxMesh_gtyhw")
+
+[node name="@MeshInstance3D@14" type="MeshInstance3D" parent="." unique_id=108673534]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.36, 0)
+mesh = SubResource("BoxMesh_mbmgf")
+
+[node name="Instruction" type="Label3D" parent="." unique_id=98468767]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.9, 0)
+pixel_size = 0.008
+billboard = 1
+modulate = Color(1, 0.26666668, 0.4745098, 1)
+text = "LASER FENCE // FIND THE GAP"
+font_size = 36
