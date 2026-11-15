@@ -230,14 +230,15 @@ func _launch_projectile() -> void:
 	if not cover.is_empty():
 		launch_position = cover.position + cover.normal * 0.03
 	var round_node: Node3D = projectile_scene.instantiate()
-	round_node.game = player_body.game
+	round_node.game = player_body.get("game")
 	round_node.speed = projectile_speed
 	round_node.max_distance = firing_distance
 	round_node.damage = damage
 	round_node.shooter = player_body.get_rid()
 	round_node.direction = (aim_point - launch_position).normalized()
-	# Parent it to the game, never to the moving gun or its SubViewport.
-	round_node.game.add_child(round_node)
+	# Keep the round in the 3D scene, never under the moving gun or its SubViewport.
+	var projectile_parent: Node = round_node.game if round_node.game else get_tree().current_scene
+	projectile_parent.add_child(round_node)
 	round_node.global_position = launch_position
 	round_node.look_at(launch_position + round_node.direction, Vector3.UP if absf(round_node.direction.y) < 0.99 else Vector3.RIGHT)
 

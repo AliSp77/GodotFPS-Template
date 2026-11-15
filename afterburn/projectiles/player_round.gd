@@ -17,7 +17,7 @@ func _ready() -> void:
 		look_at(global_position + direction, Vector3.UP if absf(direction.y) < 0.99 else Vector3.RIGHT)
 
 func _physics_process(delta: float) -> void:
-	if impacted or not game or game.state != "play":
+	if impacted or (game and game.state != "play"):
 		return
 	var step: float = minf(speed * delta, max_distance - distance_travelled)
 	var destination: Vector3 = global_position + direction * step
@@ -28,7 +28,8 @@ func _physics_process(delta: float) -> void:
 		impacted = true
 		if hit.collider.has_method("get_damage"):
 			hit.collider.get_damage(damage, direction, false)
-		game.spark(hit.position, Color("#a4ffcb"), 0.25)
+		if game:
+			game.spark(hit.position, Color("#a4ffcb"), 0.25)
 		queue_free()
 		return
 	global_position = destination

@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://arena/arena_template.tscn" id="1"]
+
+[sub_resource type="BoxMesh" id="cap_mesh"]
+size = Vector3(4, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="cap_shape"]
+size = Vector3(4, 3, 0.5)
+
+[node name="ArenaDeadEndTemplate" instance=ExtResource("1")]
+room_type = 2
+
+[node name="ExitBlock" type="StaticBody3D" parent="." index="9"]
+position = Vector3(0, 1.5, -11.75)
+
+[node name="Mesh" type="MeshInstance3D" parent="ExitBlock" index="0"]
+mesh = SubResource("cap_mesh")
+
+[node name="Collision" type="CollisionShape3D" parent="ExitBlock" index="1"]
+shape = SubResource("cap_shape")

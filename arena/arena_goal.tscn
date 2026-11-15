@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://arena/arena_dead_end_template.tscn" id="1"]
+
+[sub_resource type="StandardMaterial3D" id="goal_material"]
+albedo_color = Color(0.2, 1, 0.7, 1)
+emission_enabled = true
+emission = Color(0.2, 1, 0.7, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="CylinderMesh" id="goal_mesh"]
+top_radius = 1.5
+bottom_radius = 1.5
+height = 0.12
+material = SubResource("goal_material")
+
+[node name="ArenaGoal" instance=ExtResource("1")]
+room_type = 3
+
+[node name="GoalPad" type="MeshInstance3D" parent="." index="10"]
+position = Vector3(0, 0.08, 0)
+mesh = SubResource("goal_mesh")
+
+[node name="GoalLabel" type="Label3D" parent="." index="11"]
+position = Vector3(0, 2.8, -5)
+billboard = 1
+pixel_size = 0.012
+font_size = 48
+text = "GOAL"

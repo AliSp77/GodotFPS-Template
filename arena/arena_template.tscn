@@ -1,0 +1,125 @@
+[gd_scene format=3 uid="uid://1d342vilnu3k"]
+
+[ext_resource type="Script" uid="uid://bilomak7lnnqh" path="res://arena/arena_segment.gd" id="1"]
+
+[sub_resource type="StandardMaterial3D" id="floor_material"]
+albedo_color = Color(0.16, 0.2, 0.25, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="floor_mesh"]
+material = SubResource("floor_material")
+size = Vector3(24, 0.5, 24)
+
+[sub_resource type="BoxShape3D" id="floor_shape"]
+size = Vector3(24, 0.5, 24)
+
+[sub_resource type="StandardMaterial3D" id="wall_material"]
+albedo_color = Color(0.19, 0.32, 0.38, 1)
+roughness = 0.65
+
+[sub_resource type="BoxMesh" id="side_wall_mesh"]
+material = SubResource("wall_material")
+size = Vector3(24, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="side_wall_shape"]
+size = Vector3(24, 3, 0.5)
+
+[sub_resource type="BoxMesh" id="wall_mesh"]
+material = SubResource("wall_material")
+size = Vector3(10, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="wall_shape"]
+size = Vector3(10, 3, 0.5)
+
+[sub_resource type="NavigationMesh" id="arena_navigation"]
+vertices = PackedVector3Array(-12, 0.015, 12, 12, 0.015, 12, 12, 0.015, -12, -12, 0.015, -12)
+polygons = [PackedInt32Array(0, 1, 2), PackedInt32Array(0, 2, 3)]
+geometry_parsed_geometry_type = 0
+
+[node name="ArenaTemplate" type="Node3D" unique_id=1881348948]
+script = ExtResource("1")
+room_type = 0
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=2111928560]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Floor" unique_id=202229728]
+mesh = SubResource("floor_mesh")
+
+[node name="Collision" type="CollisionShape3D" parent="Floor" unique_id=469856757]
+shape = SubResource("floor_shape")
+
+[node name="WestWall" type="StaticBody3D" parent="." unique_id=2128068054]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.5, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="WestWall" unique_id=1440577445]
+transform = Transform3D(3.1391647e-07, 0, 1, 0, 1, 0, -1, 0, 3.1391647e-07, 0, 0, 0)
+mesh = SubResource("side_wall_mesh")
+
+[node name="Collision" type="CollisionShape3D" parent="WestWall" unique_id=1889153154]
+transform = Transform3D(3.1391647e-07, 0, 1, 0, 1, 0, -1, 0, 3.1391647e-07, 0, 0, 0)
+shape = SubResource("side_wall_shape")
+
+[node name="EastWall" type="StaticBody3D" parent="." unique_id=924878031]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.5, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="EastWall" unique_id=2062809117]
+transform = Transform3D(3.1391647e-07, 0, 1, 0, 1, 0, -1, 0, 3.1391647e-07, 0, 0, 0)
+mesh = SubResource("side_wall_mesh")
+
+[node name="Collision" type="CollisionShape3D" parent="EastWall" unique_id=1557391900]
+transform = Transform3D(3.1391647e-07, 0, 1, 0, 1, 0, -1, 0, 3.1391647e-07, 0, 0, 0)
+shape = SubResource("side_wall_shape")
+
+[node name="EntryWest" type="StaticBody3D" parent="." unique_id=2054445435]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.5, 11.75)
+
+[node name="Mesh" type="MeshInstance3D" parent="EntryWest" unique_id=1350439408]
+mesh = SubResource("wall_mesh")
+
+[node name="Collision" type="CollisionShape3D" parent="EntryWest" unique_id=640861345]
+shape = SubResource("wall_shape")
+
+[node name="EntryEast" type="StaticBody3D" parent="." unique_id=1882725894]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1.5, 11.75)
+
+[node name="Mesh" type="MeshInstance3D" parent="EntryEast" unique_id=373033019]
+mesh = SubResource("wall_mesh")
+
+[node name="Collision" type="CollisionShape3D" parent="EntryEast" unique_id=451060517]
+shape = SubResource("wall_shape")
+
+[node name="ExitWest" type="StaticBody3D" parent="." unique_id=9742295]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.5, -11.75)
+
+[node name="Mesh" type="MeshInstance3D" parent="ExitWest" unique_id=1918647075]
+mesh = SubResource("wall_mesh")
+
+[node name="Collision" type="CollisionShape3D" parent="ExitWest" unique_id=729022391]
+shape = SubResource("wall_shape")
+
+[node name="ExitEast" type="StaticBody3D" parent="." unique_id=815984972]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1.5, -11.75)
+
+[node name="Mesh" type="MeshInstance3D" parent="ExitEast" unique_id=1127157475]
+mesh = SubResource("wall_mesh")
+
+[node name="Collision" type="CollisionShape3D" parent="ExitEast" unique_id=70812460]
+shape = SubResource("wall_shape")
+
+[node name="NavigationRegion" type="NavigationRegion3D" parent="." unique_id=624528525]
+navigation_mesh = SubResource("arena_navigation")
+
+[node name="Entry" type="Marker3D" parent="." unique_id=802627622]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 12)
+
+[node name="Exit" type="Marker3D" parent="." unique_id=1486574095]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12)
+
+[node name="AuthoredEnemies" type="Node3D" parent="." unique_id=106827924]
+
+[node name="AuthoredObstacles" type="Node3D" parent="." unique_id=1868881014]
+
+[node name="EnemySpawns" type="Node3D" parent="." unique_id=1558832275]
+
+[node name="ObstacleSpawns" type="Node3D" parent="." unique_id=2036078833]

@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cwnp28v78he3g" path="res://weapons/assualt_burst.tscn" id="6_2ieo8"]
 [ext_resource type="PackedScene" uid="uid://54mnvp5mwdb2" path="res://weapons/lmg.tscn" id="7_ebec5"]
 [ext_resource type="PackedScene" uid="uid://c5cmenins5u2w" path="res://weapons/knife.tscn" id="8_yllr7"]
+[ext_resource type="PackedScene" uid="uid://cyu64gank77ya" path="res://common/hud/gameplay_hud.tscn" id="14_kb6p2"]
 [ext_resource type="Script" uid="uid://gku3bplish0s" path="res://common/utils/weapon_sub_viewport.gd" id="17_tqiix"]
 [ext_resource type="Script" uid="uid://ceq0fc565dbaa" path="res://common/managers/audio_manager.gd" id="18_x7c3f"]
 [ext_resource type="AudioStream" uid="uid://tohbwu7jgoab" path="res://player/sfx/footstep_ground.ogg" id="19_bjvpn"]
@@ -20,6 +21,7 @@ height = 1.85
 
 [node name="Player" type="CharacterBody3D" unique_id=1157596601 groups=["door_access", "player"]]
 script = ExtResource("1_oul6g")
+sensitivity = 0.005
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=403717584]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.925, 0)
@@ -73,7 +75,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="WeaponSubViewport" unique_id=870436344]
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(1920, 1080)
+size = Vector2i(1280, 720)
 render_target_update_mode = 4
 script = ExtResource("17_tqiix")
 
@@ -99,3 +101,7 @@ volume_db = -25.0
 [node name="FootstepMetal" type="AudioStreamPlayer3D" parent="AudioManager" unique_id=1362647579]
 stream = ExtResource("21_g4c7l")
 volume_db = -25.0
+
+[node name="PlayerHUD" type="CanvasLayer" parent="." unique_id=617218040]
+
+[node name="Control" parent="PlayerHUD" unique_id=581381809 instance=ExtResource("14_kb6p2")]

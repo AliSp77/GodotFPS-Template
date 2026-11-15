@@ -7,6 +7,7 @@ var armor: float = 50.0
 var vital_capacity: float = 100.0
 @export var run_speed: float = 16.0
 @export var strafe_speed: float = 9.0
+@export var standalone_free_movement: bool = true
 const RUN_STEP_INTERVAL: float = 0.27
 const HIT_SHAKE_DURATION: float = 0.34
 var run_phase: float = 0.0
@@ -32,8 +33,14 @@ var initial_skeleton_poses: Array[Dictionary] = []
 
 func _ready() -> void:
 	super._ready()
-	walk_speed = run_speed
-	sprint_speed = run_speed
+	if not game:
+		current_health = starting_health
+		vital_capacity = starting_health
+		armor = starting_armor
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	if game or not standalone_free_movement:
+		walk_speed = run_speed
+		sprint_speed = run_speed
 	camera_rest_position = camera.position
 	camera_rest_roll = camera.rotation.z
 	Global.player_sprinting_changed.emit(true)
@@ -107,12 +114,39 @@ func reset_for_run(start_transform: Transform3D) -> void:
 	weapons_manager.set_process(true)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if game and game.state == "play" and is_alive:
-		super._unhandled_input(event)
-		camera_pivot.rotation.y = clampf(camera_pivot.rotation.y, -1.25, 1.25)
+	if not is_alive or (game and game.state != "play"):
+		return
+	if not game:
+		if event.is_action_pressed("ui_cancel"):
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			return
+		if event is InputEventMouseButton and event.pressed and Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+			return
+		if Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
+			return
+		if event.is_action_pressed("aim_mode"):
+			Global.aim_mode_changed.emit(true)
+		elif event.is_action_released("aim_mode"):
+			Global.aim_mode_changed.emit(false)
+		if event.is_action_pressed("fire"):
+			Global.fire_input.emit()
+		if event.is_action_pressed("reload"):
+			Global.reload_input.emit()
+		if event.is_action_pressed("weapon_change_next"):
+			Global.weapon_switch_next.emit()
+		if event.is_action_pressed("weapon_change_prev"):
+			Global.weapon_switch_prev.emit()
+	super._unhandled_input(event)
+	camera_pivot.rotation.y = clampf(camera_pivot.rotation.y, -1.25, 1.25)
 
 func _physics_process(delta: float) -> void:
-	if not game or game.state != "play" or not is_alive:
+	if not is_alive:
+		return
+	if not game and standalone_free_movement:
+		super._physics_process(delta)
+		return
+	if game and game.state != "play":
 		return
 	invulnerability = maxf(0.0, invulnerability - delta)
 	dash_cooldown = maxf(0.0, dash_cooldown - delta)
@@ -166,7 +200,7 @@ func _handle_runner_footsteps(delta: float) -> void:
 			audio_manager.play_footstep(false)
 
 func get_damage(damage: float, _direction: Vector3, is_enemy_damage: bool = false) -> void:
-	if not is_alive or not game or game.state != "play" or invulnerability > 0.0:
+	if not is_alive or (game and game.state != "play") or invulnerability > 0.0:
 		return
 	var applied: float = damage * damage_resistance
 	var absorbed: float = minf(armor, applied * 0.7)
@@ -174,17 +208,21 @@ func get_damage(damage: float, _direction: Vector3, is_enemy_damage: bool = fals
 	current_health = maxf(0.0, current_health - (applied - absorbed))
 	invulnerability = 0.15
 	Global.player_health_changed.emit(-applied, current_health, vital_capacity, is_enemy_damage)
-	game.hud.damage_flash()
+	if game:
+		game.hud.damage_flash()
 	hit_shake_time = HIT_SHAKE_DURATION
 	hit_shake_strength = maxf(hit_shake_strength, clampf(applied * 0.003, 0.045, 0.11))
 	_update_hit_shake(0.0)
 	if current_health <= 0.0:
 		is_alive = false
 		Global.player_dead.emit()
-		game.finish_run(false)
+		if game:
+			game.finish_run(false)
+		else:
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _process(delta: float) -> void:
-	if game and game.state == "play":
+	if not game or game.state == "play":
 		_update_hit_shake(delta)
 
 func _update_hit_shake(delta: float) -> void:

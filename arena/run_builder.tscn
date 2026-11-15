@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://m04dxuc4trhp"]
+
+[ext_resource type="Script" uid="uid://dka6k3dat6sgx" path="res://arena/run_builder.gd" id="1"]
+[ext_resource type="PackedScene" path="res://arena/arena_crossfire.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://arena/arena_flanks.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://drhovrcf12ss8" path="res://arena/arena_columns.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://arena/arena_fork_crossroads.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://arena/arena_dead_end_cache.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://arena/arena_goal.tscn" id="7"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial"]
+sky_horizon_color = Color(0.42, 0.5, 0.57, 1)
+ground_horizon_color = Color(0.3, 0.32, 0.34, 1)
+energy_multiplier = 1.5
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMaterial")
+
+[sub_resource type="Environment" id="Environment"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+
+[node name="RunBuilder" type="Node3D" unique_id=2019897240]
+script = ExtResource("1")
+segment_library = Array[PackedScene]([ExtResource("2"), ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7")])
+run_seed = 37
+preview_depth = 7
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=651233618]
+environment = SubResource("Environment")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1190382381]
+transform = Transform3D(0.87758255, 0.34391883, -0.334019, 0, 0.6967067, 0.7173561, 0.47942555, -0.6295392, 0.61141765, 0, 0, 0)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="Generated" type="Node3D" parent="." unique_id=1302454668]

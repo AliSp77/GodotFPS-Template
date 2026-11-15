@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://arena/arena_dead_end_template.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://arena/arena_ship.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://world/static/block.tscn" id="3"]
+
+[node name="ArenaDeadEndCache" instance=ExtResource("1")]
+selection_weight = 1.0
+
+[node name="CacheGuard" parent="AuthoredEnemies" instance=ExtResource("2")]
+position = Vector3(0, 3, -5)
+
+[node name="CacheCover" parent="AuthoredObstacles" instance=ExtResource("3")]
+position = Vector3(-5, 0, 0)
+
+[node name="EnemyA" type="Marker3D" parent="EnemySpawns"]
+position = Vector3(-7, 3, -6)
+
+[node name="EnemyB" type="Marker3D" parent="EnemySpawns"]
+position = Vector3(7, 3, -6)
+
+[node name="EnemyC" type="Marker3D" parent="EnemySpawns"]
+position = Vector3(5, 3, 5)
+
+[node name="ObstacleA" type="Marker3D" parent="ObstacleSpawns"]
+position = Vector3(5, 0, -2)
+
+[node name="ObstacleB" type="Marker3D" parent="ObstacleSpawns"]
+position = Vector3(0, 0, 4)
