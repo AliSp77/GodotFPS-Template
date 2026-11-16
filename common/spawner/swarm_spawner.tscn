@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://dfhy2xaedpsok"]
+
+[ext_resource type="Script" uid="uid://ok5clnjq1de8" path="res://common/spawner/swarm_spawner.gd" id="1_spawner"]
+
+[sub_resource type="StandardMaterial3D" id="1_marker_material"]
+albedo_color = Color(0.79659796, 0.64232546, 0.34659702, 1)
+
+[sub_resource type="CylinderMesh" id="2_marker_mesh"]
+material = SubResource("1_marker_material")
+top_radius = 0.35
+height = 0.2
+radial_segments = 18
+cap_bottom = false
+
+[node name="SwarmSpawner" type="Node3D" unique_id=1528273254]
+script = ExtResource("1_spawner")
+
+[node name="SpawnPoint" type="Marker3D" parent="." unique_id=1715918096]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+
+[node name="SpawnerMarker" type="MeshInstance3D" parent="." unique_id=1915111150]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+mesh = SubResource("2_marker_mesh")
+
+[node name="SwarmVisuals" type="MultiMeshInstance3D" parent="." unique_id=632438968]

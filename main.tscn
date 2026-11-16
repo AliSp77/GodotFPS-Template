@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cdbipjyx57al2" path="res://player/player.tscn" id="3_kek77"]
 [ext_resource type="PackedScene" uid="uid://cyu64gank77ya" path="res://common/hud/gameplay_hud.tscn" id="4_7mycd"]
 [ext_resource type="PackedScene" uid="uid://toourw480edt" path="res://common/spawner/spawner.tscn" id="6_dg77c"]
+[ext_resource type="PackedScene" path="res://common/spawner/swarm_spawner.tscn" id="6_swarm"]
 [ext_resource type="PackedScene" uid="uid://7hhrasxj783p" path="res://resources/vehicle/jeep.tscn" id="7_272bh"]
 [ext_resource type="PackedScene" uid="uid://b42foeuutyrg5" path="res://enemies/undead.tscn" id="7_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://ngegts8mv1fv" path="res://world/interactive_items/exploding_barrel.tscn" id="8_5vw27"]
@@ -97,6 +98,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.043095, 0, -45.705246)
 item = ExtResource("7_ycdy4")
 spawn_time = 2.0
 max_items = 2
+
+[node name="SwarmSpawner" parent="Enemies" unique_id=336298828 instance=ExtResource("6_swarm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -8)
+spawn_interval = 0.1
+spawn_radius = 4.7
+spawn_seed = 12340
+activation_radius = 3.0
 
 [node name="Jeep" parent="." unique_id=723106704 instance=ExtResource("7_272bh")]
 transform = Transform3D(0.85411406, 0, -0.5200857, 0, 1, 0, 0.5200857, 0, 0.85411406, -10.539768, 0.3346548, -6.7859607)

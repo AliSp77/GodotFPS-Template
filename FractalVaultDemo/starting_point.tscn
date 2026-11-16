@@ -3,6 +3,12 @@
 [ext_resource type="Material" path="res://addons/csg_blockout/res/materials/mat_grid_light.tres" id="1_jxotu"]
 [ext_resource type="PackedScene" uid="uid://cdbipjyx57al2" path="res://player/player.tscn" id="3_fwo4u"]
 [ext_resource type="Script" uid="uid://bee0xk53hkjjw" path="res://common/managers/input_manager.gd" id="4_input"]
+[ext_resource type="Material" path="res://addons/csg_blockout/res/materials/mat_grid_orange.tres" id="4_vl2yc"]
+[ext_resource type="Script" uid="uid://bjm6f0gc4f53x" path="res://addons/csg_blockout/scripts/shapes/csg_arch_3d.gd" id="5_0758s"]
+[ext_resource type="Material" path="res://addons/csg_blockout/res/materials/mat_grid_dark.tres" id="5_v0xrp"]
+[ext_resource type="Script" uid="uid://crjgek15e7jkl" path="res://addons/csg_blockout/scripts/shapes/csg_wedge_3d.gd" id="5_xoepn"]
+[ext_resource type="Script" uid="uid://kvbujn0cb1mf" path="res://addons/csg_blockout/scripts/shapes/csg_curved_wall_3d.gd" id="7_0758s"]
+[ext_resource type="PackedScene" uid="uid://dfhy2xaedpsok" path="res://common/spawner/swarm_spawner.tscn" id="9_v0xrp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fwo4u"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -16,7 +22,36 @@ background_mode = 2
 sky = SubResource("Sky_26w10")
 glow_enabled = true
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_4c57u"]
+vertices = PackedVector3Array(-31.834023, 2.9509456, -26.664516, -30.334023, 2.9509456, -27.164516, -29.834023, 2.9509456, -27.914516, -35.834023, 2.9509456, -27.414516, -34.334023, 2.9509456, -26.664516, -37.834023, 2.9509456, -33.164516, -37.584023, 2.9509456, -29.414516, -29.334023, 2.9509456, -35.164516, -34.334023, 2.9509456, -36.664516, -36.584023, 2.9509456, -35.414516, -31.584023, 2.9509456, -36.664516, -27.834023, 2.7009456, -27.914516, -27.584023, 2.7009456, -35.164516, -18.334023, 1.2009456, -27.914516, -17.334023, 1.2009456, -27.414516, -17.084023, 1.2009456, -34.414516, -17.834023, 1.2009456, -34.664516, -17.834023, 1.2009456, -35.164516, -20.318974, 1.2009456, -34.14557, -0.33402252, 1.2009456, -16.164516, 1.1659775, 1.2009456, -16.164516, 1.1659775, 1.2009456, -17.664516, -0.8340225, 1.2009456, -21.664516, -6.5840225, 1.2009456, -17.914516, -6.0840225, 1.2009456, -16.164516, -4.3340225, 1.2009456, -16.164516, -4.0840225, 1.2009456, -15.414516, -0.5840225, 1.2009456, -15.414516, -9.5840225, 1.2009456, -20.914516, -2.8340225, 1.2009456, -23.414516, -2.8340225, 1.2009456, -24.164516, -10.5840225, 1.2009456, -31.914516, -15.3340225, 1.2009456, -26.414516, -10.0840225, 1.2009456, -20.914516, -14.0840225, 1.2009456, -33.914516, -0.33402252, 1.2009456, -14.664516, -4.3340225, 1.2009456, -14.664516, 8.9159775, 1.2009456, 2.8354836, -18.834023, 1.2009456, 2.8354836, -18.834023, 1.2009456, 13.835484, 8.9159775, 1.2009456, 13.835484, -19.584023, 1.2009456, -14.664516, -19.584023, 1.2009456, 2.5854836, 10.6659775, 1.2009456, 2.5854836, 10.4159775, 1.2009456, -14.664516, 13.6659775, 1.2009456, 2.5854836, 13.9159775, 1.2009456, 3.5854836, 15.6659775, 1.2009456, 3.5854836, 15.9159775, 1.2009456, 2.5854836, 19.415977, 1.2009456, -14.664516, 19.415977, 1.2009456, 2.5854836, 13.6659775, 1.2009456, 4.5854836, 15.9159775, 1.2009456, 4.5854836, 10.6659775, 1.2009456, 13.585484, 18.665977, 1.2009456, 13.585484, 18.665977, 1.2009456, 4.5854836, 10.6659775, 1.2009456, 4.5854836)
+polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 4), PackedInt32Array(2, 4, 3), PackedInt32Array(6, 5, 3), PackedInt32Array(3, 5, 8), PackedInt32Array(3, 8, 7), PackedInt32Array(3, 7, 2), PackedInt32Array(5, 9, 8), PackedInt32Array(8, 10, 7), PackedInt32Array(12, 11, 7), PackedInt32Array(7, 11, 2), PackedInt32Array(16, 15, 13), PackedInt32Array(13, 15, 14), PackedInt32Array(12, 18, 11), PackedInt32Array(11, 18, 13), PackedInt32Array(13, 18, 16), PackedInt32Array(16, 18, 17), PackedInt32Array(17, 18, 12), PackedInt32Array(20, 19, 21), PackedInt32Array(21, 19, 22), PackedInt32Array(25, 24, 23), PackedInt32Array(26, 25, 27), PackedInt32Array(27, 25, 19), PackedInt32Array(28, 33, 29), PackedInt32Array(29, 33, 30), PackedInt32Array(30, 33, 32), PackedInt32Array(30, 32, 31), PackedInt32Array(34, 31, 15), PackedInt32Array(15, 31, 14), PackedInt32Array(14, 31, 32), PackedInt32Array(25, 23, 19), PackedInt32Array(19, 23, 22), PackedInt32Array(22, 23, 29), PackedInt32Array(29, 23, 28), PackedInt32Array(27, 35, 26), PackedInt32Array(26, 35, 36), PackedInt32Array(35, 37, 36), PackedInt32Array(36, 37, 40), PackedInt32Array(36, 40, 38), PackedInt32Array(38, 40, 39), PackedInt32Array(42, 41, 38), PackedInt32Array(38, 41, 36), PackedInt32Array(43, 37, 44), PackedInt32Array(44, 37, 35), PackedInt32Array(46, 45, 47), PackedInt32Array(47, 45, 48), PackedInt32Array(48, 45, 44), PackedInt32Array(48, 44, 49), PackedInt32Array(49, 50, 48), PackedInt32Array(45, 43, 44), PackedInt32Array(47, 52, 46), PackedInt32Array(46, 52, 51), PackedInt32Array(52, 54, 51), PackedInt32Array(51, 54, 53), PackedInt32Array(52, 55, 54), PackedInt32Array(53, 56, 51)]
+
+[sub_resource type="PackedScene" id="PackedScene_v0xrp"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [],
+"names": PackedStringArray("walkables", "transform", "metadata/_csg_blockout_bake", "MeshInstance3D"),
+"node_count": 1,
+"node_ids": PackedInt32Array(1526140180),
+"node_paths": [],
+"nodes": PackedInt32Array(-1, -1, 3, 0, -1, 2, 1, 0, 2, 1, 0),
+"variants": [Transform3D(0.97412163, 0, -0.22602437, 0, 1, 0, 0.22602437, 0, 0.97412163, -17.032091, 0.46089935, -30.97286), {
+"collision": "auto",
+"lod": false,
+"occluder": false,
+"texel": 0.2,
+"uv2": false
+}],
+"version": 3
+}
+
 [node name="StartingPoint" type="Node3D" unique_id=322989214]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=704866037]
+transform = Transform3D(0.71950346, -0.5260899, 0.45336968, 0.12427522, 0.7398056, 0.66124386, -0.6832792, -0.41942465, 0.5976727, 0, 0, 0)
+shadow_enabled = true
 
 [node name="InputManager" type="Node" parent="." unique_id=1359683489]
 script = ExtResource("4_input")
@@ -24,34 +59,234 @@ script = ExtResource("4_input")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1814950600]
 environment = SubResource("Environment_2qwpg")
 
-[node name="Room" type="CSGCombiner3D" parent="." unique_id=1202603694]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.25, 3.5, -4.75)
-use_collision = true
-
-[node name="Shell" type="CSGBox3D" parent="Room" unique_id=1204678752]
-size = Vector3(58.5, 7, 42.5)
-material = ExtResource("1_jxotu")
-
-[node name="Hollow" type="CSGBox3D" parent="Room" unique_id=1829962027]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, 0)
-operation = 2
-size = Vector3(58, 6.76, 42)
-material = ExtResource("1_jxotu")
-
-[node name="Block" type="CSGBox3D" parent="Room" unique_id=1566272566]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.25, -1.7598252, 15.25)
-size = Vector3(6, 3.250002, 8)
-material = ExtResource("1_jxotu")
-
-[node name="Block2" type="CSGBox3D" parent="Room" unique_id=1162559656]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -22.25, -0.16077662, 11.100972)
-size = Vector3(6, 3.250002, 8)
-material = ExtResource("1_jxotu")
-
-[node name="Block3" type="CSGBox3D" parent="Room" unique_id=1109463567]
-transform = Transform3D(0.6827582, -0.7306444, -3.1937482e-08, 0, -4.371139e-08, 1, -0.7306444, -0.6827582, -2.984431e-08, -25.977835, -0.16077662, 3.8715107)
-size = Vector3(6, 3.250002, 8)
-material = ExtResource("1_jxotu")
-
 [node name="Player" parent="." unique_id=1157596601 instance=ExtResource("3_fwo4u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.124683, 5.2216682, -6.551155)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.550617, 13.993725, -30.58191)
+
+[node name="Block" type="CSGBox3D" parent="." unique_id=1804236615]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.007019043, 0.024780273, 0.012451172)
+use_collision = true
+size = Vector3(83, 0.9385996, 81)
+material = ExtResource("1_jxotu")
+
+[node name="MwainHallWalls" type="CSGPolygon3D" parent="Block" unique_id=1187153610]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.183201, 0.46160197, -14.694389)
+use_collision = true
+polygon = PackedVector2Array(0, 0, 0, 6.1657534, 7.813513, 6.1657534, 7.813513, 0, 5.9067564, 0, 5.9067564, 2, 5.868327, 2.3901806, 5.7545156, 2.7653668, 5.5696955, 3.1111405, 5.32097, 3.4142137, 5.0178967, 3.6629393, 4.6721234, 3.847759, 4.296937, 3.9615705, 3.9067564, 4, 3.5165758, 3.9615705, 3.1413896, 3.847759, 2.795616, 3.6629393, 2.4925427, 3.4142137, 2.243817, 3.1111405, 2.0589974, 2.7653668, 1.9451859, 2.3901806, 1.9067564, 2, 1.9067564, 0)
+depth = 1.1514796
+material = ExtResource("5_v0xrp")
+script = ExtResource("5_0758s")
+size = Vector3(7.813513, 6.1657534, 1.1514796)
+opening_width = 4.0
+opening_height = 4.0
+arc_segments = 16
+
+[node name="Box_02" type="CSGBox3D" parent="Block/MwainHallWalls" unique_id=166472995]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.892889, 2.6040556, -0.5596571)
+use_collision = true
+size = Vector3(13.876221, 5, 1.1794434)
+material = ExtResource("5_v0xrp")
+
+[node name="Box_06" type="CSGBox3D" parent="Block/MwainHallWalls" unique_id=1255313294]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.924109, 2.6040556, -0.5596571)
+use_collision = true
+size = Vector3(18.464966, 5, 1.1794434)
+material = ExtResource("5_v0xrp")
+
+[node name="Box_03" type="CSGBox3D" parent="Block/MwainHallWalls" unique_id=771228840]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -13.225998, 2.6040556, 14.810659)
+use_collision = true
+size = Vector3(29.753435, 5, 1.1794434)
+material = ExtResource("5_v0xrp")
+
+[node name="Box_05" type="CSGBox3D" parent="Block/MwainHallWalls" unique_id=200823249]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 25.628296, 2.6040556, 14.810659)
+use_collision = true
+size = Vector3(29.753435, 5, 1.1794434)
+material = ExtResource("5_v0xrp")
+
+[node name="Box_07" type="CSGBox3D" parent="Block/MwainHallWalls" unique_id=438864324]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 15.807373, 2.6040556, 23.690722)
+use_collision = true
+size = Vector3(11.993311, 5, 1.1794434)
+material = ExtResource("5_v0xrp")
+
+[node name="Box_08" type="CSGBox3D" parent="Block/MwainHallWalls" unique_id=209764191]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.682642, 2.6040556, 18.341722)
+use_collision = true
+size = Vector3(10.882276, 5, 1.1794434)
+material = ExtResource("5_v0xrp")
+
+[node name="Box_04" type="CSGBox3D" parent="Block/MwainHallWalls" unique_id=895705917]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 6.7657104, 2.6040556, 29.096678)
+use_collision = true
+size = Vector3(38.717537, 5, 1.1794434)
+material = ExtResource("5_v0xrp")
+
+[node name="Door" type="CSGBox3D" parent="Block/MwainHallWalls" unique_id=70691608]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 20.75141, 0.8958609, 18.341808)
+operation = 2
+size = Vector3(2.292173, 4.2729955, 1.2193608)
+material = ExtResource("5_v0xrp")
+
+[node name="StartingHallWalls" type="CSGPolygon3D" parent="Block" unique_id=1941897370]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -28.14135, 2.2567072, -27.614271)
+use_collision = true
+polygon = PackedVector2Array(0, 0, 0, 6.0323195, 7.9862185, 6.0323195, 7.9862185, 0, 5.832684, 0, 5.832684, 2.1604252, 5.797337, 2.5193086, 5.6926546, 2.8644001, 5.52266, 3.1824381, 5.293885, 3.461201, 5.0151224, 3.6899757, 4.697084, 3.8599708, 4.3519926, 3.964653, 3.9931092, 4, 3.634226, 3.964653, 3.2891345, 3.8599708, 2.9710963, 3.6899757, 2.6923335, 3.461201, 2.4635587, 3.1824381, 2.2935638, 2.8644001, 2.1888814, 2.5193086, 2.1535344, 2.1604252, 2.1535344, 0)
+depth = 1.0436721
+material = ExtResource("5_v0xrp")
+script = ExtResource("5_0758s")
+size = Vector3(7.9862185, 6.0323195, 1.0436721)
+opening_width = 3.679149485821163
+opening_height = 4.0
+arc_segments = 16
+
+[node name="CurvedWall" type="CSGPolygon3D" parent="Block/StartingHallWalls" unique_id=188649895]
+transform = Transform3D(0.65761703, 0, -0.7340216, 0, 1, 0, 0.73284847, 0, 0.6586697, 4.0749683, -2.1925402, -4.694952)
+use_collision = true
+polygon = PackedVector2Array(5.5, 0, 5.5, 6.935833, 6.25, 6.935833, 6.25, 0)
+mode = 1
+spin_degrees = 275.75186
+spin_sides = 12
+material = ExtResource("5_v0xrp")
+script = ExtResource("7_0758s")
+radius = 5.5
+thickness = 0.75
+height = 6.935833
+angle = 275.75186843119263
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Block" unique_id=502537966]
+navigation_mesh = SubResource("NavigationMesh_4c57u")
+
+[node name="walkables" type="CSGBox3D" parent="Block/NavigationRegion3D" unique_id=564569406]
+transform = Transform3D(0.97412163, 0, -0.22602437, 0, 1, 0, 0.22602437, 0, 0.97412163, -17.032091, 0.46089935, -30.97286)
+use_collision = true
+size = Vector3(4.4158287, 0.5, 7.5403547)
+material = ExtResource("4_vl2yc")
+metadata/_csg_blockout_shell = SubResource("PackedScene_v0xrp")
+
+[node name="Cylinder" type="CSGCylinder3D" parent="Block/NavigationRegion3D/walkables" unique_id=1264700625]
+transform = Transform3D(0.97412163, 0, 0.22602437, 0, 1, 0, -0.22602437, 0, 0.97412163, -15.645863, 1.0084038, 2.8961754)
+use_collision = true
+radius = 5.5
+sides = 17
+material = ExtResource("4_vl2yc")
+
+[node name="Wedge2" type="CSGPolygon3D" parent="Block/NavigationRegion3D/walkables/Cylinder" unique_id=861955721]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 15.657793, -1.1210413, -3.9329376)
+operation = 2
+use_collision = true
+polygon = PackedVector2Array(0, 0, 11.72, 2.9212008, 11.72, 0)
+depth = 8.0
+material = ExtResource("5_v0xrp")
+script = ExtResource("5_xoepn")
+size = Vector3(11.72, 2.9212008, 8)
+
+[node name="Wedge" type="CSGPolygon3D" parent="Block/NavigationRegion3D/walkables/Cylinder" unique_id=1024600432]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 15.657793, -1.1210413, -3.9329376)
+use_collision = true
+polygon = PackedVector2Array(0, 0, 11.72, 2.1517382, 11.72, 0)
+depth = 8.0
+material = ExtResource("4_vl2yc")
+script = ExtResource("5_xoepn")
+size = Vector3(11.72, 2.1517382, 8)
+
+[node name="Block_03" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables" unique_id=978983549]
+transform = Transform3D(0.9595399, 0, -0.28157246, 0, 1, 0, 0.28157246, 0, 0.9595399, 2.9115124, 0, 0.5116501)
+use_collision = true
+size = Vector3(4.4158287, 0.5, 7.936448)
+material = ExtResource("4_vl2yc")
+
+[node name="Block_04" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables" unique_id=1367338733]
+transform = Transform3D(0.8489564, 0, -0.5284627, 0, 1, 0, 0.5284627, 0, 0.8489564, 5.653633, 0, 1.7645054)
+use_collision = true
+size = Vector3(4.4158287, 0.5, 7.910081)
+material = ExtResource("4_vl2yc")
+
+[node name="Block_05" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables" unique_id=483764187]
+transform = Transform3D(0.8254508, 0, -0.56447417, 0, 1, 0, 0.56447417, 0, 0.8254508, 14.182886, 0, 7.1464176)
+use_collision = true
+size = Vector3(4.4158287, 0.5, 7.5403547)
+material = ExtResource("4_vl2yc")
+
+[node name="Block_03" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables/Block_05" unique_id=776378929]
+transform = Transform3D(0.95953995, 0, -0.28157258, 0, 1, 0, 0.28157258, 0, 0.95953995, 2.9803047, 0, -0.52603054)
+use_collision = true
+size = Vector3(3.9634836, 0.5, 5.906326)
+material = ExtResource("4_vl2yc")
+
+[node name="Block_04" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables/Block_05" unique_id=1679486403]
+transform = Transform3D(0.7388434, 0, -0.6738772, 0, 1, 0, 0.6738772, 0, 0.7388434, 4.7231426, 0, 1.054986)
+use_collision = true
+size = Vector3(1.5653362, 0.5, 7.910081)
+material = ExtResource("4_vl2yc")
+
+[node name="Block_05" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables/Block_05" unique_id=397232871]
+transform = Transform3D(0.89056665, 0, -0.45485306, 0, 1, 0, 0.45485306, 0, 0.89056665, 5.661416, 0, -1.8000937)
+use_collision = true
+size = Vector3(0.898353, 0.5, 1.8401883)
+material = ExtResource("4_vl2yc")
+
+[node name="Block_08" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables/Block_05" unique_id=459213061]
+transform = Transform3D(0.9281228, 0, -0.37227434, 0, 1, 0, 0.37227434, 0, 0.9281228, 6.118449, 0, -1.6695442)
+use_collision = true
+size = Vector3(0.898353, 0.5, 1.8401883)
+material = ExtResource("4_vl2yc")
+
+[node name="Block_07" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables/Block_05" unique_id=1626066297]
+transform = Transform3D(0.8864991, 0, -0.46273053, 0, 1, 0, 0.46273053, 0, 0.8864991, 2.6236076, 0, 1.5895777)
+use_collision = true
+size = Vector3(0.898353, 0.5, 2.2216854)
+material = ExtResource("4_vl2yc")
+
+[node name="Block_06" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables/Block_05" unique_id=1721365819]
+transform = Transform3D(0.7358049, 0, -0.6771937, 0, 1, 0, 0.6771937, 0, 0.7358049, 5.6195564, 0, 1.746747)
+use_collision = true
+size = Vector3(1.5653362, 0.5, 4.2714643)
+material = ExtResource("4_vl2yc")
+
+[node name="Block_09" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables/Block_05" unique_id=1160733004]
+transform = Transform3D(0.7358049, 0, -0.6771937, 0, 1, 0, 0.6771937, 0, 0.7358049, 5.0934467, 0, -0.7909651)
+use_collision = true
+size = Vector3(1.5653362, 0.5, 1.4624915)
+material = ExtResource("4_vl2yc")
+
+[node name="Block_06" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables" unique_id=1860500014]
+transform = Transform3D(0.8489564, 0, -0.5284627, 0, 1, 0, 0.5284627, 0, 0.8489564, 9.319466, 0, 4.0067844)
+use_collision = true
+size = Vector3(4.4158287, 0.5, 7.8371205)
+material = ExtResource("4_vl2yc")
+
+[node name="Box" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables" unique_id=1898315107]
+transform = Transform3D(0.97412163, 0, 0.22602437, 0, 1, 0, -0.22602437, 0, 0.97412163, 22.243216, -0.009953737, 20.5089)
+use_collision = true
+size = Vector3(40, 0.5, 18.065636)
+material = ExtResource("4_vl2yc")
+
+[node name="Box2" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables" unique_id=1151237827]
+transform = Transform3D(0.97412163, 0, 0.22602437, 0, 1, 0, -0.22602437, 0, 0.97412163, 20.67795, -0.009953737, 35.858185)
+use_collision = true
+size = Vector3(28.444336, 0.5, 11.232525)
+material = ExtResource("4_vl2yc")
+
+[node name="Box3" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables" unique_id=364691248]
+transform = Transform3D(0.97412163, 0, 0.22602437, 0, 1, 0, -0.22602437, 0, 0.97412163, 38.734833, -0.009953737, 26.445852)
+use_collision = true
+size = Vector3(2.4874268, 0.5, 1.3711452)
+material = ExtResource("4_vl2yc")
+
+[node name="Box4" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables" unique_id=434184296]
+transform = Transform3D(0.97412163, 0, 0.22602437, 0, 1, 0, -0.22602437, 0, 0.97412163, 39.875477, -0.009953737, 31.854887)
+use_collision = true
+size = Vector3(8.841753, 0.5, 9.734401)
+material = ExtResource("4_vl2yc")
+
+[node name="Block_07" type="CSGBox3D" parent="Block/NavigationRegion3D/walkables" unique_id=639677745]
+transform = Transform3D(0.8489564, 0, -0.5284627, 0, 1, 0, 0.5284627, 0, 0.8489564, 11.997027, 0, 5.65254)
+use_collision = true
+size = Vector3(4.4158287, 0.5, 7.750901)
+material = ExtResource("4_vl2yc")
+
+[node name="SwarmSpawner" parent="." unique_id=1582894059 instance=ExtResource("9_v0xrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.604164, 0.7334213, 9.033068)
+spawn_radius = 4.4
+spawn_seed = 12343

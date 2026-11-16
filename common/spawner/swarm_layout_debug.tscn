@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://chdurf281xpdy"]
+
+[ext_resource type="PackedScene" path="res://common/spawner/swarm_spawner.tscn" id="1_spawner"]
+
+[sub_resource type="StandardMaterial3D" id="2_floor_material"]
+albedo_color = Color(0.13, 0.16, 0.2, 1)
+
+[sub_resource type="PlaneMesh" id="1_floor"]
+size = Vector2(24, 24)
+
+[node name="SwarmLayoutDebug" type="Node3D" unique_id=524382516]
+
+[node name="PreviewFloor" type="MeshInstance3D" parent="." unique_id=1620780023]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.03, 0)
+material_override = SubResource("2_floor_material")
+mesh = SubResource("1_floor")
+
+[node name="SwarmSpawner" parent="." unique_id=278967773 instance=ExtResource("1_spawner")]
+spawn_radius = 5.0
+activation_radius = 16.0
+separation_radius = 3.05
