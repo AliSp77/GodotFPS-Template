@@ -14,6 +14,11 @@ cap_bottom = false
 
 [node name="SwarmSpawner" type="Node3D" unique_id=1528273254]
 script = ExtResource("1_spawner")
+spawn_count = 50
+spawn_radius = 2.5
+spawn_seed = 17
+separation_radius = 0.2
+preview_visual_limit = 6
 
 [node name="SpawnPoint" type="Marker3D" parent="." unique_id=1715918096]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
@@ -23,3 +28,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 mesh = SubResource("2_marker_mesh")
 
 [node name="SwarmVisuals" type="MultiMeshInstance3D" parent="." unique_id=632438968]
+visible = false

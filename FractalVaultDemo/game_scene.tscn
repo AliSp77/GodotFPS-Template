@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://j6a2mhs52t2v"]
+
+[ext_resource type="PackedScene" uid="uid://bubbh4ij2mobp" path="res://FractalVaultDemo/start_hall.tscn" id="1_wm1v0"]
+[ext_resource type="PackedScene" uid="uid://d15cpo868piur" path="res://FractalVaultDemo/starting_point.tscn" id="2_o0uy8"]
+[ext_resource type="PackedScene" uid="uid://cdbipjyx57al2" path="res://player/player.tscn" id="3_f600h"]
+[ext_resource type="PackedScene" uid="uid://cd8mi3igujfwc" path="res://FractalVaultDemo/stage_01.tscn" id="3_na3qp"]
+
+[node name="GameScene" type="Node3D" unique_id=1993115954]
+
+[node name="StartHall" parent="." unique_id=362340844 instance=ExtResource("1_wm1v0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6093073)
+
+[node name="StartingPoint" parent="." unique_id=322989214 instance=ExtResource("2_o0uy8")]
+transform = Transform3D(-0.04420084, 0, 0.99902266, 0, 1, 0, -0.99902266, 0, -0.04420084, 30.67, -1.967, -47.246)
+
+[node name="Block" parent="StartingPoint" index="3" unique_id=1804236615]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.37, 0.055, 0.05)
+size = Vector3(83, 0.9385996, 12)
+
+[node name="Node3D" parent="StartingPoint/Block" index="3" unique_id=573199834 instance=ExtResource("3_na3qp")]
+transform = Transform3D(0.88727945, 0, 0.46123233, 0, 1, 0, -0.46123233, 0, 0.88727945, 14.879, -2.49, -30.646)
+
+[node name="SwarmSpawner" parent="StartingPoint" index="4" unique_id=1582894059]
+preview_visual_limit = 50
+
+[node name="Player" parent="." unique_id=1157596601 instance=ExtResource("3_f600h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025913954, 2.408361, 1.6521571)
+
+[editable path="StartingPoint"]

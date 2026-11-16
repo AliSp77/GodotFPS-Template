@@ -80,7 +80,7 @@ func _physics_process(delta: float) -> void:
 		var target_yaw := atan2(-horizontal_velocity.x, -horizontal_velocity.z)
 		visual.rotation.y = lerp_angle(
 			visual.rotation.y,
-			target_yaw,
+			-target_yaw,
 			minf(1.0, 8.0 * delta)
 		)
 	

@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://d15cpo868piur"]
 
 [ext_resource type="Material" path="res://addons/csg_blockout/res/materials/mat_grid_light.tres" id="1_jxotu"]
-[ext_resource type="PackedScene" uid="uid://cdbipjyx57al2" path="res://player/player.tscn" id="3_fwo4u"]
 [ext_resource type="Script" uid="uid://bee0xk53hkjjw" path="res://common/managers/input_manager.gd" id="4_input"]
 [ext_resource type="Material" path="res://addons/csg_blockout/res/materials/mat_grid_orange.tres" id="4_vl2yc"]
 [ext_resource type="Script" uid="uid://bjm6f0gc4f53x" path="res://addons/csg_blockout/scripts/shapes/csg_arch_3d.gd" id="5_0758s"]
@@ -58,9 +57,6 @@ script = ExtResource("4_input")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1814950600]
 environment = SubResource("Environment_2qwpg")
-
-[node name="Player" parent="." unique_id=1157596601 instance=ExtResource("3_fwo4u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.550617, 13.993725, -30.58191)
 
 [node name="Block" type="CSGBox3D" parent="." unique_id=1804236615]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.007019043, 0.024780273, 0.012451172)
@@ -153,6 +149,12 @@ radius = 5.5
 thickness = 0.75
 height = 6.935833
 angle = 275.75186843119263
+
+[node name="Door" type="CSGBox3D" parent="Block/StartingHallWalls" unique_id=2112455784]
+transform = Transform3D(0.97934115, 0, -0.20221522, 0, 1, 0, 0.20221522, 0, 0.97934115, 4.7963905, 1.4314394, -10.1815815)
+operation = 2
+size = Vector3(2.0449219, 2.4376953, 2.764394)
+material = ExtResource("4_vl2yc")
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="Block" unique_id=502537966]
 navigation_mesh = SubResource("NavigationMesh_4c57u")

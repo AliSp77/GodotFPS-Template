@@ -48,7 +48,7 @@ func _ready() -> void:
 	mesh.radial_segments = 6
 	mesh.rings = 2
 	var material := StandardMaterial3D.new()
-	material.albedo_color = Color(0.92, 0.2, 0.15)
+	material.albedo_color = Color(0.92, 0.2, 0.15, 0.0)
 	material.roughness = 0.85
 	mesh.material = material
 	var multimesh := MultiMesh.new()

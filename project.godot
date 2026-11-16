@@ -10,7 +10,7 @@ config_version=5
 
 [addons]
 
-csg_blockout/material_preset=2
+csg_blockout/material_preset=3
 
 [animation]
 

@@ -1,0 +1,89 @@
+[gd_scene format=3 uid="uid://cd8mi3igujfwc"]
+
+[ext_resource type="Material" path="res://addons/csg_blockout/res/materials/mat_grid_orange.tres" id="1_43adk"]
+[ext_resource type="Script" uid="uid://crjgek15e7jkl" path="res://addons/csg_blockout/scripts/shapes/csg_wedge_3d.gd" id="2_v0gxh"]
+
+[node name="Node3D" type="Node3D" unique_id=573199834]
+
+[node name="Cylinder" type="CSGCylinder3D" parent="." unique_id=485086110]
+use_collision = true
+radius = 20.0
+sides = 6
+material = ExtResource("1_43adk")
+
+[node name="Marker3D" type="Marker3D" parent="." unique_id=435893770]
+
+[node name="Wedge" type="CSGPolygon3D" parent="Marker3D" unique_id=216629726]
+transform = Transform3D(0.8657316, 0, 0.5005085, 0, 1, 0, -0.5005085, 0, 0.8657316, 19.491188, 0.9162047, 0.32454655)
+use_collision = true
+polygon = PackedVector2Array(0, 0, 20, 4.045987, 20, 0)
+depth = 20.0
+material = ExtResource("1_43adk")
+script = ExtResource("2_v0gxh")
+size = Vector3(20, 4.045987, 20)
+
+[node name="Marker3D2" type="Marker3D" parent="." unique_id=946410927]
+transform = Transform3D(0.49999997, 0, 0.86602545, 0, 1, 0, -0.86602545, 0, 0.49999997, 0, 0, 0)
+
+[node name="Wedge" type="CSGPolygon3D" parent="Marker3D2" unique_id=1182797357]
+transform = Transform3D(0.8657316, 0, 0.5005085, 0, 1, 0, -0.5005085, 0, 0.8657316, 19.491188, 0.9162047, 0.32454655)
+use_collision = true
+polygon = PackedVector2Array(0, 0, 20, 4.045987, 20, 0)
+depth = 20.0
+material = ExtResource("1_43adk")
+script = ExtResource("2_v0gxh")
+size = Vector3(20, 4.045987, 20)
+
+[node name="Marker3D3" type="Marker3D" parent="." unique_id=751152200]
+transform = Transform3D(-0.5000001, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.5000001, 0, 0, 0)
+
+[node name="Wedge" type="CSGPolygon3D" parent="Marker3D3" unique_id=101990603]
+transform = Transform3D(0.8657316, 0, 0.5005085, 0, 1, 0, -0.5005085, 0, 0.8657316, 19.491188, 0.9162047, 0.32454655)
+use_collision = true
+polygon = PackedVector2Array(0, 0, 20, 4.045987, 20, 0)
+depth = 20.0
+material = ExtResource("1_43adk")
+script = ExtResource("2_v0gxh")
+size = Vector3(20, 4.045987, 20)
+
+[node name="Box" type="CSGBox3D" parent="Marker3D3" unique_id=826460583]
+transform = Transform3D(0.5005083, -0.047414802, -0.8644322, 7.450581e-09, 0.99849916, -0.054768555, 0.8657313, 0.027412105, 0.49975717, 34.567684, 4.6975145, -20.562284)
+use_collision = true
+size = Vector3(6.0000014, 1, 7)
+material = ExtResource("1_43adk")
+
+[node name="Marker3D4" type="Marker3D" parent="." unique_id=78112209]
+transform = Transform3D(-1, 0, -1.4901161e-07, 0, 1, 0, 1.4901161e-07, 0, -1, 0, 0, 0)
+
+[node name="Wedge" type="CSGPolygon3D" parent="Marker3D4" unique_id=883777216]
+transform = Transform3D(0.8657316, 0, 0.5005085, 0, 1, 0, -0.5005085, 0, 0.8657316, 19.491188, 0.9162047, 0.32454655)
+use_collision = true
+polygon = PackedVector2Array(0, 0, 20, 4.045987, 20, 0)
+depth = 20.0
+material = ExtResource("1_43adk")
+script = ExtResource("2_v0gxh")
+size = Vector3(20, 4.045987, 20)
+
+[node name="Marker3D5" type="Marker3D" parent="." unique_id=321053348]
+transform = Transform3D(-0.49999985, 0, -0.8660255, 0, 1, 0, 0.8660255, 0, -0.49999985, 0, 0, 0)
+
+[node name="Wedge" type="CSGPolygon3D" parent="Marker3D5" unique_id=1254322931]
+transform = Transform3D(0.8657316, 0, 0.5005085, 0, 1, 0, -0.5005085, 0, 0.8657316, 19.491188, 0.9162047, 0.32454655)
+use_collision = true
+polygon = PackedVector2Array(0, 0, 20, 4.045987, 20, 0)
+depth = 20.0
+material = ExtResource("1_43adk")
+script = ExtResource("2_v0gxh")
+size = Vector3(20, 4.045987, 20)
+
+[node name="Marker3D6" type="Marker3D" parent="." unique_id=1461377952]
+transform = Transform3D(0.50000024, 0, -0.8660253, 0, 1, 0, 0.8660253, 0, 0.50000024, 0, 0, 0)
+
+[node name="Wedge" type="CSGPolygon3D" parent="Marker3D6" unique_id=20803594]
+transform = Transform3D(0.8657316, 0, 0.5005085, 0, 1, 0, -0.5005085, 0, 0.8657316, 19.491188, 0.9162047, 0.32454655)
+use_collision = true
+polygon = PackedVector2Array(0, 0, 20, 4.045987, 20, 0)
+depth = 20.0
+material = ExtResource("1_43adk")
+script = ExtResource("2_v0gxh")
+size = Vector3(20, 4.045987, 20)

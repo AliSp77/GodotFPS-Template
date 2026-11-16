@@ -1,0 +1,161 @@
+[gd_scene format=3 uid="uid://bn5me4hy0prsc"]
+
+[ext_resource type="Material" path="res://addons/csg_blockout/res/materials/mat_grid_dark.tres" id="1_nslcs"]
+[ext_resource type="Script" uid="uid://dsqnk0jgc0beb" path="res://FractalVaultDemo/Scripts/atomatic_doorway.gd" id="1_sipfr"]
+
+[sub_resource type="Animation" id="Animation_5xqjt"]
+resource_name = "Close"
+length = 0.5
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LeftDoorPivot:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 1.5707964, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RightDoorPivot2:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, -1.5707964, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_sipfr"]
+resource_name = "DebugWait"
+
+[sub_resource type="Animation" id="Animation_0knsk"]
+resource_name = "Open"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LeftDoorPivot:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 1.5707964, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RightDoorPivot2:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -1.5707964, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_105cu"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LeftDoorPivot:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RightDoorPivot2:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_y3ok1"]
+_data = {
+&"Close": SubResource("Animation_5xqjt"),
+&"DebugWait": SubResource("Animation_sipfr"),
+&"Open": SubResource("Animation_0knsk"),
+&"RESET": SubResource("Animation_105cu")
+}
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bhvah"]
+size = Vector3(2.5610352, 0.25561523, 1.2255859)
+
+[node name="AtomaticDoorway" type="Node3D" unique_id=1797467163 node_paths=PackedStringArray("animation_player")]
+script = ExtResource("1_sipfr")
+debug = true
+animation_player = NodePath("AnimationPlayer")
+
+[node name="Box_Group" type="CSGCombiner3D" parent="." unique_id=959005028]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.187, 2, 0)
+use_collision = true
+
+[node name="Box" type="CSGBox3D" parent="Box_Group" unique_id=480166319]
+use_collision = true
+size = Vector3(3, 4, 0.5)
+material = ExtResource("1_nslcs")
+
+[node name="Door" type="CSGBox3D" parent="Box_Group" unique_id=453718231]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+operation = 2
+size = Vector3(2, 3, 1)
+material = ExtResource("1_nslcs")
+
+[node name="LeftDoorPivot" type="Marker3D" parent="." unique_id=1277149188]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 0, 0)
+
+[node name="LeftDoorMesh" type="CSGBox3D" parent="LeftDoorPivot" unique_id=49436049]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 1.5, 0)
+use_collision = true
+size = Vector3(1.2, 3.2, 0.15)
+material = ExtResource("1_nslcs")
+
+[node name="RightDoorPivot2" type="Marker3D" parent="." unique_id=105061542]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0, 0)
+
+[node name="RightDoorMesh" type="CSGBox3D" parent="RightDoorPivot2" unique_id=146739948]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 1.5, 0)
+use_collision = true
+size = Vector3(1.2, 3.2, 0.15)
+material = ExtResource("1_nslcs")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2071668993]
+libraries/ = SubResource("AnimationLibrary_y3ok1")
+
+[node name="BackPresurePlate" type="Area3D" parent="." unique_id=1335349186]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackPresurePlate" unique_id=1999247553]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13989258, 0.24633789, 0.79190326)
+shape = SubResource("BoxShape3D_bhvah")
+
+[node name="FrontPresurePlate" type="Area3D" parent="." unique_id=222957456]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FrontPresurePlate" unique_id=1284735853]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13989258, 0.24381435, -0.79954624)
+shape = SubResource("BoxShape3D_bhvah")
+
+[node name="Timer" type="Timer" parent="." unique_id=1364333745]
+one_shot = true
+
+[connection signal="body_entered" from="BackPresurePlate" to="." method="_on_back_presure_plate_body_entered"]
+[connection signal="body_entered" from="FrontPresurePlate" to="." method="_on_front_presure_plate_body_entered"]
