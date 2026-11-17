@@ -2,6 +2,7 @@
 
 [ext_resource type="Material" path="res://addons/csg_blockout/res/materials/mat_grid_dark.tres" id="1_wco0s"]
 [ext_resource type="Material" path="res://addons/csg_blockout/res/materials/mat_grid_orange.tres" id="2_g4o7v"]
+[ext_resource type="PackedScene" uid="uid://bn5me4hy0prsc" path="res://FractalVaultDemo/atomatic_doorway.tscn" id="3_g4o7v"]
 
 [node name="StartHall" type="Node3D" unique_id=362340844]
 
@@ -67,8 +68,8 @@ size = Vector3(0.5, 3.6923966, 3.1489258)
 material = ExtResource("1_wco0s")
 
 [node name="Box_04" type="CSGBox3D" parent="Walls_Group" unique_id=2077527298]
-transform = Transform3D(-1, 0, 0, 0, 0, -1, 0, -1, 0, 0.016571641, 1.7673178, -1.7291245)
-size = Vector3(2.8979404, 3.6300957, 0.83013725)
+transform = Transform3D(-1, 0, 0, 0, 0, -1, 0, -1, 0, 0.014740586, 1.7653646, -1.7542505)
+size = Vector3(2.8979404, 3.696584, 0.83013725)
 material = ExtResource("1_wco0s")
 
 [node name="Box_05" type="CSGBox3D" parent="Walls_Group" unique_id=261381012]
@@ -121,3 +122,7 @@ omni_range = 3.715
 [node name="AreaLight3D" type="AreaLight3D" parent="." unique_id=1776953361]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 2.746922, -6.2279935)
 area_size = Vector2(1.6688877, 0.02562809)
+
+[node name="AtomaticDoorway" parent="." unique_id=1797467163 instance=ExtResource("3_g4o7v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0044949055, 0.56463623, -6.397278)
+debug = false

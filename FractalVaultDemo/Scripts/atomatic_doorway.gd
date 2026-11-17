@@ -3,9 +3,13 @@ extends Node3D
 
 @export var debug: bool
 @export var opening_sequence: bool
-@export var animation_player: AnimationPlayer
+
+
+@export var wait_time: float = 2.0
 
 @onready var timer: Timer = $Timer
+@onready var presure_plate: Area3D = $PresurePlate
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 var _door_state: bool = false # True: Open, False: Close
 var _open_timer: bool = false
@@ -13,6 +17,9 @@ var _open_timer: bool = false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	timer.timeout.connect(_on_timer_timeout)
+	timer.wait_time = wait_time
+	presure_plate.body_entered.connect(_on_presure_plate_body_entered)
+	presure_plate.body_exited.connect(_on_presure_plate_body_exited)
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -23,26 +30,27 @@ func _process(delta: float) -> void:
 			opening_sequence = false
 			animation_player.queue("DebugWait")
 			animation_player.queue("Close")
+		print(timer.time_left)
 	pass
 
 func try_2_open():
 	if not _door_state:
 		animation_player.play("Open")
 		_door_state = true
-		_open_timer = true
-		timer.start()
 
 func try_2_close():
-	if not _door_state:
-		animation_player.play("Open")
-		_door_state = true
+	if _door_state:
+		animation_player.play("Close")
+		_door_state = false
 		
-func _on_front_presure_plate_body_entered(body: Node3D) -> void:
-	animation_player.play()
+func _on_presure_plate_body_entered(body: Node3D) -> void:
+	try_2_open()
+	timer.stop()
 	pass # Replace with function body.
 
-func _on_back_presure_plate_body_entered(body: Node3D) -> void:
+func _on_presure_plate_body_exited(body: Node3D) -> void:
+	timer.start()
 	pass # Replace with function body.
 
 func _on_timer_timeout():
-	_open_timer = false
+	try_2_close()

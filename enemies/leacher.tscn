@@ -1,0 +1,176 @@
+[gd_scene format=3 uid="uid://cumxs056a1mxy"]
+
+[ext_resource type="Script" uid="uid://dh44if7r1bufl" path="res://enemies/leacher.gd" id="1_rhjbd"]
+[ext_resource type="Script" uid="uid://b4pgqtg3t3tx4" path="res://ai/tasks/find_random_patrol_point.gd" id="2_ggm2j"]
+[ext_resource type="Script" uid="uid://b63q8spxahp1u" path="res://ai/tasks/move_to.gd" id="3_rp1f3"]
+[ext_resource type="PackedScene" uid="uid://dahahiqbij0mc" path="res://enemies/VisionCone.tscn" id="4_rp1f3"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cqakf"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_68t63"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0pep7"]
+albedo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xylcl"]
+lifetime_randomness = 0.2
+emission_shape = 1
+emission_sphere_radius = 1.0
+gravity = Vector3(0, 0, 0)
+radial_accel_min = 4.9999976
+radial_accel_max = 9.799997
+
+[sub_resource type="QuadMesh" id="QuadMesh_4bb4a"]
+size = Vector2(0.15, 0.15)
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_rhjbd"]
+var/health/name = &"health"
+var/health/type = 3
+var/health/value = 0.0
+var/health/hint = 0
+var/health/hint_string = ""
+var/target/name = &"target"
+var/target/type = 24
+var/target/hint = 0
+var/target/hint_string = ""
+var/patrol_destination/name = &"patrol_destination"
+var/patrol_destination/type = 9
+var/patrol_destination/value = Vector3(0, 0, 0)
+var/patrol_destination/hint = 0
+var/patrol_destination/hint_string = ""
+var/latch_ok/name = &"latch_ok"
+var/latch_ok/type = 1
+var/latch_ok/value = false
+var/latch_ok/hint = 0
+var/latch_ok/hint_string = ""
+var/approach_speed/name = &"approach_speed"
+var/approach_speed/type = 3
+var/approach_speed/value = 0.0
+var/approach_speed/hint = 0
+var/approach_speed/hint_string = ""
+var/latch_distance/name = &"latch_distance"
+var/latch_distance/type = 3
+var/latch_distance/value = 0.0
+var/latch_distance/hint = 0
+var/latch_distance/hint_string = ""
+var/pull_speed/name = &"pull_speed"
+var/pull_speed/type = 3
+var/pull_speed/value = 0.0
+var/pull_speed/hint = 0
+var/pull_speed/hint_string = ""
+var/arrival_distance/name = &"arrival_distance"
+var/arrival_distance/type = 3
+var/arrival_distance/value = 0.0
+var/arrival_distance/hint = 0
+var/arrival_distance/hint_string = ""
+var/wander_position/name = &"wander_position"
+var/wander_position/type = 9
+var/wander_position/value = Vector3(0, 0, 0)
+var/wander_position/hint = 0
+var/wander_position/hint_string = ""
+var/wander_radius/name = &"wander_radius"
+var/wander_radius/type = 3
+var/wander_radius/value = 0.0
+var/wander_radius/hint = 0
+var/wander_radius/hint_string = ""
+var/walk_speed/name = &"walk_speed"
+var/walk_speed/type = 3
+var/walk_speed/value = 0.0
+var/walk_speed/hint = 0
+var/walk_speed/hint_string = ""
+var/is_chasing/name = &"is_chasing"
+var/is_chasing/type = 1
+var/is_chasing/value = false
+var/is_chasing/hint = 0
+var/is_chasing/hint_string = ""
+
+[sub_resource type="BBVariant" id="BBVariant_rp1f3"]
+type = 1
+saved_value = true
+resource_name = "true"
+
+[sub_resource type="BTCheckVar" id="BTCheckVar_cqya1"]
+variable = &"is_chasing"
+value = SubResource("BBVariant_rp1f3")
+
+[sub_resource type="BTSequence" id="BTSequence_beovg"]
+custom_name = "Chase"
+children = [SubResource("BTCheckVar_cqya1")]
+
+[sub_resource type="BBVariant" id="BBVariant_ggm2j"]
+type = 1
+saved_value = false
+resource_name = "false"
+
+[sub_resource type="BTCheckVar" id="BTCheckVar_rp1f3"]
+variable = &"is_chasing"
+value = SubResource("BBVariant_ggm2j")
+
+[sub_resource type="BTAction" id="BTAction_cqya1"]
+script = ExtResource("2_ggm2j")
+patrol_radius = 10.0
+
+[sub_resource type="BTAction" id="BTAction_beovg"]
+script = ExtResource("3_rp1f3")
+timeout = 5.0
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_ggm2j"]
+min_duration = 3.0
+max_duration = 5.0
+
+[sub_resource type="BTWait" id="BTWait_ggm2j"]
+duration = 10.0
+
+[sub_resource type="BTSequence" id="BTSequence_rhjbd"]
+custom_name = "Patrol"
+children = [SubResource("BTCheckVar_rp1f3"), SubResource("BTAction_cqya1"), SubResource("BTAction_beovg"), SubResource("BTRandomWait_ggm2j"), SubResource("BTWait_ggm2j")]
+
+[sub_resource type="BTDynamicSelector" id="BTDynamicSelector_ggm2j"]
+children = [SubResource("BTSequence_beovg"), SubResource("BTSequence_rhjbd")]
+
+[sub_resource type="BTRepeat" id="BTRepeat_ggm2j"]
+forever = true
+children = [SubResource("BTDynamicSelector_ggm2j")]
+
+[sub_resource type="BehaviorTree" id="BehaviorTree_xhbki"]
+blackboard_plan = SubResource("BlackboardPlan_rhjbd")
+root_task = SubResource("BTRepeat_ggm2j")
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_xhbki"]
+
+[node name="Leacher" type="CharacterBody3D" unique_id=32077111]
+script = ExtResource("1_rhjbd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=317656859]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_cqakf")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=875469844]
+target_desired_distance = 1.5
+
+[node name="Visual" type="Node3D" parent="." unique_id=1574444390]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Visual" unique_id=946439746]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_68t63")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_0pep7")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="Visual" unique_id=1139337702]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4721069, 0)
+process_material = SubResource("ParticleProcessMaterial_xylcl")
+draw_pass_1 = SubResource("QuadMesh_4bb4a")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1548267048]
+
+[node name="BTPlayer" type="BTPlayer" parent="." unique_id=137643714]
+behavior_tree = SubResource("BehaviorTree_xhbki")
+blackboard_plan = SubResource("BlackboardPlan_xhbki")
+
+[node name="Marker3D" type="Marker3D" parent="." unique_id=723287811]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -1)
+
+[node name="VisionSensor" parent="." unique_id=101220262 instance=ExtResource("4_rp1f3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0034458637, 1.5110455, -0.0038747787)
+length = 10.0
+angle = 90.0
