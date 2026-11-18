@@ -1,9 +1,17 @@
 [gd_scene format=3 uid="uid://cumxs056a1mxy"]
 
 [ext_resource type="Script" uid="uid://dh44if7r1bufl" path="res://enemies/leacher.gd" id="1_rhjbd"]
+[ext_resource type="Script" uid="uid://bn7k8bnm8ncxm" path="res://ai/tasks/chase_player.gd" id="2_cqya1"]
 [ext_resource type="Script" uid="uid://b4pgqtg3t3tx4" path="res://ai/tasks/find_random_patrol_point.gd" id="2_ggm2j"]
 [ext_resource type="Script" uid="uid://b63q8spxahp1u" path="res://ai/tasks/move_to.gd" id="3_rp1f3"]
 [ext_resource type="PackedScene" uid="uid://dahahiqbij0mc" path="res://enemies/VisionCone.tscn" id="4_rp1f3"]
+[ext_resource type="AudioStream" uid="uid://c4y4tklyj13iw" path="res://resources/undead/sfx/undead_alert.wav" id="5_rush"]
+[ext_resource type="AudioStream" uid="uid://ctdnyhhfcslw8" path="res://resources/undead/sfx/undead_spawn.wav" id="6_recover"]
+[ext_resource type="Script" uid="uid://bvfglfaokuil" path="res://ai/tasks/can_grab_player.gd" id="7_can_grab"]
+[ext_resource type="Script" uid="uid://dh80s4i3jepok" path="res://ai/tasks/find_carry_destination.gd" id="8_find_carry"]
+[ext_resource type="Script" uid="uid://ufk8i27tbyln" path="res://ai/tasks/grab_player.gd" id="9_grab"]
+[ext_resource type="Script" uid="uid://b1qgr5efedanu" path="res://ai/tasks/carry_player.gd" id="10_carry"]
+[ext_resource type="Script" uid="uid://1cbrdsvk2fjs" path="res://ai/tasks/release_player.gd" id="11_release"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cqakf"]
 
@@ -20,8 +28,16 @@ gravity = Vector3(0, 0, 0)
 radial_accel_min = 4.9999976
 radial_accel_max = 9.799997
 
+[sub_resource type="StandardMaterial3D" id="RushParticleMaterial"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
 [sub_resource type="QuadMesh" id="QuadMesh_4bb4a"]
+material = SubResource("RushParticleMaterial")
 size = Vector2(0.15, 0.15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cqakf"]
+size = Vector3(0.6464844, 0.39343262, 0.37841797)
 
 [sub_resource type="BlackboardPlan" id="BlackboardPlan_rhjbd"]
 var/health/name = &"health"
@@ -83,6 +99,30 @@ var/is_chasing/type = 1
 var/is_chasing/value = false
 var/is_chasing/hint = 0
 var/is_chasing/hint_string = ""
+var/carry_destination/name = &"carry_destination"
+var/carry_destination/type = 9
+var/carry_destination/value = Vector3(0, 0, 0)
+var/carry_destination/hint = 0
+var/carry_destination/hint_string = ""
+
+[sub_resource type="BTCondition" id="BTCondition_can_grab"]
+script = ExtResource("7_can_grab")
+
+[sub_resource type="BTAction" id="BTAction_find_carry"]
+script = ExtResource("8_find_carry")
+
+[sub_resource type="BTAction" id="BTAction_grab"]
+script = ExtResource("9_grab")
+
+[sub_resource type="BTAction" id="BTAction_carry"]
+script = ExtResource("10_carry")
+
+[sub_resource type="BTAction" id="BTAction_release"]
+script = ExtResource("11_release")
+
+[sub_resource type="BTSequence" id="BTSequence_grab"]
+custom_name = "Grab: find point, lift, carry, release"
+children = [SubResource("BTCondition_can_grab"), SubResource("BTAction_find_carry"), SubResource("BTAction_grab"), SubResource("BTAction_carry"), SubResource("BTAction_release")]
 
 [sub_resource type="BBVariant" id="BBVariant_rp1f3"]
 type = 1
@@ -93,9 +133,15 @@ resource_name = "true"
 variable = &"is_chasing"
 value = SubResource("BBVariant_rp1f3")
 
+[sub_resource type="BTAction" id="BTAction_yhmic"]
+custom_name = "Rush toward player"
+script = ExtResource("2_cqya1")
+phase = null
+phase_speed = null
+
 [sub_resource type="BTSequence" id="BTSequence_beovg"]
 custom_name = "Chase"
-children = [SubResource("BTCheckVar_cqya1")]
+children = [SubResource("BTCheckVar_cqya1"), SubResource("BTAction_yhmic")]
 
 [sub_resource type="BBVariant" id="BBVariant_ggm2j"]
 type = 1
@@ -118,15 +164,18 @@ timeout = 5.0
 min_duration = 3.0
 max_duration = 5.0
 
-[sub_resource type="BTWait" id="BTWait_ggm2j"]
-duration = 10.0
-
 [sub_resource type="BTSequence" id="BTSequence_rhjbd"]
 custom_name = "Patrol"
-children = [SubResource("BTCheckVar_rp1f3"), SubResource("BTAction_cqya1"), SubResource("BTAction_beovg"), SubResource("BTRandomWait_ggm2j"), SubResource("BTWait_ggm2j")]
+children = [SubResource("BTCheckVar_rp1f3"), SubResource("BTAction_cqya1"), SubResource("BTAction_beovg"), SubResource("BTRandomWait_ggm2j")]
+
+[sub_resource type="BTWait" id="BTWait_ggm2j"]
+duration = 5.0
+
+[sub_resource type="BTSelector" id="BTSelector_3abr3"]
+children = [SubResource("BTSequence_rhjbd"), SubResource("BTWait_ggm2j")]
 
 [sub_resource type="BTDynamicSelector" id="BTDynamicSelector_ggm2j"]
-children = [SubResource("BTSequence_beovg"), SubResource("BTSequence_rhjbd")]
+children = [SubResource("BTSequence_grab"), SubResource("BTSequence_beovg"), SubResource("BTSelector_3abr3")]
 
 [sub_resource type="BTRepeat" id="BTRepeat_ggm2j"]
 forever = true
@@ -158,8 +207,15 @@ surface_material_override/0 = SubResource("StandardMaterial3D_0pep7")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Visual" unique_id=1139337702]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4721069, 0)
+emitting = false
+amount = 35
+lifetime = 0.5
 process_material = SubResource("ParticleProcessMaterial_xylcl")
 draw_pass_1 = SubResource("QuadMesh_4bb4a")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Visual" unique_id=101050208]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.51, -0.41)
+mesh = SubResource("BoxMesh_cqakf")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1548267048]
 
@@ -170,7 +226,33 @@ blackboard_plan = SubResource("BlackboardPlan_xhbki")
 [node name="Marker3D" type="Marker3D" parent="." unique_id=723287811]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -1)
 
+[node name="StateLabel" type="Label3D" parent="." unique_id=219974651]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.45, 0)
+pixel_size = 0.008
+billboard = 1
+modulate = Color(1, 0.55, 1, 1)
+text = "LEACHER // PATROL"
+font_size = 36
+
+[node name="RushSFX" type="AudioStreamPlayer3D" parent="." unique_id=1046079080]
+stream = ExtResource("5_rush")
+volume_db = -6.0
+pitch_scale = 1.15
+max_distance = 30.0
+
+[node name="RecoverSFX" type="AudioStreamPlayer3D" parent="." unique_id=77497375]
+stream = ExtResource("6_recover")
+volume_db = -9.0
+pitch_scale = 0.8
+max_distance = 25.0
+
 [node name="VisionSensor" parent="." unique_id=101220262 instance=ExtResource("4_rp1f3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0034458637, 1.5110455, -0.0038747787)
 length = 10.0
 angle = 90.0
+
+[node name="RayCast3D" type="RayCast3D" parent="." unique_id=296179107]
+enabled = false
+
+[connection signal="body_entered" from="VisionSensor" to="." method="_on_vision_sensor_body_entered"]
+[connection signal="body_exited" from="VisionSensor" to="." method="_on_vision_sensor_body_exited"]

@@ -15,6 +15,7 @@ var current_weapon: Node3D
 
 # Track aim mode state
 var current_aim_mode: bool = false
+var controls_locked: bool = false
 
 # Weapon switch state
 var is_switching: bool = false
@@ -57,19 +58,25 @@ func _process(_delta: float) -> void:
 	
 	# Continuous firing for automatic weapons (burst mode)
 	# Pass false to indicate this is NOT the initial press
-	if Input.is_action_pressed("fire") and current_weapon.burst_mode:
+	if not controls_locked and Input.is_action_pressed("fire") and current_weapon.burst_mode:
 		current_weapon.try_fire(false)
 
 func _on_fire_input() -> void:
+	if controls_locked:
+		return
 	# This is called on initial press, so pass true
 	current_weapon.try_fire(true)
 
 func _on_reload_input() -> void:
+	if controls_locked:
+		return
 	if current_weapon.is_melee_weapon:
 		return
 	current_weapon.start_reload()
 
 func _on_aim_mode_changed(aim_mode: bool) -> void:
+	if controls_locked:
+		return
 	# Update tracked aim mode
 	current_aim_mode = aim_mode
 	
@@ -78,18 +85,24 @@ func _on_aim_mode_changed(aim_mode: bool) -> void:
 
 # Weapon switching functions
 func switch_to_next_weapon() -> void:
+	if controls_locked:
+		return
 	if current_weapon.is_reloading:
 		return
 	var next_index = (current_weapon_index + 1) % weapons_array.size()
 	switch_weapon(next_index)
 
 func switch_to_previous_weapon() -> void:
+	if controls_locked:
+		return
 	if current_weapon.is_reloading:
 		return
 	var prev_index = (current_weapon_index - 1 + weapons_array.size()) % weapons_array.size()
 	switch_weapon(prev_index)
 
 func switch_weapon(index: int) -> void:
+	if controls_locked:
+		return
 	if index < 0 or index >= weapons_array.size():
 		return
 	if index == current_weapon_index and not is_switching:
@@ -130,6 +143,10 @@ func switch_weapon(index: int) -> void:
 	switch_tween.tween_callback(func():
 		is_switching = false
 	)
+
+
+func set_controls_locked(value: bool) -> void:
+	controls_locked = value
 
 # Helper functions to get weapon state
 func get_current_mag() -> int:

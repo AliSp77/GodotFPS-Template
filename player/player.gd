@@ -1,4 +1,5 @@
 extends CharacterBody3D
+class_name Player
 
 
 @export var walk_speed: float = 5.0
@@ -44,6 +45,12 @@ var current_health:float = 100.0
 var is_alive: bool = true
 const HIT_STAGGER: float = 40.0
 
+var is_grabbed: bool = false
+var grabber: Node3D
+var grab_height: float = 0.0
+var grab_camera_time: float = 0.0
+var camera_transform_before_grab: Transform3D
+
 
 
 func _ready() -> void:
@@ -53,6 +60,8 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if is_grabbed:
+		return
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		camera_pivot.rotate_y(-event.relative.x * sensitivity)
 		camera_holder.rotate_x(-event.relative.y * sensitivity)
@@ -62,6 +71,15 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if is_grabbed:
+		if not is_instance_valid(grabber):
+			end_leacher_grab()
+		else:
+			velocity = Vector3.ZERO
+			sync_grab_position()
+			Global.player_velocity_changed.emit(Vector3.ZERO)
+			return
+
 	# Add the gravity
 	if not is_on_floor():
 		velocity.y += GRAVITY * delta
@@ -111,6 +129,50 @@ func _physics_process(delta: float) -> void:
 	Global.player_velocity_changed.emit(velocity)
 
 	move_and_slide()
+
+
+func _process(delta: float) -> void:
+	if not is_grabbed:
+		return
+	grab_camera_time += delta
+	camera_holder.transform = camera_transform_before_grab
+	camera_holder.position += Vector3(
+		sin(grab_camera_time * 18.0) * 0.025,
+		cos(grab_camera_time * 23.0) * 0.025,
+		0.0
+	)
+	camera_holder.rotation.z += sin(grab_camera_time * 16.0) * 0.012
+
+
+func begin_leacher_grab(new_grabber: Node3D, lift_height: float) -> bool:
+	if is_grabbed or not is_alive or not is_instance_valid(new_grabber):
+		return false
+	is_grabbed = true
+	grabber = new_grabber
+	grab_height = lift_height
+	grab_camera_time = 0.0
+	camera_transform_before_grab = camera_holder.transform
+	velocity = Vector3.ZERO
+	weapons_manager.set_controls_locked(true)
+	sync_grab_position()
+	return true
+
+
+func sync_grab_position() -> void:
+	if is_grabbed and is_instance_valid(grabber):
+		global_position = grabber.global_position + Vector3.UP * grab_height
+
+
+func end_leacher_grab(release_position: Vector3 = Vector3.INF) -> void:
+	if not is_grabbed:
+		return
+	is_grabbed = false
+	grabber = null
+	velocity = Vector3.ZERO
+	camera_holder.transform = camera_transform_before_grab
+	weapons_manager.set_controls_locked(false)
+	if release_position != Vector3.INF:
+		global_position = release_position
 
 
 func _handle_footsteps(delta: float) -> void:
@@ -171,6 +233,7 @@ func get_damage(damage:float,direction:Vector3, is_enemy_damage:bool = false) ->
 		current_health = 0.0
 		is_alive = false
 		Global.player_dead.emit()
+		end_leacher_grab()
 	else:
 		velocity +=  direction * HIT_STAGGER
 	Global.player_health_changed.emit(-damage,current_health,MAX_HEALTH, is_enemy_damage)

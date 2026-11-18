@@ -17,6 +17,17 @@ transform = Transform3D(-0.04420084, 0, 0.99902266, 0, 1, 0, -0.99902266, 0, -0.
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.37, 0.055, 0.05)
 size = Vector3(83, 0.9385996, 12)
 
+[node name="walkables" parent="StartingPoint/Block/NavigationRegion3D" parent_id_path=PackedInt32Array(322989214, 502537966) index="0" unique_id=564569406]
+transform = Transform3D(0.9741216, 0, -0.22602437, 0, 1, 0, 0.22602437, 0, 0.9741216, -17.138937, 0.46089935, -30.977585)
+
+[node name="Box" parent="StartingPoint/Block/NavigationRegion3D/walkables" index="5" unique_id=1898315107]
+transform = Transform3D(0.97412163, 0, 0.22602442, 0, 1, 0, -0.22602442, 0, 0.97412163, 22.376486, -0.009953737, 20.477974)
+size = Vector3(37.84381, 0.5, 18.065636)
+
+[node name="Box2" parent="StartingPoint/Block/NavigationRegion3D/walkables" index="6" unique_id=1151237827]
+transform = Transform3D(0.97412163, 0, 0.22602442, 0, 1, 0, -0.22602442, 0, 0.97412163, 20.894678, -0.009953737, 35.8079)
+size = Vector3(28.043608, 0.5, 11.232525)
+
 [node name="SwarmSpawner" parent="StartingPoint" index="4" unique_id=1582894059]
 preview_visual_limit = 50
 
