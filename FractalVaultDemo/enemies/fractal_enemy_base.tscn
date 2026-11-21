@@ -1,0 +1,215 @@
+[gd_scene load_steps=19 format=3]
+
+[ext_resource type="Script" path="res://FractalVaultDemo/enemies/fractal_enemy_base.gd" id="1_base"]
+[ext_resource type="Script" path="res://FractalVaultDemo/enemies/fractal_enemy_hurt_point.gd" id="2_hurt"]
+[ext_resource type="PackedScene" path="res://enemies/VisionCone.tscn" id="3_vision"]
+
+[sub_resource type="CapsuleShape3D" id="Shape_body"]
+radius = 0.32
+height = 1.6
+
+[sub_resource type="CapsuleMesh" id="Mesh_body"]
+radius = 0.3
+height = 1.55
+
+[sub_resource type="SphereShape3D" id="Shape_head"]
+radius = 0.25
+
+[sub_resource type="SphereMesh" id="Mesh_head"]
+radius = 0.24
+height = 0.48
+
+[sub_resource type="StandardMaterial3D" id="Material_body"]
+albedo_color = Color(0.22, 0.55, 0.85, 1)
+roughness = 0.85
+
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "idle"
+length = 1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals:position")
+tracks/0/interp = 1
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.025, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_move"]
+resource_name = "move"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals:position")
+tracks/0/interp = 1
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.065, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_alert"]
+resource_name = "alert"
+length = 0.35
+tracks/0/type = "value"
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals:scale")
+tracks/0/interp = 1
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.35),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(1, 1, 1), Vector3(1.08, 1.08, 1.08), Vector3(1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_attack_windup"]
+resource_name = "attack_windup"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals:position")
+tracks/0/interp = 1
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, 0.15)]
+}
+
+[sub_resource type="Animation" id="Animation_attack"]
+resource_name = "attack"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals:position")
+tracks/0/interp = 1
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.12, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0.15), Vector3(0, 0, -0.2), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_recover"]
+resource_name = "recover"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals:position")
+tracks/0/interp = 1
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, -0.1), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_hurt"]
+resource_name = "hurt"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals:scale")
+tracks/0/interp = 1
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(1, 1, 1), Vector3(1.1, 0.9, 1.1), Vector3(1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_dodge"]
+resource_name = "dodge"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals:position")
+tracks/0/interp = 1
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.12, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.15, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_death"]
+resource_name = "death"
+length = 0.9
+tracks/0/type = "value"
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals:scale")
+tracks/0/interp = 1
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(1, 1, 1), Vector3(1, 0.2, 1), Vector3(0.01, 0.01, 0.01)]
+}
+
+[sub_resource type="AnimationLibrary" id="Library_base"]
+_data = {
+&"idle": SubResource("Animation_idle"),
+&"move": SubResource("Animation_move"),
+&"alert": SubResource("Animation_alert"),
+&"attack_windup": SubResource("Animation_attack_windup"),
+&"attack": SubResource("Animation_attack"),
+&"recover": SubResource("Animation_recover"),
+&"hurt": SubResource("Animation_hurt"),
+&"dodge": SubResource("Animation_dodge"),
+&"death": SubResource("Animation_death")
+}
+
+[node name="FractalEnemyBase" type="CharacterBody3D" groups=["character"]]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_base")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.8, 0)
+shape = SubResource("Shape_body")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_desired_distance = 0.5
+target_desired_distance = 0.7
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(0, 0.8, 0)
+mesh = SubResource("Mesh_body")
+material_override = SubResource("Material_body")
+
+[node name="HeadMesh" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(0, 1.57, 0)
+mesh = SubResource("Mesh_head")
+material_override = SubResource("Material_body")
+
+[node name="HurtPoints" type="Node3D" parent="."]
+
+[node name="Head" type="AnimatableBody3D" parent="HurtPoints"]
+position = Vector3(0, 1.57, 0)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_hurt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtPoints/Head"]
+shape = SubResource("Shape_head")
+
+[node name="VisionSensor" parent="." instance=ExtResource("3_vision")]
+position = Vector3(0, 1.4, 0)
+collision_mask = 1
+length = 10.0
+angle = 90.0
+
+[node name="SightRay" type="RayCast3D" parent="."]
+position = Vector3(0, 1.4, 0)
+enabled = false
+collision_mask = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries/ = SubResource("Library_base")

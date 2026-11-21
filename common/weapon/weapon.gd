@@ -150,6 +150,9 @@ func fire_weapon() -> void:
 				return
 		Global.bullets_changed.emit()
 	
+	if not is_melee_weapon and Global.player is Node3D:
+		Global.noise_emitted.emit(Global.player.global_position, 24.0, Global.player)
+
 	# Play fire animation
 	if animation_player and animation_fire:
 		animation_player.play(animation_fire)

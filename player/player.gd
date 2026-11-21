@@ -89,6 +89,7 @@ func _physics_process(delta: float) -> void:
 		# Player just landed
 		if audio_manager:
 			audio_manager.play_footstep(true)  # Play jump/land sound
+			Global.noise_emitted.emit(global_position, 10.0, self)
 	
 	# Update floor state tracker
 	was_on_floor = is_on_floor()
@@ -188,6 +189,7 @@ func _handle_footsteps(delta: float) -> void:
 			# Play footstep (not a jump landing)
 			if audio_manager:
 				audio_manager.play_footstep(false)
+				Global.noise_emitted.emit(global_position, 10.0 if Input.is_action_pressed("sprint") else 6.0, self)
 	else:
 		# Reset timer when not moving
 		footstep_timer = 0.0

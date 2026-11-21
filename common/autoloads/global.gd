@@ -9,6 +9,9 @@ var in_vehicle: bool = false
 signal enemy_killed
 
 @warning_ignore("unused_signal")
+signal noise_emitted(position: Vector3, radius: float, source: Node3D)
+
+@warning_ignore("unused_signal")
 signal enemy_count_changed(count: int)
 
 

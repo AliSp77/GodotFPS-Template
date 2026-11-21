@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://d15cpo868piur" path="res://FractalVaultDemo/starting_point.tscn" id="2_o0uy8"]
 [ext_resource type="PackedScene" uid="uid://cdbipjyx57al2" path="res://player/player.tscn" id="3_f600h"]
 [ext_resource type="PackedScene" uid="uid://cumxs056a1mxy" path="res://enemies/leacher.tscn" id="5_e7pou"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/russian_doll_enemy.tscn" id="6_doll"]
 
 [node name="GameScene" type="Node3D" unique_id=1993115954]
 
@@ -36,5 +37,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025913954, 2.408361, 1.6521
 
 [node name="Leacher" parent="." unique_id=32077111 instance=ExtResource("5_e7pou")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.210056, -0.7544421, -39.66588)
+
+[node name="RussianDollEnemy" parent="." unique_id=645438996 instance=ExtResource("6_doll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.59988, 0.53, -40.005653)
 
 [editable path="StartingPoint"]
