@@ -19,6 +19,7 @@ var t_bob = 0.0
 
 var is_aiming: bool = false
 
+@onready var body_collision: CollisionShape3D = $CollisionShape3D
 @onready var camera_pivot: Node3D = $CameraPivot
 @onready var camera_holder: Node3D = $CameraPivot/CameraHolder
 @onready var camera: Camera3D = %MainCamera
@@ -76,7 +77,8 @@ func _physics_process(delta: float) -> void:
 			end_leacher_grab()
 		else:
 			velocity = Vector3.ZERO
-			sync_grab_position()
+			if not sync_grab_position():
+				end_leacher_grab()
 			Global.player_velocity_changed.emit(Vector3.ZERO)
 			return
 
@@ -148,6 +150,9 @@ func _process(delta: float) -> void:
 func begin_leacher_grab(new_grabber: Node3D, lift_height: float) -> bool:
 	if is_grabbed or not is_alive or not is_instance_valid(new_grabber):
 		return false
+	var carry_position := new_grabber.global_position + Vector3.UP * lift_height
+	if not can_move_to_grab_position(carry_position, new_grabber):
+		return false
 	is_grabbed = true
 	grabber = new_grabber
 	grab_height = lift_height
@@ -155,25 +160,84 @@ func begin_leacher_grab(new_grabber: Node3D, lift_height: float) -> bool:
 	camera_transform_before_grab = camera_holder.transform
 	velocity = Vector3.ZERO
 	weapons_manager.set_controls_locked(true)
-	sync_grab_position()
+	global_position = carry_position
 	return true
 
 
-func sync_grab_position() -> void:
-	if is_grabbed and is_instance_valid(grabber):
-		global_position = grabber.global_position + Vector3.UP * grab_height
+func sync_grab_position() -> bool:
+	if not is_grabbed or not is_instance_valid(grabber):
+		return false
+	var carry_position := grabber.global_position + Vector3.UP * grab_height
+	if not can_move_to_grab_position(carry_position, grabber):
+		return false
+	global_position = carry_position
+	return true
+
+
+func _grab_shape_query(target_position: Vector3, excluded_carrier: Node3D = null) -> PhysicsShapeQueryParameters3D:
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = body_collision.shape
+	var shape_transform := body_collision.global_transform
+	shape_transform.origin += target_position - global_position
+	query.transform = shape_transform
+	query.collision_mask = collision_mask
+	query.margin = 0.01
+	var exclusions: Array[RID] = [get_rid()]
+	if excluded_carrier is CollisionObject3D:
+		exclusions.append((excluded_carrier as CollisionObject3D).get_rid())
+	query.exclude = exclusions
+	return query
+
+
+func can_move_to_grab_position(destination: Vector3, carrier: Node3D) -> bool:
+	var query := _grab_shape_query(global_position, carrier)
+	query.motion = destination - global_position
+	var space := get_world_3d().direct_space_state
+	var fractions := space.cast_motion(query)
+	if fractions[0] < 1.0:
+		return false
+	# Sweeps ignore initial overlaps, so also validate the complete destination capsule.
+	return space.intersect_shape(_grab_shape_query(destination, carrier), 1).is_empty()
+
+
+func find_safe_leacher_release(origin: Vector3, forward: Vector3) -> Vector3:
+	var space := get_world_3d().direct_space_state
+	forward.y = 0.0
+	if forward.length_squared() < 0.001:
+		forward = Vector3.FORWARD
+	forward = forward.normalized()
+	for radius in [1.6, 2.4]:
+		for index in range(8):
+			var sample: Vector3 = origin + forward.rotated(Vector3.UP, index * TAU / 8.0) * radius
+			var ground_query := PhysicsRayQueryParameters3D.create(
+				sample + Vector3.UP * (grab_height + 0.5),
+				sample + Vector3.DOWN * 2.0, collision_mask,
+				_grab_shape_query(global_position, grabber).exclude)
+			var ground := space.intersect_ray(ground_query)
+			if ground.is_empty() or ground.normal.dot(Vector3.UP) < cos(floor_max_angle):
+				continue
+			var candidate: Vector3 = ground.position + Vector3.UP * 0.05
+			if not can_move_to_grab_position(candidate, grabber):
+				continue
+			# The released player must also fit without overlapping the Leacher itself.
+			if space.intersect_shape(_grab_shape_query(candidate), 1).is_empty():
+				return candidate
+	# Keep the last collision-free carried position if every ground candidate is blocked.
+	return Vector3.INF
 
 
 func end_leacher_grab(release_position: Vector3 = Vector3.INF) -> void:
 	if not is_grabbed:
 		return
+	if release_position != Vector3.INF:
+		if can_move_to_grab_position(release_position, grabber):
+			if get_world_3d().direct_space_state.intersect_shape(_grab_shape_query(release_position), 1).is_empty():
+				global_position = release_position
 	is_grabbed = false
 	grabber = null
 	velocity = Vector3.ZERO
 	camera_holder.transform = camera_transform_before_grab
 	weapons_manager.set_controls_locked(false)
-	if release_position != Vector3.INF:
-		global_position = release_position
 
 
 func _handle_footsteps(delta: float) -> void:

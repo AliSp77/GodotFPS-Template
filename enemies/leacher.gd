@@ -208,10 +208,7 @@ func release_player() -> void:
 		held_player = null
 		return
 	end_move()
-	var release_position: Vector3 = global_position - global_basis.z * 1.6
-	var nav_map: RID = nav.get_navigation_map()
-	if nav_map.is_valid() and NavigationServer3D.map_get_iteration_id(nav_map) > 0:
-		release_position = NavigationServer3D.map_get_closest_point(nav_map, release_position)
+	var release_position := held_player.find_safe_leacher_release(global_position, -global_basis.z)
 	held_player.end_leacher_grab(release_position)
 	held_player = null
 	grab_cooldown_left = grab_cooldown
@@ -294,7 +291,7 @@ func _physics_process(delta: float) -> void:
 	grab_cooldown_left = maxf(0.0, grab_cooldown_left - delta)
 	var player_visible: bool = false
 	if held_player != null:
-		if not is_instance_valid(held_player) or not held_player.is_alive:
+		if not is_instance_valid(held_player) or not held_player.is_alive or not held_player.is_grabbed:
 			release_player()
 	else:
 		player_visible = update_vision(delta)
@@ -345,10 +342,17 @@ func _physics_process(delta: float) -> void:
 	elif velocity.y < 0.0:
 		velocity.y = 0.0
 
+	# Stop carrying before a wall or low ceiling would intersect the held player's capsule.
+	if is_instance_valid(held_player):
+		var next_carry_position := global_position + velocity * delta + Vector3.UP * held_player.grab_height
+		if not held_player.can_move_to_grab_position(next_carry_position, self):
+			release_player()
+
 	# 5. Apply movement.
 	move_and_slide()
 	if is_instance_valid(held_player):
-		held_player.sync_grab_position()
+		if not held_player.sync_grab_position():
+			release_player()
 
 
 func _exit_tree() -> void:

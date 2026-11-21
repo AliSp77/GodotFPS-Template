@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/fractal_enemy_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://FractalVaultDemo/enemies/fractal_leacher.gd" id="2_leacher"]
+
+[sub_resource type="StandardMaterial3D" id="Material_leacher"]
+albedo_color = Color(0.7, 0.12, 0.6, 1)
+roughness = 0.65
+
+[sub_resource type="StandardMaterial3D" id="Material_claws"]
+albedo_color = Color(0.15, 0.85, 0.95, 1)
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="Mesh_claw"]
+size = Vector3(0.13, 0.65, 0.2)
+
+[node name="FractalLeacher" instance=ExtResource("1_base")]
+script = ExtResource("2_leacher")
+max_health = 140.0
+move_speed = 3.5
+vision_range = 12.0
+
+[node name="Body" parent="Visuals" index="0"]
+material_override = SubResource("Material_leacher")
+
+[node name="HeadMesh" parent="Visuals" index="1"]
+material_override = SubResource("Material_claws")
+
+[node name="LeftClaw" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(-0.4, 1.1, -0.15)
+rotation = Vector3(-0.3, 0, -0.25)
+mesh = SubResource("Mesh_claw")
+material_override = SubResource("Material_claws")
+
+[node name="RightClaw" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(0.4, 1.1, -0.15)
+rotation = Vector3(-0.3, 0, 0.25)
+mesh = SubResource("Mesh_claw")
+material_override = SubResource("Material_claws")
+
+[node name="StateIndicator" parent="." index="6"]
+text = "FRACTAL LEACHER\nIDLE"

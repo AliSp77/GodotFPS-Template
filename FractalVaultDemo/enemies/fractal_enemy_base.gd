@@ -18,12 +18,17 @@ signal animation_requested(name: StringName)
 @export_range(1.0, 180.0) var vision_angle_degrees: float = 90.0
 @export var hearing_sensitivity: float = 1.0
 @export var search_duration: float = 4.0
+@export var investigation_travel_timeout: float = 30.0
 
 @export_group("Dodge")
 @export var dodge_distance: float = 1.5
 @export var dodge_duration: float = 0.3
 @export var dodge_cooldown: float = 2.0
 
+@export_group("Debug")
+@export var show_state_indicator: bool = true
+
+@onready var state_indicator: Label3D = $StateIndicator
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent3D
 @onready var vision_sensor: Area3D = $VisionSensor
 @onready var sight_ray: RayCast3D = $SightRay
@@ -39,6 +44,8 @@ var has_last_known_position: bool = false
 
 var _vision_timer: float = 0.0
 var _memory_left: float = 0.0
+var _investigation_travel_left: float = 0.0
+var _investigation_moving: bool = false
 var _dodge_cooldown_left: float = 0.0
 var _dodge_left: float = 0.0
 var _dodge_direction: Vector3 = Vector3.ZERO
@@ -54,9 +61,11 @@ func _ready() -> void:
 	sight_ray.add_exception(self)
 	Global.noise_emitted.connect(_on_noise_emitted)
 	play_enemy_animation(&"idle")
+	_update_state_indicator()
 
 
 func _physics_process(delta: float) -> void:
+	_update_state_indicator()
 	if awareness == Awareness.DEAD:
 		return
 
@@ -74,11 +83,18 @@ func _physics_process(delta: float) -> void:
 		elif awareness == Awareness.ENGAGED:
 			target_player = null
 			_memory_left = search_duration
+			_investigation_travel_left = investigation_travel_timeout
 			_set_awareness(Awareness.SEARCH)
 
 	if awareness == Awareness.INVESTIGATE or awareness == Awareness.SEARCH:
-		_memory_left -= delta
-		if _memory_left <= 0.0:
+		var offset := last_known_position - global_position
+		var arrived := Vector2(offset.x, offset.z).length() <= navigation_agent.target_desired_distance
+		# Spend the search time at the destination, or while genuinely blocked.
+		# Travelling through a hallway must not consume the entire investigation.
+		if arrived or not _investigation_moving:
+			_memory_left -= delta
+		_investigation_travel_left -= delta
+		if _memory_left <= 0.0 or _investigation_travel_left <= 0.0:
 			has_last_known_position = false
 			_set_awareness(Awareness.IDLE)
 
@@ -100,7 +116,10 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 	else:
 		velocity.y = 0.0
+	var previous_position := global_position
 	move_and_slide()
+	var motion := global_position - previous_position
+	_investigation_moving = desired_direction.length_squared() > 0.001 and Vector2(motion.x, motion.z).length() > 0.05 * delta
 
 	var facing_direction := desired_direction
 	if awareness == Awareness.ENGAGED and is_instance_valid(target_player):
@@ -125,17 +144,26 @@ func _find_visible_player() -> Player:
 
 func _direction_to(destination: Vector3) -> Vector3:
 	var target := destination
+	var stopping_distance := navigation_agent.target_desired_distance
 	var map := navigation_agent.get_navigation_map()
 	if map.is_valid() and NavigationServer3D.map_get_iteration_id(map) > 0 and not NavigationServer3D.map_get_regions(map).is_empty():
 		var nearest := NavigationServer3D.map_get_closest_point(map, global_position)
 		var gap := Vector2(global_position.x, global_position.z).distance_to(Vector2(nearest.x, nearest.z))
 		if gap <= 1.0:
-			navigation_agent.target_position = NavigationServer3D.map_get_closest_point(map, destination)
-			if not navigation_agent.is_navigation_finished():
-				target = navigation_agent.get_next_path_position()
+			# Align raised navigation points with the character's physical feet.
+			navigation_agent.path_height_offset = nearest.y - global_position.y
+			var navigation_target := NavigationServer3D.map_get_closest_point(map, destination)
+			if navigation_agent.target_position.distance_squared_to(navigation_target) > 0.01 or navigation_agent.get_current_navigation_path().is_empty():
+				navigation_agent.target_position = navigation_target
+			# Refresh the path before asking whether navigation has finished.
+			target = navigation_agent.get_next_path_position()
+			if navigation_agent.is_navigation_finished():
+				return Vector3.ZERO
+			# Let the agent advance intermediate waypoints before stopping.
+			stopping_distance = 0.01
 	var direction := target - global_position
 	direction.y = 0.0
-	if direction.length() <= 0.7:
+	if direction.length() <= stopping_distance:
 		return Vector3.ZERO
 	return direction.normalized()
 
@@ -152,6 +180,7 @@ func _on_noise_emitted(noise_position: Vector3, radius: float, source: Node3D) -
 	if awareness != Awareness.ENGAGED:
 		target_player = null
 		_memory_left = search_duration
+		_investigation_travel_left = investigation_travel_timeout
 		_set_awareness(Awareness.INVESTIGATE)
 
 
@@ -168,6 +197,7 @@ func get_damage(amount: float, direction: Vector3, _is_enemy_damage: bool = fals
 		last_known_position = global_position + from_direction * 2.0
 		has_last_known_position = true
 		_memory_left = search_duration
+		_investigation_travel_left = investigation_travel_timeout
 		_set_awareness(Awareness.INVESTIGATE)
 	play_enemy_animation(&"hurt")
 	_animation_lock_left = 0.25
@@ -232,10 +262,39 @@ func _set_awareness(next: Awareness) -> void:
 		return
 	var previous := awareness
 	awareness = next
+	_update_state_indicator()
 	awareness_changed.emit(previous, next)
 	if next == Awareness.ENGAGED:
 		play_enemy_animation(&"alert")
 		_animation_lock_left = 0.35
+
+
+func _update_state_indicator() -> void:
+	state_indicator.visible = show_state_indicator
+	if not show_state_indicator:
+		return
+	var state_text: String = "IDLE"
+	var state_color := Color(0.65, 0.85, 1.0)
+	match awareness:
+		Awareness.INVESTIGATE:
+			state_text = "INVESTIGATE\n%.1fs" % maxf(0.0, _memory_left)
+			if _investigation_moving:
+				state_text = "INVESTIGATE\nMOVING"
+			state_color = Color(1.0, 0.82, 0.2)
+		Awareness.ENGAGED:
+			state_text = "ENGAGED"
+			state_color = Color(1.0, 0.25, 0.2)
+		Awareness.SEARCH:
+			state_text = "SEARCH\n%.1fs" % maxf(0.0, _memory_left)
+			if _investigation_moving:
+				state_text = "SEARCH\nMOVING"
+			state_color = Color(1.0, 0.55, 0.15)
+		Awareness.DEAD:
+			state_text = "DEAD"
+			state_color = Color(0.6, 0.6, 0.65)
+	if state_indicator.text != state_text:
+		state_indicator.text = state_text
+	state_indicator.modulate = state_color
 
 
 func _die() -> void:
