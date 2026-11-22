@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/grenadier_base.tscn" id="1_base"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/grenade_volley_single.tscn" id="2_projectile"]
+
+[node name="GrenadierSingle" instance=ExtResource("1_base")]
+projectile_scene = ExtResource("2_projectile")

@@ -17,6 +17,17 @@ func _check_run() -> void:
 	await _frames(5)
 	if not _check(run.stage_number == 1 and run.state == "combat" and run.current_stage != null and run.current_definition.id == &"expansion_map", "Config-only test map did not start"):
 		return
+	run.spawn_queue.clear()
+	for opening_enemy in run.current_stage.enemies.get_children():
+		opening_enemy.queue_free()
+	var active_hazard := Node3D.new()
+	active_hazard.add_to_group("encounter_hazard")
+	run.current_stage.enemies.add_child(active_hazard)
+	run._tick_combat(1.0)
+	if not _check(run.state == "combat" and run.clear_grace == 0.0, "Active grenade hazard allowed the stage to clear"):
+		return
+	active_hazard.queue_free()
+	await _frames(2)
 	for cleared_stage in range(1, 6):
 		run.spawn_queue.clear()
 		for enemy in run.current_stage.enemies.get_children():

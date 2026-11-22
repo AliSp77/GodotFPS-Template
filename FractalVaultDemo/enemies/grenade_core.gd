@@ -32,8 +32,8 @@ var floor_bounces: int = 0
 var direct_hit_player: Player
 
 
-func launch(owner: Node3D, origin: Vector3, destination: Vector3, travel_time: float, height: float, radius: float, fuse: float, air_limit: float, ignored_rid: RID) -> void:
-	volley = owner
+func launch(volley_node: Node3D, origin: Vector3, destination: Vector3, travel_time: float, height: float, radius: float, fuse: float, air_limit: float, ignored_rid: RID) -> void:
+	volley = volley_node
 	start_position = origin
 	target_position = destination
 	duration = maxf(0.1, travel_time)
@@ -61,12 +61,14 @@ func _physics_process(delta: float) -> void:
 			desired.y += 4.0 * arc_height * t * (1.0 - t)
 			var curve := flight_path.curve
 			if curve != null and curve.point_count >= 2:
+				# FlightPath X is sideways, Y is height, and Z is along the shot. Its first point is the muzzle offset.
 				var offset := curve.sample_baked(t * curve.get_baked_length(), true) - curve.sample_baked(0.0)
 				desired += right * offset.x + Vector3.UP * offset.y + forward * offset.z
-			_sweep_to(desired, (desired - global_position) / maxf(delta, 0.001))
+			var guided_velocity := (desired - global_position) / maxf(delta, 0.001)
+			_sweep_to(desired, guided_velocity)
 			if phase == Phase.GUIDED and elapsed >= duration:
 				phase = Phase.BOUNCING
-				bounce_velocity = (desired - global_position) / maxf(delta, 0.001)
+				bounce_velocity = guided_velocity
 		Phase.BOUNCING:
 			air_elapsed += delta
 			bounce_velocity += Vector3.DOWN * 9.8 * delta

@@ -221,10 +221,13 @@ func _tick_combat(delta: float) -> void:
 			spawn_timer = maxf(0.1, entry.interval)
 		return
 	var alive := 0
+	var hazards_alive := false
 	for child in current_stage.enemies.get_children():
 		if child is FractalEnemyBase and child.awareness != FractalEnemyBase.Awareness.DEAD:
 			alive += 1
-	if alive == 0:
+		if child.is_in_group("encounter_hazard") and not child.is_queued_for_deletion():
+			hazards_alive = true
+	if alive == 0 and not hazards_alive:
 		clear_grace += delta
 		if clear_grace >= 0.45:
 			_clear_stage()

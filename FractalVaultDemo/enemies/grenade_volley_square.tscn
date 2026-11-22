@@ -1,0 +1,30 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/grenade_volley_base.tscn" id="1_base"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/grenade_core.tscn" id="2_core"]
+[ext_resource type="Curve3D" path="res://FractalVaultDemo/enemies/formations/square_left_low.tres" id="3_path"]
+[ext_resource type="Curve3D" path="res://FractalVaultDemo/enemies/formations/square_left_high.tres" id="4_path"]
+[ext_resource type="Curve3D" path="res://FractalVaultDemo/enemies/formations/square_right_low.tres" id="5_path"]
+[ext_resource type="Curve3D" path="res://FractalVaultDemo/enemies/formations/square_right_high.tres" id="6_path"]
+
+[node name="GrenadeVolleySquare" instance=ExtResource("1_base")]
+
+[node name="CoreLeftLow" parent="." instance=ExtResource("2_core")]
+
+[node name="FlightPath" parent="CoreLeftLow" index="0"]
+curve = ExtResource("3_path")
+
+[node name="CoreLeftHigh" parent="." instance=ExtResource("2_core")]
+
+[node name="FlightPath" parent="CoreLeftHigh" index="0"]
+curve = ExtResource("4_path")
+
+[node name="CoreRightLow" parent="." instance=ExtResource("2_core")]
+
+[node name="FlightPath" parent="CoreRightLow" index="0"]
+curve = ExtResource("5_path")
+
+[node name="CoreRightHigh" parent="." instance=ExtResource("2_core")]
+
+[node name="FlightPath" parent="CoreRightHigh" index="0"]
+curve = ExtResource("6_path")

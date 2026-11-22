@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://FractalVaultDemo/enemies/grenade_volley.gd" id="1_script"]
+
+[node name="GrenadeVolleyBase" type="Node3D" groups=["encounter_hazard"]]
+script = ExtResource("1_script")

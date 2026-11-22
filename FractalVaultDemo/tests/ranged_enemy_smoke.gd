@@ -124,13 +124,13 @@ func _run_checks() -> void:
 	await _frames(3)
 	if not _check(not is_instance_valid(departing_projectile), "Shooter death left a live projectile"):
 		return
-	for name in ["forge_assault", "relay_onslaught"]:
-		var encounter: EncounterDefinition = load("res://FractalVaultDemo/stages/catalog/encounters/%s.tres" % name)
+	for encounter_name in ["forge_assault", "relay_onslaught"]:
+		var encounter: EncounterDefinition = load("res://FractalVaultDemo/stages/catalog/encounters/%s.tres" % encounter_name)
 		var found := false
 		for entry in encounter.entries:
 			if entry.enemy_scene.resource_path.ends_with("fractal_skirmisher.tscn"):
 				found = true
-		if not _check(found, "Skirmisher is missing from " + name):
+		if not _check(found, "Skirmisher is missing from " + encounter_name):
 			return
 	print("RANGED_ENEMY_SMOKE_OK")
 	get_tree().quit()

@@ -42,7 +42,6 @@ radius = 1.25
 height = 2.5
 
 [node name="Gardian" unique_id=2031401266 groups=["gardian"] instance=ExtResource("1_base")]
-sound_pitch_scale = 0.7
 collision_layer = 8
 script = ExtResource("2_gardian")
 attack_damage = 16.0
@@ -60,6 +59,7 @@ explosion_damage = 65.0
 max_health = 450.0
 move_speed = 3.2
 vision_range = 13.0
+sound_pitch_scale = 0.7
 show_state_indicator = false
 
 [node name="CollisionShape3D" parent="." index="0"]
@@ -67,7 +67,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 
 [node name="Body" parent="Visuals" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-visible = false
 material_override = SubResource("Material_titan")
 
 [node name="HeadMesh" parent="Visuals" index="1"]
@@ -83,12 +82,12 @@ material_override = SubResource("Material_weak")
 mesh = SubResource("Mesh_weak")
 
 [node name="Left" type="MeshInstance3D" parent="Visuals/WeakPoints" index="1" unique_id=1339673397]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.52, 1.02, -0.23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2180283, 1.2005557, -0.23)
 material_override = SubResource("Material_weak")
 mesh = SubResource("Mesh_weak")
 
 [node name="Right" type="MeshInstance3D" parent="Visuals/WeakPoints" index="2" unique_id=646852391]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 1.02, -0.23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.20697641, 1.1852258, -0.23)
 material_override = SubResource("Material_weak")
 mesh = SubResource("Mesh_weak")
 
@@ -150,3 +149,6 @@ font_size = 44
 outline_size = 10
 
 [node name="Waves" type="Node3D" parent="." index="10" unique_id=2091245859]
+
+[node name="SFX" parent="." index="11"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
