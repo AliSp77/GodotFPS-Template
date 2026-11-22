@@ -1,0 +1,267 @@
+[gd_scene load_steps=7 format=3]
+
+[sub_resource type="StandardMaterial3D" id="Ceiling"]
+albedo_color = Color(0.055, 0.075, 0.095, 1)
+metallic = 0.55
+roughness = 0.72
+
+[sub_resource type="StandardMaterial3D" id="Rib"]
+albedo_color = Color(0.16, 0.21, 0.25, 1)
+metallic = 0.62
+roughness = 0.48
+
+[sub_resource type="StandardMaterial3D" id="Walk"]
+albedo_color = Color(0.105, 0.13, 0.17, 1)
+metallic = 0.42
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="Seam"]
+albedo_color = Color(0.27, 0.33, 0.38, 1)
+metallic = 0.75
+roughness = 0.42
+
+[sub_resource type="StandardMaterial3D" id="Accent"]
+albedo_color = Color(0.035, 0.35, 0.46, 1)
+emission_enabled = true
+emission = Color(0.015, 0.3, 0.44, 1)
+emission_energy_multiplier = 1.2
+metallic = 0.25
+roughness = 0.4
+
+[node name="VaultArchitecture" type="Node3D"]
+
+[node name="CenterFill" type="OmniLight3D" parent="."]
+position = Vector3(0, 3.65, 0)
+light_color = Color(0.62, 0.76, 0.92, 1)
+light_energy = 1.15
+omni_range = 20.0
+
+[node name="Ceiling" type="CSGBox3D" parent="."]
+position = Vector3(0, 4.5, 0)
+size = Vector3(40, 0.55, 40)
+use_collision = true
+material = SubResource("Ceiling")
+
+[node name="CenterWalk" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.025, 0)
+size = Vector3(6, 0.05, 39)
+material = SubResource("Walk")
+
+[node name="EdgeRailL" type="CSGBox3D" parent="."]
+position = Vector3(-18, 0.025, 0)
+size = Vector3(0.15, 0.05, 38)
+material = SubResource("Accent")
+
+[node name="WallBandL" type="CSGBox3D" parent="."]
+position = Vector3(-19.47, 2.5, 0)
+size = Vector3(0.09, 0.09, 38)
+material = SubResource("Accent")
+
+[node name="WallRibL6" type="CSGBox3D" parent="."]
+position = Vector3(-19.35, 2, -14)
+size = Vector3(0.25, 3.7, 0.55)
+material = SubResource("Rib")
+
+[node name="WallRibL13" type="CSGBox3D" parent="."]
+position = Vector3(-19.35, 2, -7)
+size = Vector3(0.25, 3.7, 0.55)
+material = SubResource("Rib")
+
+[node name="WallRibL20" type="CSGBox3D" parent="."]
+position = Vector3(-19.35, 2, 0)
+size = Vector3(0.25, 3.7, 0.55)
+material = SubResource("Rib")
+
+[node name="WallRibL27" type="CSGBox3D" parent="."]
+position = Vector3(-19.35, 2, 7)
+size = Vector3(0.25, 3.7, 0.55)
+material = SubResource("Rib")
+
+[node name="WallRibL34" type="CSGBox3D" parent="."]
+position = Vector3(-19.35, 2, 14)
+size = Vector3(0.25, 3.7, 0.55)
+material = SubResource("Rib")
+
+[node name="EdgeRailR" type="CSGBox3D" parent="."]
+position = Vector3(18, 0.025, 0)
+size = Vector3(0.15, 0.05, 38)
+material = SubResource("Accent")
+
+[node name="WallBandR" type="CSGBox3D" parent="."]
+position = Vector3(19.47, 2.5, 0)
+size = Vector3(0.09, 0.09, 38)
+material = SubResource("Accent")
+
+[node name="WallRibR6" type="CSGBox3D" parent="."]
+position = Vector3(19.35, 2, -14)
+size = Vector3(0.25, 3.7, 0.55)
+material = SubResource("Rib")
+
+[node name="WallRibR13" type="CSGBox3D" parent="."]
+position = Vector3(19.35, 2, -7)
+size = Vector3(0.25, 3.7, 0.55)
+material = SubResource("Rib")
+
+[node name="WallRibR20" type="CSGBox3D" parent="."]
+position = Vector3(19.35, 2, 0)
+size = Vector3(0.25, 3.7, 0.55)
+material = SubResource("Rib")
+
+[node name="WallRibR27" type="CSGBox3D" parent="."]
+position = Vector3(19.35, 2, 7)
+size = Vector3(0.25, 3.7, 0.55)
+material = SubResource("Rib")
+
+[node name="WallRibR34" type="CSGBox3D" parent="."]
+position = Vector3(19.35, 2, 14)
+size = Vector3(0.25, 3.7, 0.55)
+material = SubResource("Rib")
+
+[node name="FloorSeam6" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.054, -14)
+size = Vector3(36, 0.01, 0.06)
+material = SubResource("Seam")
+
+[node name="CeilingTruss6" type="CSGBox3D" parent="."]
+position = Vector3(0, 4.03, -14)
+size = Vector3(38, 0.28, 0.46)
+material = SubResource("Rib")
+
+[node name="TrussLight6" type="CSGBox3D" parent="."]
+position = Vector3(0, 3.85, -14)
+size = Vector3(8, 0.04, 0.12)
+material = SubResource("Accent")
+
+[node name="FloorSeam13" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.054, -7)
+size = Vector3(36, 0.01, 0.06)
+material = SubResource("Seam")
+
+[node name="CeilingTruss13" type="CSGBox3D" parent="."]
+position = Vector3(0, 4.03, -7)
+size = Vector3(38, 0.28, 0.46)
+material = SubResource("Rib")
+
+[node name="TrussLight13" type="CSGBox3D" parent="."]
+position = Vector3(0, 3.85, -7)
+size = Vector3(8, 0.04, 0.12)
+material = SubResource("Accent")
+
+[node name="FloorSeam20" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.054, 0)
+size = Vector3(36, 0.01, 0.06)
+material = SubResource("Seam")
+
+[node name="CeilingTruss20" type="CSGBox3D" parent="."]
+position = Vector3(0, 4.03, 0)
+size = Vector3(38, 0.28, 0.46)
+material = SubResource("Rib")
+
+[node name="TrussLight20" type="CSGBox3D" parent="."]
+position = Vector3(0, 3.85, 0)
+size = Vector3(8, 0.04, 0.12)
+material = SubResource("Accent")
+
+[node name="FloorSeam27" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.054, 7)
+size = Vector3(36, 0.01, 0.06)
+material = SubResource("Seam")
+
+[node name="CeilingTruss27" type="CSGBox3D" parent="."]
+position = Vector3(0, 4.03, 7)
+size = Vector3(38, 0.28, 0.46)
+material = SubResource("Rib")
+
+[node name="TrussLight27" type="CSGBox3D" parent="."]
+position = Vector3(0, 3.85, 7)
+size = Vector3(8, 0.04, 0.12)
+material = SubResource("Accent")
+
+[node name="FloorSeam34" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.054, 14)
+size = Vector3(36, 0.01, 0.06)
+material = SubResource("Seam")
+
+[node name="CeilingTruss34" type="CSGBox3D" parent="."]
+position = Vector3(0, 4.03, 14)
+size = Vector3(38, 0.28, 0.46)
+material = SubResource("Rib")
+
+[node name="TrussLight34" type="CSGBox3D" parent="."]
+position = Vector3(0, 3.85, 14)
+size = Vector3(8, 0.04, 0.12)
+material = SubResource("Accent")
+
+[node name="LuminaireL10" type="CSGBox3D" parent="."]
+position = Vector3(-8, 4.05, -10)
+size = Vector3(1.3, 0.12, 1.3)
+material = SubResource("Rib")
+
+[node name="LightL10" type="OmniLight3D" parent="."]
+position = Vector3(-8, 3.7, -10)
+light_color = Color(0.63, 0.82, 1, 1)
+light_energy = 1.0
+omni_range = 14.0
+
+[node name="LuminaireL30" type="CSGBox3D" parent="."]
+position = Vector3(-8, 4.05, 10)
+size = Vector3(1.3, 0.12, 1.3)
+material = SubResource("Rib")
+
+[node name="LightL30" type="OmniLight3D" parent="."]
+position = Vector3(-8, 3.7, 10)
+light_color = Color(0.63, 0.82, 1, 1)
+light_energy = 1.0
+omni_range = 14.0
+
+[node name="LuminaireR10" type="CSGBox3D" parent="."]
+position = Vector3(8, 4.05, -10)
+size = Vector3(1.3, 0.12, 1.3)
+material = SubResource("Rib")
+
+[node name="LightR10" type="OmniLight3D" parent="."]
+position = Vector3(8, 3.7, -10)
+light_color = Color(0.63, 0.82, 1, 1)
+light_energy = 1.0
+omni_range = 14.0
+
+[node name="LuminaireR30" type="CSGBox3D" parent="."]
+position = Vector3(8, 4.05, 10)
+size = Vector3(1.3, 0.12, 1.3)
+material = SubResource("Rib")
+
+[node name="LightR30" type="OmniLight3D" parent="."]
+position = Vector3(8, 3.7, 10)
+light_color = Color(0.63, 0.82, 1, 1)
+light_energy = 1.0
+omni_range = 14.0
+
+[node name="ExitHeaderL" type="CSGBox3D" parent="."]
+position = Vector3(-8, 3.32, -19.35)
+size = Vector3(4.5, 0.16, 0.16)
+material = SubResource("Accent")
+
+[node name="ExitJamb-10.18" type="CSGBox3D" parent="."]
+position = Vector3(-10.18, 1.65, -19.35)
+size = Vector3(0.15, 3.3, 0.16)
+material = SubResource("Rib")
+
+[node name="ExitJamb-5.82" type="CSGBox3D" parent="."]
+position = Vector3(-5.82, 1.65, -19.35)
+size = Vector3(0.15, 3.3, 0.16)
+material = SubResource("Rib")
+
+[node name="ExitHeaderR" type="CSGBox3D" parent="."]
+position = Vector3(8, 3.32, -19.35)
+size = Vector3(4.5, 0.16, 0.16)
+material = SubResource("Accent")
+
+[node name="ExitJamb5.82" type="CSGBox3D" parent="."]
+position = Vector3(5.82, 1.65, -19.35)
+size = Vector3(0.15, 3.3, 0.16)
+material = SubResource("Rib")
+
+[node name="ExitJamb10.18" type="CSGBox3D" parent="."]
+position = Vector3(10.18, 1.65, -19.35)
+size = Vector3(0.15, 3.3, 0.16)
+material = SubResource("Rib")

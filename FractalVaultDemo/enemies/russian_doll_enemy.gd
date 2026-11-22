@@ -1,8 +1,9 @@
-class_name RussianDollEnemy extends CharacterBody3D
+class_name RussianDollEnemy
+extends FractalEnemyBase
 
 const MAX_SPLITS: int = 4
 const BASE_RADIUS: float = 0.72
-const BASE_HEIGHT: float = 2.65
+const BASE_HEIGHT: float = 2.1
 const STAGE_COLORS = [
 	Color(0.68, 0.08, 0.12),
 	Color(0.92, 0.28, 0.08),
@@ -11,51 +12,48 @@ const STAGE_COLORS = [
 	Color(0.30, 0.31, 0.76),
 ]
 
+@export_group("Russian Doll")
 @export_range(0, 4, 1) var split_generation: int = 0
 @export var base_health: float = 160.0
 @export var base_damage: float = 24.0
 @export var base_speed: float = 1.8
 @export var attack_cooldown: float = 1.25
-@export var acceleration: float = 12.0
-@export var steering_interval: float = 0.18
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
-@onready var navigation_agent: NavigationAgent3D = $NavigationAgent3D
-@onready var visuals: Node3D = $Visuals
-@onready var body_mesh: MeshInstance3D = $Visuals/Body
-@onready var cap_mesh: MeshInstance3D = $Visuals/Cap
+@onready var doll_visual: Node3D = $Visuals/DollVisual
+@onready var body_mesh: MeshInstance3D = $Visuals/DollVisual/Body
+@onready var cap_mesh: MeshInstance3D = $Visuals/DollVisual/Cap
 
-var current_health: float
-var max_health: float
 var attack_damage: float
-var move_speed: float
-
 var _size: float
 var _attack_timer: float = 0.4
-var _steering_timer: float = 0.0
-var _desired_direction: Vector3 = Vector3.ZERO
-var _use_navigation: bool = false
-var _dead: bool = false
 
 
 func _ready() -> void:
 	split_generation = clampi(split_generation, 0, MAX_SPLITS)
 	_size = pow(0.78, split_generation)
+	sound_pitch_scale *= pow(1.12, split_generation)
 	max_health = base_health * pow(0.65, split_generation)
-	current_health = max_health
-	attack_damage = base_damage * pow(0.65, split_generation)
 	move_speed = base_speed * pow(1.4, split_generation)
-	floor_snap_length = 0.3
-	_steering_timer = randf_range(0.0, steering_interval)
+	attack_damage = base_damage * pow(0.65, split_generation)
 
-	# Change the physics shape itself, not only the visible mesh.
-	var shape: CapsuleShape3D = collision_shape.shape.duplicate() as CapsuleShape3D
-	shape.radius = BASE_RADIUS * _size
-	shape.height = BASE_HEIGHT * _size
-	collision_shape.shape = shape
-	collision_shape.position.y = shape.height * 0.5
-	visuals.scale = Vector3.ONE * _size
-	navigation_agent.radius = maxf(0.2, BASE_RADIUS * _size)
+	# Resize the physical body and head hurt point along with the model.
+	var body_shape := collision_shape.shape.duplicate() as CapsuleShape3D
+	body_shape.radius = BASE_RADIUS * _size
+	body_shape.height = BASE_HEIGHT * _size
+	collision_shape.shape = body_shape
+	collision_shape.position.y = body_shape.height * 0.5
+	var head_shape := head_hurt_point.get_node("CollisionShape3D") as CollisionShape3D
+	var sphere := head_shape.shape.duplicate() as SphereShape3D
+	sphere.radius = 0.53 * _size
+	head_shape.shape = sphere
+	head_hurt_point.position.y = 2.1 * _size
+	doll_visual.scale = Vector3.ONE * _size
+	vision_sensor.position.y = 1.8 * _size
+	sight_ray.position.y = 1.8 * _size
+	state_indicator.position.y = 3.0 * _size
+	navigation_agent.radius = BASE_RADIUS * _size
+	navigation_agent.target_desired_distance = 0.65 * _size
 
 	var tint: Color = STAGE_COLORS[split_generation]
 	var body_material := StandardMaterial3D.new()
@@ -66,94 +64,61 @@ func _ready() -> void:
 	cap_material.albedo_color = tint.darkened(0.25)
 	cap_material.roughness = 0.8
 	cap_mesh.material_override = cap_material
+	super._ready()
 
 
 func _physics_process(delta: float) -> void:
-	if _dead:
+	super._physics_process(delta)
+	if global_position.y < -20.0:
+		queue_free()
+		return
+	if awareness != Awareness.ENGAGED or not is_instance_valid(target_player) or not target_player.is_alive:
 		return
 	_attack_timer = maxf(0.0, _attack_timer - delta)
-	var player := Global.player as Player
-	if not is_instance_valid(player) or not player.is_alive:
-		velocity.x = move_toward(velocity.x, 0.0, acceleration * delta)
-		velocity.z = move_toward(velocity.z, 0.0, acceleration * delta)
-	else:
-		_steering_timer -= delta
-		if _steering_timer <= 0.0:
-			_steering_timer = steering_interval
-			_update_steering(player)
-		velocity.x = move_toward(velocity.x, _desired_direction.x * move_speed, acceleration * delta)
-		velocity.z = move_toward(velocity.z, _desired_direction.z * move_speed, acceleration * delta)
-		var offset := player.global_position - global_position
-		offset.y = 0.0
-		var reach := 1.4 * _size + 0.45
-		if offset.length_squared() <= reach * reach and _attack_timer <= 0.0:
-			_attack_timer = attack_cooldown
-			player.get_damage(attack_damage, offset.normalized(), true)
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-	else:
-		velocity.y = 0.0
-	move_and_slide()
-	if global_position.y < -20.0:
-		_dead = true
-		queue_free()
-
-
-func _update_steering(player: Player) -> void:
-	var navigation_map := get_world_3d().navigation_map
-	if not _use_navigation:
-		_use_navigation = NavigationServer3D.map_get_iteration_id(navigation_map) > 0 and not NavigationServer3D.map_get_regions(navigation_map).is_empty()
-	var destination := player.global_position
-	if _use_navigation:
-		var nearest_point := NavigationServer3D.map_get_closest_point(navigation_map, global_position)
-		var navigation_gap := Vector2(global_position.x, global_position.z).distance_to(Vector2(nearest_point.x, nearest_point.z))
-		if navigation_gap <= 1.5:
-			navigation_agent.target_position = NavigationServer3D.map_get_closest_point(navigation_map, destination)
-			if not navigation_agent.is_navigation_finished():
-				destination = navigation_agent.get_next_path_position()
-	var seek := destination - global_position
-	seek.y = 0.0
-	_desired_direction = seek.normalized()
-	var facing := player.global_position - global_position
-	facing.y = 0.0
-	if facing.length_squared() > 0.001:
-		visuals.rotation.y = atan2(-facing.x, -facing.z)
-
-
-func get_damage(damage: float, _direction: Vector3, _is_enemy_damage: bool = false) -> void:
-	if _dead or damage <= 0.0:
+	if _attack_timer > 0.0:
 		return
-	current_health = maxf(0.0, current_health - damage)
-	if current_health <= 0.0:
-		_die()
+	var offset := target_player.global_position - global_position
+	if absf(offset.y) > 1.25 * _size:
+		return
+	offset.y = 0.0
+	var reach := 1.4 * _size + 0.45
+	if offset.length_squared() > reach * reach or _find_visible_player() != target_player:
+		return
+	_attack_timer = attack_cooldown
+	play_enemy_animation(&"attack")
+	_animation_lock_left = 0.3
+	target_player.get_damage(attack_damage, offset.normalized(), true)
 
 
 func _die() -> void:
-	_dead = true
-	set_physics_process(false)
-	collision_shape.set_deferred("disabled", true)
-	hide()
-	Global.enemy_killed.emit()
-	call_deferred("_spawn_children_and_free")
+	if _death_started:
+		return
+	super._die()
+	call_deferred("_spawn_children")
 
 
-func _spawn_children_and_free() -> void:
-	if split_generation < MAX_SPLITS and get_parent() is Node3D:
-		var doll_scene: PackedScene = load("res://FractalVaultDemo/enemies/russian_doll_enemy.tscn")
-		var host := get_parent() as Node3D
-		var origin := global_position
-		var direction := Vector3.RIGHT.rotated(Vector3.UP, randf() * TAU)
-		var next_size := _size * 0.78
-		var offset := BASE_RADIUS * next_size * 1.25
-		for side in [-1.0, 1.0]:
-			var child := doll_scene.instantiate() as RussianDollEnemy
-			child.split_generation = split_generation + 1
-			child.base_health = base_health
-			child.base_damage = base_damage
-			child.base_speed = base_speed
-			child.attack_cooldown = attack_cooldown
-			child.acceleration = acceleration
-			child.steering_interval = steering_interval
-			host.add_child(child)
-			child.global_position = origin + direction * offset * side
-	queue_free()
+func _spawn_children() -> void:
+	if split_generation >= MAX_SPLITS or not get_parent() is Node3D:
+		return
+	var doll_scene: PackedScene = load("res://FractalVaultDemo/enemies/russian_doll_enemy.tscn")
+	var host := get_parent() as Node3D
+	var origin := global_position
+	var direction := Vector3.RIGHT.rotated(Vector3.UP, randf() * TAU)
+	var next_size := _size * 0.78
+	var offset := BASE_RADIUS * next_size * 1.25
+	for side in [-1.0, 1.0]:
+		var child := doll_scene.instantiate() as RussianDollEnemy
+		child.split_generation = split_generation + 1
+		child.base_health = base_health
+		child.base_damage = base_damage
+		child.base_speed = base_speed
+		child.attack_cooldown = attack_cooldown
+		child.acceleration = acceleration
+		child.vision_range = vision_range
+		child.vision_angle_degrees = vision_angle_degrees
+		child.hearing_sensitivity = hearing_sensitivity
+		child.search_duration = search_duration
+		child.investigation_travel_timeout = investigation_travel_timeout
+		child.show_state_indicator = show_state_indicator
+		host.add_child(child)
+		child.global_position = origin + direction * offset * side

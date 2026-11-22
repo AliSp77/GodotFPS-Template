@@ -1,0 +1,55 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/ranged_enemy_base.tscn" id="1_ranged"]
+
+[sub_resource type="StandardMaterial3D" id="ArmorMaterial"]
+albedo_color = Color(0.23, 0.17, 0.42, 1)
+metallic = 0.55
+roughness = 0.48
+
+[sub_resource type="StandardMaterial3D" id="VisorMaterial"]
+albedo_color = Color(1, 0.43, 0.11, 1)
+emission_enabled = true
+emission = Color(0.9, 0.2, 0.035, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="BoxMesh" id="ShoulderMesh"]
+size = Vector3(0.28, 0.24, 0.55)
+
+[sub_resource type="BoxMesh" id="VisorMesh"]
+size = Vector3(0.42, 0.11, 0.12)
+
+[node name="FractalSkirmisher" instance=ExtResource("1_ranged")]
+sound_pitch_scale = 1.15
+max_health = 75.0
+move_speed = 3.8
+acceleration = 14.0
+vision_range = 16.0
+firing_range = 14.0
+minimum_distance = 6.0
+maximum_distance = 10.0
+windup_duration = 0.65
+firing_cooldown = 1.8
+projectile_speed = 18.0
+projectile_damage = 8.0
+
+[node name="Body" parent="Visuals" index="0"]
+material_override = SubResource("ArmorMaterial")
+
+[node name="HeadMesh" parent="Visuals" index="1"]
+material_override = SubResource("ArmorMaterial")
+
+[node name="LeftShoulder" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(-0.43, 1.18, 0)
+mesh = SubResource("ShoulderMesh")
+surface_material_override/0 = SubResource("ArmorMaterial")
+
+[node name="RightShoulder" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(0.43, 1.18, 0)
+mesh = SubResource("ShoulderMesh")
+surface_material_override/0 = SubResource("ArmorMaterial")
+
+[node name="Visor" type="MeshInstance3D" parent="Visuals"]
+position = Vector3(0, 1.61, -0.23)
+mesh = SubResource("VisorMesh")
+surface_material_override/0 = SubResource("VisorMaterial")

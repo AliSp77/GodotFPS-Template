@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://FractalVaultDemo/stages/data/stage_definition.gd" id="1"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/encounters/forge_assault.tres" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"forge_assault"
+title = "Forge: Hot Zone"
+kind = 0
+scene_path = "res://FractalVaultDemo/stages/maps/forge_vault.tscn"
+encounter = ExtResource("2")
+threat = 3
+clear_credits = 90
+meta_reward = 0

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://FractalVaultDemo/stages/data/stage_definition.gd" id="1"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/encounters/relay_final.tres" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"relay_final"
+title = "Relay: Final Signal"
+kind = 2
+scene_path = "res://FractalVaultDemo/stages/maps/relay_array.tscn"
+encounter = ExtResource("2")
+threat = 5
+clear_credits = 250
+meta_reward = 3

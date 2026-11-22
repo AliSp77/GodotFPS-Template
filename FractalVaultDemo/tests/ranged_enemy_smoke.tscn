@@ -1,0 +1,46 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://FractalVaultDemo/tests/ranged_enemy_smoke.gd" id="1_test"]
+[ext_resource type="PackedScene" path="res://player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/fractal_skirmisher.tscn" id="3_enemy"]
+
+[sub_resource type="NavigationMesh" id="Navigation"]
+vertices = PackedVector3Array(-15, 0, -15, -15, 0, 15, 15, 0, 15, 15, 0, -15)
+polygons = [PackedInt32Array(0, 1, 2, 3)]
+agent_radius = 0.4
+
+[sub_resource type="BoxShape3D" id="CoverShape"]
+size = Vector3(3, 2.5, 0.3)
+
+[sub_resource type="BoxShape3D" id="RearBarrierShape"]
+size = Vector3(8, 2.5, 0.3)
+
+[node name="RangedEnemySmoke" type="Node3D"]
+script = ExtResource("1_test")
+
+[node name="Floor" type="CSGBox3D" parent="."]
+position = Vector3(0, -0.5, 0)
+use_collision = true
+size = Vector3(30, 1, 30)
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("Navigation")
+
+[node name="Cover" type="StaticBody3D" parent="."]
+position = Vector3(0, 1.25, -4)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cover"]
+shape = SubResource("CoverShape")
+
+[node name="RearBarrier" type="StaticBody3D" parent="."]
+position = Vector3(0, 1.25, 1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RearBarrier"]
+disabled = true
+shape = SubResource("RearBarrierShape")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector3(0, 0.1, -8)
+
+[node name="Skirmisher" parent="." instance=ExtResource("3_enemy")]
+move_speed = 0.0

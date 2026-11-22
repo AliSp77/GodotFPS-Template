@@ -1,66 +1,62 @@
 [gd_scene load_steps=8 format=3]
 
-[ext_resource type="Script" path="res://FractalVaultDemo/enemies/russian_doll_enemy.gd" id="1_doll"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/fractal_enemy_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://FractalVaultDemo/enemies/russian_doll_enemy.gd" id="2_doll"]
 
-[sub_resource type="CapsuleShape3D" id="1_collision"]
-radius = 0.72
-height = 2.65
-
-[sub_resource type="CapsuleMesh" id="2_body_mesh"]
+[sub_resource type="CapsuleMesh" id="Mesh_body"]
 radius = 0.7
 height = 2.2
 
-[sub_resource type="SphereMesh" id="3_head_mesh"]
+[sub_resource type="SphereMesh" id="Mesh_head"]
 radius = 0.53
 height = 1.06
 
-[sub_resource type="SphereMesh" id="4_eye_mesh"]
+[sub_resource type="SphereMesh" id="Mesh_eye"]
 radius = 0.065
 height = 0.13
 
-[sub_resource type="StandardMaterial3D" id="5_face_material"]
+[sub_resource type="StandardMaterial3D" id="Material_face"]
 albedo_color = Color(0.98, 0.78, 0.56, 1)
 roughness = 0.9
 
-[sub_resource type="StandardMaterial3D" id="6_eye_material"]
+[sub_resource type="StandardMaterial3D" id="Material_eye"]
 albedo_color = Color(0.06, 0.03, 0.03, 1)
 roughness = 0.8
 
-[node name="RussianDollEnemy" type="CharacterBody3D" groups=["russian_dolls"]]
-collision_layer = 2
-collision_mask = 5
-script = ExtResource("1_doll")
+[node name="RussianDollEnemy" groups=["russian_dolls"] instance=ExtResource("1_base")]
+sound_pitch_scale = 0.85
+script = ExtResource("2_doll")
+max_health = 160.0
+move_speed = 1.8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-position = Vector3(0, 1.325, 0)
-shape = SubResource("1_collision")
+[node name="Body" parent="Visuals" index="0"]
+visible = false
 
-[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
-path_desired_distance = 0.6
-target_desired_distance = 1.2
+[node name="HeadMesh" parent="Visuals" index="1"]
+visible = false
 
-[node name="Visuals" type="Node3D" parent="."]
+[node name="DollVisual" type="Node3D" parent="Visuals"]
 
-[node name="Body" type="MeshInstance3D" parent="Visuals"]
+[node name="Body" type="MeshInstance3D" parent="Visuals/DollVisual"]
 position = Vector3(0, 1.15, 0)
-mesh = SubResource("2_body_mesh")
+mesh = SubResource("Mesh_body")
 
-[node name="Head" type="MeshInstance3D" parent="Visuals"]
+[node name="Head" type="MeshInstance3D" parent="Visuals/DollVisual"]
 position = Vector3(0, 2.1, 0)
-material_override = SubResource("5_face_material")
-mesh = SubResource("3_head_mesh")
+mesh = SubResource("Mesh_head")
+material_override = SubResource("Material_face")
 
-[node name="Cap" type="MeshInstance3D" parent="Visuals"]
+[node name="Cap" type="MeshInstance3D" parent="Visuals/DollVisual"]
 position = Vector3(0, 2.4, 0)
 scale = Vector3(1, 0.35, 1)
-mesh = SubResource("3_head_mesh")
+mesh = SubResource("Mesh_head")
 
-[node name="LeftEye" type="MeshInstance3D" parent="Visuals"]
+[node name="LeftEye" type="MeshInstance3D" parent="Visuals/DollVisual"]
 position = Vector3(-0.18, 2.14, -0.49)
-material_override = SubResource("6_eye_material")
-mesh = SubResource("4_eye_mesh")
+mesh = SubResource("Mesh_eye")
+material_override = SubResource("Material_eye")
 
-[node name="RightEye" type="MeshInstance3D" parent="Visuals"]
+[node name="RightEye" type="MeshInstance3D" parent="Visuals/DollVisual"]
 position = Vector3(0.18, 2.14, -0.49)
-material_override = SubResource("6_eye_material")
-mesh = SubResource("4_eye_mesh")
+mesh = SubResource("Mesh_eye")
+material_override = SubResource("Material_eye")

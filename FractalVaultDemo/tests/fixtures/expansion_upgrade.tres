@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://FractalVaultDemo/stages/data/upgrade_definition.gd" id="1"]
+[ext_resource type="Script" path="res://FractalVaultDemo/stages/data/stat_effect.gd" id="2"]
+
+[sub_resource type="Resource" id="Effect"]
+script = ExtResource("2")
+stat = 0
+amount = 5.0
+
+[resource]
+script = ExtResource("1")
+id = &"expansion_heal"
+title = "Expansion Heal"
+description = "Restore five health"
+effect = SubResource("Effect")

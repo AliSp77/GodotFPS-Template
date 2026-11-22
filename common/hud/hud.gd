@@ -23,6 +23,8 @@ func _ready() -> void:
 
 
 func _on_bullets_changed() -> void:
+	if not weapons_manager and Global.player:
+		weapons_manager = Global.player.get_node_or_null("WeaponsManager")
 	if not weapons_manager or not weapons_manager.current_weapon:
 		bullets_label.text = "AMMO: --/--"
 		return

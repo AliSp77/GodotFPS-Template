@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/stages/maps/forge_hall.tscn" id="1"]
+
+[node name="ExpansionMap" instance=ExtResource("1")]
+
+[node name="ExpansionBanner" type="Label3D" parent="."]
+position = Vector3(0, 3, 8)
+pixel_size = 0.01
+text = "EXPANSION MAP"

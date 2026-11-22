@@ -1,0 +1,152 @@
+[gd_scene format=3 uid="uid://debp2bq2rqrqr"]
+
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/fractal_enemy_base.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://dsgae3ke4iry6" path="res://FractalVaultDemo/enemies/gardian.gd" id="2_gardian"]
+[ext_resource type="Script" uid="uid://rayjlty7e2sd" path="res://FractalVaultDemo/enemies/fractal_enemy_hurt_point.gd" id="3_hurt"]
+[ext_resource type="Script" uid="uid://bpaelsl16ij84" path="res://FractalVaultDemo/enemies/gardian_shield.gd" id="4_shield"]
+
+[sub_resource type="StandardMaterial3D" id="Material_titan"]
+albedo_color = Color(0.09, 0.13, 0.27, 1)
+metallic = 0.5
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.14, 0.2, 0.5, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="StandardMaterial3D" id="Material_weak"]
+albedo_color = Color(0.18, 0.9, 1, 1)
+metallic = 0.35
+roughness = 0.25
+emission_enabled = true
+emission = Color(0.05, 0.65, 1, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="SphereMesh" id="Mesh_weak"]
+radius = 0.23
+height = 0.46
+
+[sub_resource type="SphereShape3D" id="Shape_weak"]
+radius = 0.23
+
+[sub_resource type="SphereShape3D" id="Shape_shield"]
+radius = 1.25
+
+[sub_resource type="StandardMaterial3D" id="Material_shield"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(0.18, 0.6, 1, 0.27)
+
+[sub_resource type="SphereMesh" id="Mesh_shield"]
+radius = 1.25
+height = 2.5
+
+[node name="Gardian" unique_id=2031401266 groups=["gardian"] instance=ExtResource("1_base")]
+sound_pitch_scale = 0.7
+collision_layer = 8
+script = ExtResource("2_gardian")
+attack_damage = 16.0
+attack_range = 1.7
+attack_cooldown = 1.3
+titan_cooldown = 6.0
+titan_charge_duration = 5.0
+shield_max_health = 300.0
+wave_interval = 1.1
+wave_radius = 6.0
+wave_travel_time = 1.0
+wave_damage = 10.0
+explosion_radius = 8.0
+explosion_damage = 65.0
+max_health = 450.0
+move_speed = 3.2
+vision_range = 13.0
+show_state_indicator = false
+
+[node name="CollisionShape3D" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+
+[node name="Body" parent="Visuals" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+visible = false
+material_override = SubResource("Material_titan")
+
+[node name="HeadMesh" parent="Visuals" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.57, 0)
+visible = false
+material_override = SubResource("Material_titan")
+
+[node name="WeakPoints" type="Node3D" parent="Visuals" index="2" unique_id=1172901459]
+
+[node name="Crown" type="MeshInstance3D" parent="Visuals/WeakPoints" index="0" unique_id=1326864149]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.57, 0)
+material_override = SubResource("Material_weak")
+mesh = SubResource("Mesh_weak")
+
+[node name="Left" type="MeshInstance3D" parent="Visuals/WeakPoints" index="1" unique_id=1339673397]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.52, 1.02, -0.23)
+material_override = SubResource("Material_weak")
+mesh = SubResource("Mesh_weak")
+
+[node name="Right" type="MeshInstance3D" parent="Visuals/WeakPoints" index="2" unique_id=646852391]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 1.02, -0.23)
+material_override = SubResource("Material_weak")
+mesh = SubResource("Mesh_weak")
+
+[node name="Head" parent="HurtPoints" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.57, 0)
+
+[node name="Left" type="AnimatableBody3D" parent="HurtPoints" index="1" unique_id=933527662]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.52, 1.02, -0.23)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("3_hurt")
+damage_multiplier = 1.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtPoints/Left" index="0" unique_id=265907133]
+shape = SubResource("Shape_weak")
+
+[node name="Right" type="AnimatableBody3D" parent="HurtPoints" index="2" unique_id=1065570842]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 1.02, -0.23)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("3_hurt")
+damage_multiplier = 1.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtPoints/Right" index="0" unique_id=900522254]
+shape = SubResource("Shape_weak")
+
+[node name="VisionSensor" parent="." index="4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+
+[node name="SightRay" parent="." index="5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+
+[node name="StateIndicator" parent="." index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 0)
+
+[node name="TitanShield" type="StaticBody3D" parent="." index="8" unique_id=611261593]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+visible = false
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("4_shield")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TitanShield" index="0" unique_id=1781506935]
+shape = SubResource("Shape_shield")
+
+[node name="Visual" type="MeshInstance3D" parent="TitanShield" index="1" unique_id=2103718258]
+material_override = SubResource("Material_shield")
+mesh = SubResource("Mesh_shield")
+
+[node name="ChargeLabel" type="Label3D" parent="." index="9" unique_id=90708904]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 0)
+visible = false
+pixel_size = 0.004
+billboard = 1
+modulate = Color(0.5, 0.85, 1, 1)
+outline_modulate = Color(0.02, 0.04, 0.1, 1)
+text = "TITAN"
+font_size = 44
+outline_size = 10
+
+[node name="Waves" type="Node3D" parent="." index="10" unique_id=2091245859]

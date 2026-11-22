@@ -1,0 +1,65 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://FractalVaultDemo/stages/stage_vendor.gd" id="1"]
+
+[sub_resource type="BoxShape3D" id="HitShape"]
+size = Vector3(2.2, 2.4, 1.4)
+
+[sub_resource type="BoxMesh" id="VendorMesh"]
+size = Vector3(1.8, 2.2, 1.0)
+
+[sub_resource type="StandardMaterial3D" id="VendorMaterial"]
+albedo_color = Color(0.17, 0.21, 0.25, 1)
+metallic = 0.68
+roughness = 0.48
+
+[sub_resource type="BoxMesh" id="ScreenMesh"]
+size = Vector3(1.35, 0.85, 0.055)
+
+[sub_resource type="BoxMesh" id="BaseMesh"]
+size = Vector3(2.05, 0.2, 1.25)
+
+[sub_resource type="StandardMaterial3D" id="ScreenMaterial"]
+albedo_color = Color(0.025, 0.32, 0.42, 1)
+emission_enabled = true
+emission = Color(0.015, 0.27, 0.38, 1)
+emission_energy_multiplier = 1.4
+
+[sub_resource type="StandardMaterial3D" id="BaseMaterial"]
+albedo_color = Color(0.35, 0.39, 0.42, 1)
+metallic = 0.72
+roughness = 0.4
+
+[node name="StageVendor" type="Area3D"]
+script = ExtResource("1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.2, 0)
+shape = SubResource("HitShape")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.1, 0)
+mesh = SubResource("VendorMesh")
+surface_material_override/0 = SubResource("VendorMaterial")
+
+[node name="Screen" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.55, 0.53)
+mesh = SubResource("ScreenMesh")
+surface_material_override/0 = SubResource("ScreenMaterial")
+
+[node name="Base" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.12, 0)
+mesh = SubResource("BaseMesh")
+surface_material_override/0 = SubResource("BaseMaterial")
+
+[node name="Counter" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.73, 0.58)
+mesh = SubResource("BaseMesh")
+surface_material_override/0 = SubResource("BaseMaterial")
+
+[node name="Label3D" type="Label3D" parent="."]
+position = Vector3(0, 2.5, 0)
+pixel_size = 0.005
+font_size = 48
+billboard = 1
+text = "VENDOR [F]"

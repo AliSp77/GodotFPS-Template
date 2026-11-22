@@ -3,15 +3,12 @@
 [ext_resource type="PackedScene" uid="uid://bubbh4ij2mobp" path="res://FractalVaultDemo/start_hall.tscn" id="1_wm1v0"]
 [ext_resource type="PackedScene" uid="uid://d15cpo868piur" path="res://FractalVaultDemo/starting_point.tscn" id="2_o0uy8"]
 [ext_resource type="PackedScene" uid="uid://cdbipjyx57al2" path="res://player/player.tscn" id="3_f600h"]
-[ext_resource type="PackedScene" uid="uid://cumxs056a1mxy" path="res://enemies/leacher.tscn" id="5_e7pou"]
-[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/fractal_enemy_base.tscn" id="6_1tcg4"]
-[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/russian_doll_enemy.tscn" id="6_doll"]
-[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/fractal_leacher.tscn" id="7_fractal_leacher"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/fractal_skirmisher.tscn" id="5_e7pou"]
 [ext_resource type="NavigationMesh" path="res://FractalVaultDemo/navigation/game_navigation.tres" id="8_navigation"]
 
 [node name="GameScene" type="Node3D" unique_id=1993115954]
 
-[node name="StartHall" parent="." unique_id=362340844 instance=ExtResource("1_wm1v0")]
+[node name="StartHall" type="Node3D" parent="." unique_id=362340844 instance=ExtResource("1_wm1v0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6093073)
 
 [node name="StartingPoint" parent="." unique_id=322989214 instance=ExtResource("2_o0uy8")]
@@ -21,7 +18,10 @@ transform = Transform3D(-0.04420084, 0, 0.99902266, 0, 1, 0, -0.99902266, 0, -0.
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.37, 0.055, 0.05)
 size = Vector3(83, 0.9385996, 12)
 
-[node name="walkables" parent="StartingPoint/Block/NavigationRegion3D" parent_id_path=PackedInt32Array(322989214, 502537966) index="0" unique_id=564569406]
+[node name="NavigationRegion3D" parent="StartingPoint/Block" index="2" unique_id=502537966]
+enabled = false
+
+[node name="walkables" parent="StartingPoint/Block/NavigationRegion3D" index="0" unique_id=564569406]
 transform = Transform3D(0.9741216, 0, -0.22602437, 0, 1, 0, 0.22602437, 0, 0.9741216, -17.138937, 0.46089935, -30.977585)
 
 [node name="Box" parent="StartingPoint/Block/NavigationRegion3D/walkables" index="5" unique_id=1898315107]
@@ -38,34 +38,13 @@ preview_visual_limit = 50
 [node name="Player" parent="." unique_id=1157596601 instance=ExtResource("3_f600h")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025913954, 2.408361, 1.6521571)
 
-[node name="Leacher" parent="." unique_id=32077111 instance=ExtResource("5_e7pou")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 41.485455, -0.7544421, -39.66588)
-
-[node name="RussianDollEnemy" parent="." unique_id=645438996 instance=ExtResource("6_doll")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.59988, 0.53, -40.005653)
-
-[node name="FractalEnemyBase" parent="." unique_id=399989762 instance=ExtResource("6_1tcg4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5053415, -1.2010988, -36.702034)
-
-[node name="FractalLeacher" parent="." unique_id=409492582 instance=ExtResource("7_fractal_leacher")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.5, -0.75, -39.5)
-rush_speed = 8.5
-rush_duration = 1.2
-recover_speed = 1.2
-recover_duration = 1.0
-grab_distance = 1.6
-grab_lift_height = 2.2
-grab_cooldown = 6.0
-carry_speed = 8.5
-carry_duration = 10.0
-carry_min_distance = 12.0
-carry_max_distance = 24.0
-carry_arrival_distance = 1.2
-
-[node name="NavigationRegion3D" parent="StartingPoint/Block" index="2"]
-enabled = false
-
-[node name="LevelNavigation" type="NavigationRegion3D" parent="."]
+[node name="LevelNavigation" type="NavigationRegion3D" parent="." unique_id=1549000279]
 navigation_mesh = ExtResource("8_navigation")
+
+[node name="FractalSkirmisher" parent="." unique_id=549158821 instance=ExtResource("5_e7pou")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.360111, 0, -39.696743)
+reposition_distance = 3.0
+reposition_interval = 0.6
+projectile_distance = 30.0
 
 [editable path="StartingPoint"]

@@ -41,7 +41,7 @@ var footstep_timer: float = 0.0
 const FOOTSTEP_INTERVAL_WALK: float = 0.5
 const FOOTSTEP_INTERVAL_SPRINT: float = 0.3
 
-const MAX_HEALTH:float = 100.0
+@export var max_health:float = 100.0
 var current_health:float = 100.0
 var is_alive: bool = true
 const HIT_STAGGER: float = 40.0
@@ -302,4 +302,4 @@ func get_damage(damage:float,direction:Vector3, is_enemy_damage:bool = false) ->
 		end_leacher_grab()
 	else:
 		velocity +=  direction * HIT_STAGGER
-	Global.player_health_changed.emit(-damage,current_health,MAX_HEALTH, is_enemy_damage)
+	Global.player_health_changed.emit(-damage,current_health,max_health, is_enemy_damage)

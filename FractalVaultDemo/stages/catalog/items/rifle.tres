@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="StoreItem" format=3 uid="uid://1cxsej48lmnt"]
+
+[ext_resource type="Script" uid="uid://by40raox7cwgs" path="res://FractalVaultDemo/stages/data/store_item.gd" id="1"]
+[ext_resource type="Script" uid="uid://d3l15iteui4ct" path="res://FractalVaultDemo/stages/data/equip_effect.gd" id="2"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/weapons/assault_rifle.tres" id="3"]
+
+[sub_resource type="Resource" id="Effect"]
+script = ExtResource("2")
+weapon = ExtResource("3")
+
+[resource]
+script = ExtResource("1")
+id = &"rifle"
+title = "Assault Rifle"
+description = "Equip an automatic rifle"
+cost = 90
+effect = SubResource("Effect")

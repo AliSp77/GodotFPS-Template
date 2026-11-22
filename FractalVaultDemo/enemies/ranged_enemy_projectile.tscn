@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://FractalVaultDemo/enemies/ranged_enemy_projectile.gd" id="1"]
+
+[sub_resource type="StandardMaterial3D" id="PulseMaterial"]
+shading_mode = 0
+albedo_color = Color(1, 0.35, 0.1, 1)
+emission_enabled = true
+emission = Color(1, 0.22, 0.035, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="SphereMesh" id="PulseMesh"]
+radius = 0.12
+height = 0.24
+
+[sub_resource type="BoxMesh" id="TrailMesh"]
+size = Vector3(0.055, 0.055, 0.55)
+
+[node name="RangedEnemyProjectile" type="Node3D"]
+script = ExtResource("1")
+
+[node name="Pulse" type="MeshInstance3D" parent="."]
+mesh = SubResource("PulseMesh")
+surface_material_override/0 = SubResource("PulseMaterial")
+
+[node name="Trail" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0, 0.34)
+mesh = SubResource("TrailMesh")
+surface_material_override/0 = SubResource("PulseMaterial")

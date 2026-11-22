@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="UpgradeDefinition" format=3 uid="uid://cwjgmretllqwc"]
+
+[ext_resource type="Script" uid="uid://bsfsiwyvuckwo" path="res://FractalVaultDemo/stages/data/upgrade_definition.gd" id="1"]
+[ext_resource type="Script" uid="uid://n14r6ukwk400" path="res://FractalVaultDemo/stages/data/stat_effect.gd" id="2"]
+
+[sub_resource type="Resource" id="Effect"]
+script = ExtResource("2")
+stat = 4
+amount = 0.8
+
+[resource]
+script = ExtResource("1")
+id = &"quick_reload"
+title = "Quick Reload"
+description = "Reload 20% faster"
+unlock_cost = 2
+effect = SubResource("Effect")

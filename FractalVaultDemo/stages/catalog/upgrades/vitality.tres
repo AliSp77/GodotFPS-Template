@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UpgradeDefinition" format=3 uid="uid://mah80trjijnf"]
+
+[ext_resource type="Script" uid="uid://bsfsiwyvuckwo" path="res://FractalVaultDemo/stages/data/upgrade_definition.gd" id="1"]
+[ext_resource type="Script" uid="uid://n14r6ukwk400" path="res://FractalVaultDemo/stages/data/stat_effect.gd" id="2"]
+
+[sub_resource type="Resource" id="Effect"]
+script = ExtResource("2")
+stat = 1
+amount = 25
+
+[resource]
+script = ExtResource("1")
+id = &"vitality"
+title = "Vitality"
+description = "+25 maximum health"
+effect = SubResource("Effect")

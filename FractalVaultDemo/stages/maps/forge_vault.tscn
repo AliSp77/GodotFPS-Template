@@ -1,0 +1,194 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/stages/modules/vault_architecture.tscn" id="5"]
+[ext_resource type="Script" uid="uid://dm3w167w4ky0y" path="res://FractalVaultDemo/stages/stage_root.gd" id="1"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/stages/stage_door.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/stages/stage_lever.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/stages/stage_vendor.tscn" id="4"]
+
+[sub_resource type="StandardMaterial3D" id="FloorMat"]
+albedo_color = Color(0.075, 0.11, 0.15, 1)
+metallic = 0.35
+roughness = 0.74
+
+[sub_resource type="StandardMaterial3D" id="WallMat"]
+albedo_color = Color(0.16, 0.21, 0.26, 1)
+metallic = 0.48
+roughness = 0.65
+
+[sub_resource type="NavigationMesh" id="Nav"]
+vertices = PackedVector3Array(-19, 0, -19, -19, 0, 19, 19, 0, 19, 19, 0, -19)
+polygons = [PackedInt32Array(0, 1, 2, 3)]
+agent_radius = 0.4
+
+[sub_resource type="BoxShape3D" id="EntryShape"]
+size = Vector3(6, 3, 6)
+
+[sub_resource type="StandardMaterial3D" id="StageAccent"]
+albedo_color = Color(0.78, 0.24, 0.08, 1)
+emission_enabled = true
+emission = Color(0.78, 0.24, 0.08, 1)
+emission_energy_multiplier = 0.8
+metallic = 0.3
+roughness = 0.45
+
+[node name="ForgeHall" type="Node3D" unique_id=1788977591]
+script = ExtResource("1")
+
+[node name="Floor" type="CSGBox3D" parent="." unique_id=1842320530]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(40, 1, 40)
+material = SubResource("FloorMat")
+
+[node name="WestWall" type="CSGBox3D" parent="." unique_id=1159233012]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 2, 0)
+use_collision = true
+size = Vector3(1, 4, 40)
+material = SubResource("WallMat")
+
+[node name="EastWall" type="CSGBox3D" parent="." unique_id=887425205]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 2, 0)
+use_collision = true
+size = Vector3(1, 4, 40)
+material = SubResource("WallMat")
+
+[node name="BackWest" type="CSGBox3D" parent="." unique_id=239574421]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2, 20)
+use_collision = true
+size = Vector3(18, 4, 1)
+material = SubResource("WallMat")
+
+[node name="BackEast" type="CSGBox3D" parent="." unique_id=1017716878]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2, 20)
+use_collision = true
+size = Vector3(18, 4, 1)
+material = SubResource("WallMat")
+
+[node name="FrontWest" type="CSGBox3D" parent="." unique_id=1251773325]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 2, -20)
+use_collision = true
+size = Vector3(10, 4, 1)
+material = SubResource("WallMat")
+
+[node name="FrontCenter" type="CSGBox3D" parent="." unique_id=703468390]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -20)
+use_collision = true
+size = Vector3(12, 4, 1)
+material = SubResource("WallMat")
+
+[node name="FrontEast" type="CSGBox3D" parent="." unique_id=53150605]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 2, -20)
+use_collision = true
+size = Vector3(10, 4, 1)
+material = SubResource("WallMat")
+
+[node name="NorthBeam" type="CSGBox3D" parent="." unique_id=915268624]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 10)
+size = Vector3(28, 0.6, 1)
+material = SubResource("WallMat")
+
+[node name="SouthBeam" type="CSGBox3D" parent="." unique_id=850446901]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -8)
+size = Vector3(28, 0.6, 1)
+material = SubResource("WallMat")
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=8399841]
+navigation_mesh = SubResource("Nav")
+
+[node name="Entry" type="Marker3D" parent="." unique_id=1122535845]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20)
+
+[node name="ExitLeft" type="Marker3D" parent="." unique_id=1873279960]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -20)
+
+[node name="ExitRight" type="Marker3D" parent="." unique_id=577208210]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -20)
+
+[node name="EntryDoor" parent="." unique_id=63233314 instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20)
+
+[node name="EntryArea" type="Area3D" parent="." unique_id=451683325]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 17)
+collision_layer = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EntryArea" unique_id=469965725]
+shape = SubResource("EntryShape")
+
+[node name="Doors" type="Node3D" parent="." unique_id=1905021732]
+
+[node name="Left" parent="Doors" unique_id=32623368 instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -20)
+
+[node name="Right" parent="Doors" unique_id=356637256 instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -20)
+
+[node name="Levers" type="Node3D" parent="." unique_id=2143140010]
+
+[node name="Left" parent="Levers" unique_id=1473204474 instance=ExtResource("3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -16)
+
+[node name="Right" parent="Levers" unique_id=1827646571 instance=ExtResource("3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -16)
+branch = 1
+
+[node name="Vendor" parent="." unique_id=1758277633 instance=ExtResource("4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12)
+
+[node name="EnemySpawns" type="Node3D" parent="." unique_id=292813316]
+
+[node name="Spawn1" type="Marker3D" parent="EnemySpawns" unique_id=2000490961]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0.1, -8)
+
+[node name="Spawn2" type="Marker3D" parent="EnemySpawns" unique_id=1776866007]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0.1, -8)
+
+[node name="Spawn3" type="Marker3D" parent="EnemySpawns" unique_id=1053441712]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.1, 5)
+
+[node name="Spawn4" type="Marker3D" parent="EnemySpawns" unique_id=449789179]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.1, 5)
+
+[node name="Spawn5" type="Marker3D" parent="EnemySpawns" unique_id=1088016491]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -3)
+
+[node name="Enemies" type="Node3D" parent="." unique_id=419616842]
+
+[node name="VaultArchitecture" parent="." instance=ExtResource("5")]
+
+[node name="StageFloorStripe4" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.06, -16)
+size = Vector3(5.6, 0.015, 0.09)
+material = SubResource("StageAccent")
+
+[node name="StageFloorStripe12" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.06, -8)
+size = Vector3(5.6, 0.015, 0.09)
+material = SubResource("StageAccent")
+
+[node name="StageFloorStripe20" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.06, 0)
+size = Vector3(5.6, 0.015, 0.09)
+material = SubResource("StageAccent")
+
+[node name="StageFloorStripe28" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.06, 8)
+size = Vector3(5.6, 0.015, 0.09)
+material = SubResource("StageAccent")
+
+[node name="StageFloorStripe36" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.06, 16)
+size = Vector3(5.6, 0.015, 0.09)
+material = SubResource("StageAccent")
+
+[node name="StageLightLeft" type="OmniLight3D" parent="."]
+position = Vector3(-18, 2.9, -9)
+light_color = Color(1, 0.43, 0.2, 1)
+light_energy = 0.85
+omni_range = 12.0
+
+[node name="StageLightRight" type="OmniLight3D" parent="."]
+position = Vector3(18, 2.9, -9)
+light_color = Color(1, 0.43, 0.2, 1)
+light_energy = 0.85
+omni_range = 12.0

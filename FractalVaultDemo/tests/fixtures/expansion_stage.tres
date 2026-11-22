@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://FractalVaultDemo/stages/data/stage_definition.gd" id="1"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/encounters/forge_scavenge.tres" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"expansion_map"
+title = "Expansion Map"
+kind = 0
+scene_path = "res://FractalVaultDemo/tests/fixtures/expansion_map.tscn"
+encounter = ExtResource("2")
+threat = 2
+clear_credits = 45

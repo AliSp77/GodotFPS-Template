@@ -23,7 +23,16 @@ func _ready() -> void:
 
 func _run_checks() -> void:
 	await _frames(8)
+	if not _check(enemy.spawn_sfx.playing, "Spawn sound did not play"):
+		return
 	if not _check(enemy.awareness != FractalEnemyBase.Awareness.ENGAGED, "Player behind cone was visually detected"):
+		return
+	var idle_origin := enemy.global_position
+	var idle_yaw := enemy.rotation.y
+	await _frames(120)
+	if not _check(enemy.awareness == FractalEnemyBase.Awareness.IDLE and absf(wrapf(enemy.rotation.y - idle_yaw, -PI, PI)) > 0.1, "Idle enemy did not look around"):
+		return
+	if not _check(Vector2(enemy.global_position.x, enemy.global_position.z).distance_to(Vector2(idle_origin.x, idle_origin.z)) < 0.02, "Idle enemy moved away from its spot"):
 		return
 
 	Global.noise_emitted.emit(player.global_position, 20.0, player)
@@ -47,6 +56,8 @@ func _run_checks() -> void:
 		return
 	if not _check(enemy.target_player == player, "Engaged target was not the seen player"):
 		return
+	if not _check(enemy.alert_sfx.playing, "Alert sound did not play"):
+		return
 
 	player.global_position = Vector3(0, 0, 4)
 	await _frames(5)
@@ -67,6 +78,8 @@ func _run_checks() -> void:
 	if not _check(is_equal_approx(enemy.current_health, 80.0), "Head hurt point multiplier did not apply"):
 		return
 	if not _check(enemy.animation_player.current_animation == "hurt", "Hurt animation was not requested"):
+		return
+	if not _check(enemy.hit_sfx.playing, "Hit sound did not play"):
 		return
 
 	enemy.rotation.y = 0.0
@@ -90,6 +103,9 @@ func _run_checks() -> void:
 	for clip_name in animation_names:
 		if not _check(enemy.animation_player.has_animation(clip_name), "Missing animation: " + clip_name):
 			return
+	enemy.play_enemy_animation(&"attack")
+	if not _check(enemy.attack_sfx.playing, "Attack sound did not play"):
+		return
 
 	var kills_before := Global.enemies_killed
 	var death_count := [0]
@@ -101,6 +117,11 @@ func _run_checks() -> void:
 	if not _check(death_count[0] == 1 and Global.enemies_killed == kills_before + 1, "Death was emitted more than once"):
 		return
 	if not _check(enemy.animation_player.current_animation == "death", "Death animation was not requested"):
+		return
+	if not _check(enemy.death_sfx.playing, "Death sound did not play"):
+		return
+	await _frames(65)
+	if not _check(is_instance_valid(enemy), "Enemy despawned before its death sound finished"):
 		return
 
 	player.velocity = Vector3.RIGHT

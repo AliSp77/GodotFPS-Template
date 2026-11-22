@@ -1,0 +1,42 @@
+[gd_scene load_steps=20 format=3]
+
+[ext_resource type="Environment" path="res://FractalVaultDemo/stages/modules/vault_atmosphere.tres" id="env"]
+[ext_resource type="Script" path="res://FractalVaultDemo/stages/stage_run.gd" id="1"]
+[ext_resource type="PackedScene" path="res://player/player.tscn" id="2"]
+[ext_resource type="Script" path="res://common/managers/input_manager.gd" id="3"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/stages/run_hud.tscn" id="4"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/stages/forge_scavenge.tres" id="s0"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/stages/relay_scout.tres" id="s1"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/stages/forge_assault.tres" id="s2"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/stages/relay_onslaught.tres" id="s3"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/stages/forge_mid.tres" id="s4"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/stages/relay_mid.tres" id="s5"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/stages/forge_final.tres" id="s6"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/stages/relay_final.tres" id="s7"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/upgrades/vitality.tres" id="u0"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/upgrades/firepower.tres" id="u1"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/upgrades/momentum.tres" id="u2"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/upgrades/quick_reload.tres" id="u3"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/upgrades/field_resupply.tres" id="u4"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/items/medkit.tres" id="i0"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/items/ammo.tres" id="i1"]
+[ext_resource type="Resource" path="res://FractalVaultDemo/stages/catalog/items/rifle.tres" id="i2"]
+
+[node name="StageRun" type="Node3D"]
+script = ExtResource("1")
+stage_catalog = Array[Resource]([ExtResource("s0"), ExtResource("s1"), ExtResource("s2"), ExtResource("s3"), ExtResource("s4"), ExtResource("s5"), ExtResource("s6"), ExtResource("s7")])
+upgrade_catalog = Array[Resource]([ExtResource("u0"), ExtResource("u1"), ExtResource("u2"), ExtResource("u3"), ExtResource("u4")])
+store_catalog = Array[Resource]([ExtResource("i0"), ExtResource("i1"), ExtResource("i2")])
+
+[node name="VaultAtmosphere" type="WorldEnvironment" parent="."]
+environment = ExtResource("env")
+
+[node name="Player" parent="." instance=ExtResource("2")]
+position = Vector3(0, 0.1, 15)
+
+[node name="Stages" type="Node3D" parent="."]
+
+[node name="Input" type="Node" parent="."]
+script = ExtResource("3")
+
+[node name="StageRunHUD" parent="." instance=ExtResource("4")]

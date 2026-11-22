@@ -24,7 +24,8 @@ func _ready() -> void:
 
 
 func _check() -> void:
-	await get_tree().physics_frame
+	for frame in 30:
+		await get_tree().physics_frame
 	var previous_health := INF
 	var previous_damage := INF
 	var previous_speed := 0.0
@@ -38,6 +39,9 @@ func _check() -> void:
 			_fail("Generation %d has %d dolls; expected %d" % [generation, dolls.size(), expected_count])
 			return
 		for doll in dolls:
+			if not doll is FractalEnemyBase or doll.get_node_or_null("VisionSensor") == null:
+				_fail("Doll did not inherit the fractal enemy scene")
+				return
 			if doll.split_generation != generation:
 				_fail("Child spawned in the wrong generation")
 				return
@@ -48,8 +52,17 @@ func _check() -> void:
 			if generation == 0:
 				var ray := PhysicsRayQueryParameters3D.create(doll.global_position + Vector3.UP * 4.0, doll.global_position - Vector3.UP, 2)
 				var hit := get_world_3d().direct_space_state.intersect_ray(ray)
-				if hit.is_empty() or hit.collider != doll:
+				if hit.is_empty() or (hit.collider != doll and hit.collider != doll.head_hurt_point):
 					_fail("Weapon ray could not hit the doll")
+					return
+				var head_ray := PhysicsRayQueryParameters3D.create(Vector3(0, 2.3, -3), Vector3(0, 2.3, 3), 2)
+				var head_hit := get_world_3d().direct_space_state.intersect_ray(head_ray)
+				if head_hit.is_empty() or head_hit.collider != doll.head_hurt_point:
+					_fail("Weapon ray could not hit the doll's head hurt point")
+					return
+				doll.head_hurt_point.get_damage(10.0, Vector3.FORWARD)
+				if not is_equal_approx(doll.current_health, doll.max_health - 20.0) or doll.awareness != FractalEnemyBase.Awareness.INVESTIGATE:
+					_fail("Inherited head damage and investigation failed")
 					return
 			doll.get_damage(doll.current_health, Vector3.FORWARD)
 		previous_health = dolls[0].max_health
@@ -70,11 +83,11 @@ func _check() -> void:
 	_player.global_position = Vector3.ZERO
 	var attacker := _doll_scene.instantiate() as RussianDollEnemy
 	add_child(attacker)
-	attacker.global_position = Vector3(0, 0, -1.5)
+	attacker.global_position = Vector3(0, 0, 1.5)
 	var health_before := _player.current_health
 	for frame in 45:
 		await get_tree().physics_frame
-	if _player.current_health >= health_before:
+	if attacker.awareness != FractalEnemyBase.Awareness.ENGAGED or _player.current_health >= health_before:
 		_fail("Doll did not damage the player")
 		return
 	print("RUSSIAN_DOLL_MCP_SMOKE_OK")
@@ -84,7 +97,7 @@ func _check() -> void:
 func _get_dolls() -> Array[RussianDollEnemy]:
 	var dolls: Array[RussianDollEnemy] = []
 	for node in get_tree().get_nodes_in_group("russian_dolls"):
-		if node is RussianDollEnemy:
+		if node is RussianDollEnemy and node.awareness != FractalEnemyBase.Awareness.DEAD:
 			dolls.append(node)
 	return dolls
 

@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/fractal_enemy_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://FractalVaultDemo/enemies/ranged_enemy_base.gd" id="2_ranged"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/ranged_enemy_projectile.tscn" id="3_projectile"]
+
+[sub_resource type="StandardMaterial3D" id="AimMaterial"]
+shading_mode = 0
+albedo_color = Color(1, 0.28, 0.07, 1)
+emission_enabled = true
+emission = Color(1, 0.14, 0.02, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="SphereMesh" id="AimMesh"]
+radius = 0.2
+height = 0.4
+
+[node name="RangedEnemyBase" instance=ExtResource("1_base")]
+script = ExtResource("2_ranged")
+vision_range = 16.0
+show_state_indicator = false
+projectile_scene = ExtResource("3_projectile")
+
+[node name="Muzzle" type="Marker3D" parent="."]
+position = Vector3(0, 1.38, -0.45)
+
+[node name="AimIndicator" type="MeshInstance3D" parent="Muzzle"]
+visible = false
+position = Vector3(0, 0, -0.18)
+mesh = SubResource("AimMesh")
+surface_material_override/0 = SubResource("AimMaterial")
+
+[node name="WindupLight" type="OmniLight3D" parent="Muzzle/AimIndicator"]
+light_color = Color(1, 0.29, 0.08, 1)
+light_energy = 1.5
+omni_range = 3.0

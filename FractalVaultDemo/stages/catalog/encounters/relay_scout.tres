@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EncounterDefinition" format=3 uid="uid://cdg13hg6g177u"]
+
+[ext_resource type="Script" uid="uid://b1vxwiotcai50" path="res://FractalVaultDemo/stages/data/encounter_definition.gd" id="1"]
+[ext_resource type="Script" uid="uid://idnuh6yxljen" path="res://FractalVaultDemo/stages/data/enemy_entry.gd" id="2"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/fractal_leacher.tscn" id="e0"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/russian_doll_enemy.tscn" id="e1"]
+
+[sub_resource type="Resource" id="Entry0"]
+script = ExtResource("2")
+enemy_scene = ExtResource("e0")
+count = 3
+interval = 1.2
+
+[sub_resource type="Resource" id="Entry1"]
+script = ExtResource("2")
+enemy_scene = ExtResource("e1")
+interval = 2
+
+[resource]
+script = ExtResource("1")
+entries = Array[ExtResource("2")]([SubResource("Entry0"), SubResource("Entry1")])

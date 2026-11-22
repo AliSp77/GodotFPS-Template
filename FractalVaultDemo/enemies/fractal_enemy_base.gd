@@ -20,10 +20,19 @@ signal animation_requested(name: StringName)
 @export var search_duration: float = 4.0
 @export var investigation_travel_timeout: float = 30.0
 
+@export_group("Idle Motion")
+@export_range(0.0, 90.0) var idle_turn_degrees: float = 35.0
+@export var idle_turn_interval: float = 2.0
+@export var idle_turn_speed: float = 2.0
+
 @export_group("Dodge")
 @export var dodge_distance: float = 1.5
 @export var dodge_duration: float = 0.3
 @export var dodge_cooldown: float = 2.0
+
+@export_group("Audio")
+@export_range(0.25, 2.0, 0.01) var sound_pitch_scale: float = 1.0
+@export var idle_sound_interval: float = 10.0
 
 @export_group("Debug")
 @export var show_state_indicator: bool = true
@@ -35,6 +44,12 @@ signal animation_requested(name: StringName)
 @onready var visuals: Node3D = $Visuals
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var head_hurt_point: CollisionObject3D = $HurtPoints/Head
+@onready var spawn_sfx: AudioStreamPlayer3D = $SFX/Spawn
+@onready var idle_sfx: AudioStreamPlayer3D = $SFX/Idle
+@onready var alert_sfx: AudioStreamPlayer3D = $SFX/Alert
+@onready var hit_sfx: AudioStreamPlayer3D = $SFX/Hit
+@onready var attack_sfx: AudioStreamPlayer3D = $SFX/Attack
+@onready var death_sfx: AudioStreamPlayer3D = $SFX/Death
 
 var current_health: float
 var awareness: Awareness = Awareness.IDLE
@@ -51,6 +66,11 @@ var _dodge_left: float = 0.0
 var _dodge_direction: Vector3 = Vector3.ZERO
 var _animation_lock_left: float = 0.0
 var _death_started: bool = false
+var _idle_center_yaw: float = 0.0
+var _idle_target_yaw: float = 0.0
+var _idle_turn_timer: float = 0.0
+var _idle_turn_rate: float = 0.0
+var _idle_sound_left: float = 0.0
 
 
 func _ready() -> void:
@@ -60,14 +80,21 @@ func _ready() -> void:
 	vision_sensor.set("angle", vision_angle_degrees)
 	sight_ray.add_exception(self)
 	Global.noise_emitted.connect(_on_noise_emitted)
+	_start_idle_motion()
 	play_enemy_animation(&"idle")
 	_update_state_indicator()
+	_play_sound(spawn_sfx)
 
 
 func _physics_process(delta: float) -> void:
 	_update_state_indicator()
 	if awareness == Awareness.DEAD:
 		return
+	if awareness == Awareness.IDLE and idle_sfx.stream != null:
+		_idle_sound_left -= delta
+		if _idle_sound_left <= 0.0:
+			_play_sound(idle_sfx)
+			_idle_sound_left = maxf(0.5, idle_sound_interval) * randf_range(0.75, 1.25)
 
 	_dodge_cooldown_left = maxf(0.0, _dodge_cooldown_left - delta)
 	_animation_lock_left = maxf(0.0, _animation_lock_left - delta)
@@ -105,7 +132,7 @@ func _physics_process(delta: float) -> void:
 		velocity.x = desired_direction.x * dodge_distance / maxf(dodge_duration, 0.01)
 		velocity.z = desired_direction.z * dodge_distance / maxf(dodge_duration, 0.01)
 	elif awareness == Awareness.ENGAGED and is_instance_valid(target_player):
-		desired_direction = _direction_to(target_player.global_position)
+		desired_direction = _engagement_direction()
 	elif has_last_known_position and (awareness == Awareness.INVESTIGATE or awareness == Awareness.SEARCH):
 		desired_direction = _direction_to(last_known_position)
 
@@ -125,10 +152,42 @@ func _physics_process(delta: float) -> void:
 	if awareness == Awareness.ENGAGED and is_instance_valid(target_player):
 		facing_direction = target_player.global_position - global_position
 		facing_direction.y = 0.0
-	if facing_direction.length_squared() > 0.001 and _dodge_left <= 0.0:
+	if awareness == Awareness.IDLE and _dodge_left <= 0.0:
+		_update_idle_facing(delta)
+	elif facing_direction.length_squared() > 0.001 and _dodge_left <= 0.0:
 		var target_yaw := atan2(-facing_direction.x, -facing_direction.z)
 		rotation.y = lerp_angle(rotation.y, target_yaw, minf(1.0, 8.0 * delta))
 	_sync_animation()
+
+
+func _start_idle_motion() -> void:
+	_idle_center_yaw = rotation.y
+	_idle_target_yaw = rotation.y
+	_idle_turn_rate = idle_turn_speed
+	_idle_turn_timer = randf_range(0.2, 1.2)
+	_idle_sound_left = maxf(0.5, idle_sound_interval) * randf_range(0.75, 1.25)
+
+
+func _update_idle_facing(delta: float) -> void:
+	# A scripted turn or teleport should become the new direction to scan around.
+	if absf(wrapf(rotation.y - _idle_center_yaw, -PI, PI)) > deg_to_rad(idle_turn_degrees) + 0.2:
+		_start_idle_motion()
+	_idle_turn_timer -= delta
+	if _idle_turn_timer <= 0.0:
+		var arc := deg_to_rad(maxf(0.0, idle_turn_degrees))
+		var current_offset := wrapf(rotation.y - _idle_center_yaw, -PI, PI)
+		var next_offset := randf_range(-arc, arc)
+		# Skip tiny changes so each new glance is visible without imposing a left/right pattern.
+		for attempt in range(6):
+			if absf(next_offset - current_offset) >= arc * 0.4:
+				break
+			next_offset = randf_range(-arc, arc)
+		if arc > 0.0 and absf(next_offset - current_offset) < arc * 0.4:
+			next_offset = -arc if current_offset > 0.0 else arc
+		_idle_target_yaw = _idle_center_yaw + next_offset
+		_idle_turn_rate = maxf(0.0, idle_turn_speed) * randf_range(0.65, 1.35)
+		_idle_turn_timer = maxf(0.1, idle_turn_interval) * randf_range(0.55, 1.65)
+	rotation.y = lerp_angle(rotation.y, _idle_target_yaw, minf(1.0, _idle_turn_rate * delta))
 
 
 func _find_visible_player() -> Player:
@@ -140,6 +199,10 @@ func _find_visible_player() -> Player:
 			if sight_ray.is_colliding() and sight_ray.get_collider() == player:
 				return player
 	return null
+
+
+func _engagement_direction() -> Vector3:
+	return _direction_to(target_player.global_position)
 
 
 func _direction_to(destination: Vector3) -> Vector3:
@@ -244,8 +307,24 @@ func _can_dodge(direction: Vector3) -> bool:
 
 func play_enemy_animation(clip_name: StringName) -> void:
 	animation_requested.emit(clip_name)
+	match clip_name:
+		&"alert":
+			_play_sound(alert_sfx)
+		&"hurt":
+			_play_sound(hit_sfx)
+		&"attack":
+			_play_sound(attack_sfx)
+		&"death":
+			_play_sound(death_sfx)
 	if animation_player.has_animation(clip_name):
 		animation_player.play(clip_name)
+
+
+func _play_sound(player: AudioStreamPlayer3D) -> void:
+	if player.stream == null:
+		return
+	player.pitch_scale = sound_pitch_scale * randf_range(0.96, 1.04)
+	player.play()
 
 
 func _sync_animation() -> void:
@@ -262,6 +341,8 @@ func _set_awareness(next: Awareness) -> void:
 		return
 	var previous := awareness
 	awareness = next
+	if next == Awareness.IDLE:
+		_start_idle_motion()
 	_update_state_indicator()
 	awareness_changed.emit(previous, next)
 	if next == Awareness.ENGAGED:
@@ -306,8 +387,13 @@ func _die() -> void:
 	velocity = Vector3.ZERO
 	collision_layer = 0
 	head_hurt_point.collision_layer = 0
+	for player in [spawn_sfx, idle_sfx, alert_sfx, hit_sfx, attack_sfx]:
+		player.stop()
 	play_enemy_animation(&"death")
 	died.emit()
 	Global.enemy_killed.emit()
-	await get_tree().create_timer(1.0).timeout
+	var death_sound_length := 0.0
+	if death_sfx.stream != null:
+		death_sound_length = death_sfx.stream.get_length() / maxf(0.01, death_sfx.pitch_scale)
+	await get_tree().create_timer(maxf(1.0, death_sound_length)).timeout
 	queue_free()
