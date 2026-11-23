@@ -1,42 +1,26 @@
 [gd_scene format=3 uid="uid://j6a2mhs52t2v"]
 
 [ext_resource type="PackedScene" uid="uid://bubbh4ij2mobp" path="res://FractalVaultDemo/start_hall.tscn" id="1_wm1v0"]
-[ext_resource type="PackedScene" uid="uid://d15cpo868piur" path="res://FractalVaultDemo/starting_point.tscn" id="2_o0uy8"]
+[ext_resource type="Script" uid="uid://bee0xk53hkjjw" path="res://common/managers/input_manager.gd" id="2_1tcg4"]
 [ext_resource type="PackedScene" uid="uid://cdbipjyx57al2" path="res://player/player.tscn" id="3_f600h"]
+[ext_resource type="PackedScene" uid="uid://dhhigooulfp62" path="res://FractalVaultDemo/stages/maps/testing_out_terrain3d.tscn" id="3_na3qp"]
 [ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/fractal_skirmisher.tscn" id="5_e7pou"]
 [ext_resource type="NavigationMesh" path="res://FractalVaultDemo/navigation/game_navigation.tres" id="8_navigation"]
 
 [node name="GameScene" type="Node3D" unique_id=1993115954]
 
-[node name="StartHall" type="Node3D" parent="." unique_id=362340844 instance=ExtResource("1_wm1v0")]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=373313599]
+transform = Transform3D(-0.1305264, 0.79180306, -0.5966664, 0, 0.60181504, 0.79863554, 0.9914448, 0.10424302, -0.078552745, 0, 0, 0)
+shadow_enabled = true
+
+[node name="StartHall" parent="." unique_id=362340844 instance=ExtResource("1_wm1v0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6093073)
 
-[node name="StartingPoint" parent="." unique_id=322989214 instance=ExtResource("2_o0uy8")]
-transform = Transform3D(-0.04420084, 0, 0.99902266, 0, 1, 0, -0.99902266, 0, -0.04420084, 30.67, -1.967, -47.246)
-
-[node name="Block" parent="StartingPoint" index="3" unique_id=1804236615]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.37, 0.055, 0.05)
-size = Vector3(83, 0.9385996, 12)
-
-[node name="NavigationRegion3D" parent="StartingPoint/Block" index="2" unique_id=502537966]
-enabled = false
-
-[node name="walkables" parent="StartingPoint/Block/NavigationRegion3D" index="0" unique_id=564569406]
-transform = Transform3D(0.9741216, 0, -0.22602437, 0, 1, 0, 0.22602437, 0, 0.9741216, -17.138937, 0.46089935, -30.977585)
-
-[node name="Box" parent="StartingPoint/Block/NavigationRegion3D/walkables" index="5" unique_id=1898315107]
-transform = Transform3D(0.97412163, 0, 0.22602442, 0, 1, 0, -0.22602442, 0, 0.97412163, 22.376486, -0.009953737, 20.477974)
-size = Vector3(37.84381, 0.5, 18.065636)
-
-[node name="Box2" parent="StartingPoint/Block/NavigationRegion3D/walkables" index="6" unique_id=1151237827]
-transform = Transform3D(0.97412163, 0, 0.22602442, 0, 1, 0, -0.22602442, 0, 0.97412163, 20.894678, -0.009953737, 35.8079)
-size = Vector3(28.043608, 0.5, 11.232525)
-
-[node name="SwarmSpawner" parent="StartingPoint" index="4" unique_id=1582894059]
-preview_visual_limit = 50
+[node name="InputManager" type="Node" parent="." unique_id=1359683489]
+script = ExtResource("2_1tcg4")
 
 [node name="Player" parent="." unique_id=1157596601 instance=ExtResource("3_f600h")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025913954, 2.408361, 1.6521571)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.314215, 10.438492, -6.101512)
 
 [node name="LevelNavigation" type="NavigationRegion3D" parent="." unique_id=1549000279]
 navigation_mesh = ExtResource("8_navigation")
@@ -47,4 +31,5 @@ reposition_distance = 3.0
 reposition_interval = 0.6
 projectile_distance = 30.0
 
-[editable path="StartingPoint"]
+[node name="Node3D" parent="." unique_id=2031983584 instance=ExtResource("3_na3qp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 41.78094, 47.41375, 73.277626)
