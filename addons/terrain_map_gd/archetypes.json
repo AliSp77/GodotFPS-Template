@@ -1,0 +1,429 @@
+[
+  {
+    "key": "highland_basin",
+    "name": "Highland Basin",
+    "summary": "A sheltered upland floor ringed by climbing rock, veined with meltwater",
+    "tier": 2,
+    "frames": [
+      "valley",
+      "basin",
+      "open"
+    ],
+    "openness": 0.4,
+    "frameDepth": 0.085,
+    "frameNoise": 0.55,
+    "reliefBias": -1.1,
+    "terraceBands": 4,
+    "terraceStep": 2,
+    "terraceNoise": 0.55,
+    "wallRelief": 1.82,
+    "waterBudget": 0.14,
+    "riftBudget": 0.04,
+    "floraDensity": 0.125,
+    "canopyShare": 0.62,
+    "landmarkDensity": 1.1,
+    "wonderDensity": 1.1,
+    "wonderAffinity": [
+      "sacred_grove",
+      "terraced_quarry",
+      "cliff_switchback"
+    ],
+    "roadDensity": 1.4,
+    "themeRegions": [
+      1,
+      2
+    ],
+    "weight": 1.15
+  },
+  {
+    "key": "river_delta",
+    "name": "River Delta",
+    "summary": "Braided water splits the low country into a fan of green islands",
+    "tier": 2,
+    "frames": [
+      "island",
+      "open",
+      "basin"
+    ],
+    "openness": 0.42,
+    "frameDepth": 0.07,
+    "frameNoise": 0.72,
+    "reliefBias": -0.4,
+    "terraceBands": 3,
+    "terraceStep": 1,
+    "terraceNoise": 0.7,
+    "wallRelief": 1.29,
+    "waterBudget": 0.28,
+    "riftBudget": 0,
+    "floraDensity": 0.15,
+    "canopyShare": 0.7,
+    "landmarkDensity": 0.7,
+    "wonderDensity": 1,
+    "wonderAffinity": [
+      "great_causeway",
+      "sacred_grove",
+      "boiling_springs"
+    ],
+    "roadDensity": 1.7,
+    "themeRegions": [
+      2,
+      3
+    ],
+    "weight": 1
+  },
+  {
+    "key": "rift_plateau",
+    "name": "Rift Plateau",
+    "summary": "A raised table split by deep rifts and stitched back together by spans",
+    "tier": 3,
+    "frames": [
+      "plateau",
+      "shelf",
+      "open"
+    ],
+    "openness": 0.38,
+    "frameDepth": 0.08,
+    "frameNoise": 0.5,
+    "reliefBias": 1.5,
+    "terraceBands": 3,
+    "terraceStep": 3,
+    "terraceNoise": 0.35,
+    "wallRelief": 2.28,
+    "waterBudget": 0.05,
+    "riftBudget": 0.17,
+    "floraDensity": 0.085,
+    "canopyShare": 0.34,
+    "landmarkDensity": 1.8,
+    "wonderDensity": 1.35,
+    "wonderAffinity": [
+      "great_causeway",
+      "spiral_sinkhole",
+      "sky_observatory"
+    ],
+    "roadDensity": 1.2,
+    "themeRegions": [
+      1,
+      2
+    ],
+    "weight": 1
+  },
+  {
+    "key": "island_chain",
+    "name": "Island Chain",
+    "summary": "Scattered land in open water, linked by narrow crossings",
+    "tier": 2,
+    "frames": [
+      "island"
+    ],
+    "openness": 0.4,
+    "frameDepth": 0.105,
+    "frameNoise": 0.85,
+    "reliefBias": 0.3,
+    "terraceBands": 3,
+    "terraceStep": 2,
+    "terraceNoise": 0.65,
+    "wallRelief": 1.44,
+    "waterBudget": 0.36,
+    "riftBudget": 0,
+    "floraDensity": 0.14,
+    "canopyShare": 0.66,
+    "landmarkDensity": 1,
+    "wonderDensity": 1.2,
+    "wonderAffinity": [
+      "great_causeway",
+      "watch_gate",
+      "drowned_caldera"
+    ],
+    "roadDensity": 1.1,
+    "themeRegions": [
+      2,
+      4
+    ],
+    "weight": 0.9
+  },
+  {
+    "key": "terraced_valley",
+    "name": "Terraced Valley",
+    "summary": "Stepped shelves descend to a sheltered valley floor",
+    "tier": 3,
+    "frames": [
+      "valley",
+      "open",
+      "plateau"
+    ],
+    "openness": 0.38,
+    "frameDepth": 0.095,
+    "frameNoise": 0.4,
+    "reliefBias": -1.6,
+    "terraceBands": 6,
+    "terraceStep": 2,
+    "terraceNoise": 0.3,
+    "wallRelief": 1.98,
+    "waterBudget": 0.13,
+    "riftBudget": 0.05,
+    "floraDensity": 0.12,
+    "canopyShare": 0.55,
+    "landmarkDensity": 0.9,
+    "wonderDensity": 1.15,
+    "wonderAffinity": [
+      "cliff_switchback",
+      "terraced_quarry",
+      "sunken_arena"
+    ],
+    "roadDensity": 2.1,
+    "themeRegions": [
+      2,
+      3
+    ],
+    "weight": 1
+  },
+  {
+    "key": "canyon_fork",
+    "name": "Canyon Fork",
+    "summary": "Two canyons meet; the land between them is a narrow high spine",
+    "tier": 3,
+    "frames": [
+      "shelf",
+      "open",
+      "plateau"
+    ],
+    "openness": 0.4,
+    "frameDepth": 0.055,
+    "frameNoise": 0.68,
+    "reliefBias": 0.8,
+    "terraceBands": 4,
+    "terraceStep": 2,
+    "terraceNoise": 0.5,
+    "wallRelief": 2.58,
+    "waterBudget": 0.08,
+    "riftBudget": 0.2,
+    "floraDensity": 0.09,
+    "canopyShare": 0.4,
+    "landmarkDensity": 1.5,
+    "wonderDensity": 1.3,
+    "wonderAffinity": [
+      "great_causeway",
+      "cliff_switchback",
+      "spiral_sinkhole"
+    ],
+    "roadDensity": 1.3,
+    "themeRegions": [
+      1,
+      3
+    ],
+    "weight": 0.95
+  },
+  {
+    "key": "lake_district",
+    "name": "Lake District",
+    "summary": "Still water pools between low wooded ridges",
+    "tier": 2,
+    "frames": [
+      "basin",
+      "island",
+      "open"
+    ],
+    "openness": 0.4,
+    "frameDepth": 0.08,
+    "frameNoise": 0.6,
+    "reliefBias": -1.2,
+    "terraceBands": 4,
+    "terraceStep": 1,
+    "terraceNoise": 0.6,
+    "wallRelief": 1.37,
+    "waterBudget": 0.26,
+    "riftBudget": 0.02,
+    "floraDensity": 0.165,
+    "canopyShare": 0.76,
+    "landmarkDensity": 0.8,
+    "wonderDensity": 1.05,
+    "wonderAffinity": [
+      "sacred_grove",
+      "boiling_springs",
+      "drowned_caldera"
+    ],
+    "roadDensity": 1.5,
+    "themeRegions": [
+      2,
+      3
+    ],
+    "weight": 1
+  },
+  {
+    "key": "crown_massif",
+    "name": "Crown Massif",
+    "summary": "One monumental massif crowns the map; everything else looks up at it",
+    "tier": 4,
+    "frames": [
+      "plateau",
+      "open",
+      "valley"
+    ],
+    "openness": 0.36,
+    "frameDepth": 0.07,
+    "frameNoise": 0.45,
+    "reliefBias": 2.2,
+    "terraceBands": 6,
+    "terraceStep": 2,
+    "terraceNoise": 0.32,
+    "wallRelief": 2.74,
+    "waterBudget": 0.1,
+    "riftBudget": 0.11,
+    "floraDensity": 0.1,
+    "canopyShare": 0.48,
+    "landmarkDensity": 2.2,
+    "wonderDensity": 1.4,
+    "wonderAffinity": [
+      "sky_observatory",
+      "step_ziggurat",
+      "cliff_switchback"
+    ],
+    "roadDensity": 1.6,
+    "themeRegions": [
+      1,
+      2
+    ],
+    "weight": 0.85
+  },
+  {
+    "key": "ruined_metropolis",
+    "name": "Ruined Metropolis",
+    "summary": "A dead city on a broken grid; the ground remembers streets nobody walks",
+    "tier": 4,
+    "frames": [
+      "valley",
+      "open",
+      "shelf"
+    ],
+    "openness": 0.46,
+    "frameDepth": 0.06,
+    "frameNoise": 0.5,
+    "reliefBias": 0.2,
+    "terraceBands": 3,
+    "terraceStep": 2,
+    "terraceNoise": 0.25,
+    "wallRelief": 2.13,
+    "waterBudget": 0.07,
+    "riftBudget": 0.09,
+    "floraDensity": 0.115,
+    "canopyShare": 0.3,
+    "landmarkDensity": 2.4,
+    "wonderDensity": 1.8,
+    "wonderAffinity": [
+      "broken_quarter",
+      "labyrinth_court",
+      "watch_gate"
+    ],
+    "roadDensity": 3.2,
+    "themeRegions": [
+      1,
+      3
+    ],
+    "weight": 0.95
+  },
+  {
+    "key": "shattered_atoll",
+    "name": "Shattered Atoll",
+    "summary": "A drowned caldera rim; everything worth standing on is a shard of the old wall",
+    "tier": 3,
+    "frames": [
+      "island",
+      "shelf"
+    ],
+    "openness": 0.34,
+    "frameDepth": 0.12,
+    "frameNoise": 0.9,
+    "reliefBias": -2,
+    "terraceBands": 4,
+    "terraceStep": 2,
+    "terraceNoise": 0.75,
+    "wallRelief": 1.67,
+    "waterBudget": 0.34,
+    "riftBudget": 0.08,
+    "floraDensity": 0.13,
+    "canopyShare": 0.5,
+    "landmarkDensity": 1.4,
+    "wonderDensity": 1.5,
+    "wonderAffinity": [
+      "drowned_caldera",
+      "great_causeway",
+      "boiling_springs"
+    ],
+    "roadDensity": 1,
+    "themeRegions": [
+      2,
+      3
+    ],
+    "weight": 0.8
+  },
+  {
+    "key": "ashen_steppe",
+    "name": "Ashen Steppe",
+    "summary": "Open country under a wide sky; the map is what stands on it, not what encloses it",
+    "tier": 3,
+    "frames": [
+      "open",
+      "basin"
+    ],
+    "openness": 0.56,
+    "frameDepth": 0.03,
+    "frameNoise": 0.8,
+    "reliefBias": -0.3,
+    "terraceBands": 2,
+    "terraceStep": 2,
+    "terraceNoise": 0.7,
+    "wallRelief": 1.52,
+    "waterBudget": 0.06,
+    "riftBudget": 0.07,
+    "floraDensity": 0.075,
+    "canopyShare": 0.24,
+    "landmarkDensity": 2.6,
+    "wonderDensity": 1.6,
+    "wonderAffinity": [
+      "impact_crater",
+      "lonely_spire",
+      "sky_observatory"
+    ],
+    "roadDensity": 1.9,
+    "themeRegions": [
+      1,
+      2
+    ],
+    "weight": 1.05
+  },
+  {
+    "key": "sky_terraces",
+    "name": "Sky Terraces",
+    "summary": "Stacked shelves stepping into thin air, stitched by switchbacks and spans",
+    "tier": 5,
+    "frames": [
+      "plateau",
+      "shelf"
+    ],
+    "openness": 0.34,
+    "frameDepth": 0.09,
+    "frameNoise": 0.55,
+    "reliefBias": 2.6,
+    "terraceBands": 7,
+    "terraceStep": 2,
+    "terraceNoise": 0.28,
+    "wallRelief": 2.43,
+    "waterBudget": 0.05,
+    "riftBudget": 0.2,
+    "floraDensity": 0.095,
+    "canopyShare": 0.36,
+    "landmarkDensity": 1.9,
+    "wonderDensity": 1.7,
+    "wonderAffinity": [
+      "cliff_switchback",
+      "sky_observatory",
+      "great_causeway"
+    ],
+    "roadDensity": 1.8,
+    "themeRegions": [
+      1,
+      2
+    ],
+    "weight": 0.85
+  }
+]

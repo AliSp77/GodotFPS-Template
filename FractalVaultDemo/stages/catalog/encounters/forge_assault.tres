@@ -4,8 +4,8 @@
 [ext_resource type="Script" uid="uid://idnuh6yxljen" path="res://FractalVaultDemo/stages/data/enemy_entry.gd" id="2"]
 [ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/fractal_leacher.tscn" id="e0"]
 [ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/russian_doll_enemy.tscn" id="e1"]
-[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/fractal_skirmisher.tscn" id="e_skirmisher"]
 [ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/grenadier_single.tscn" id="e_grenadier"]
+[ext_resource type="PackedScene" path="res://FractalVaultDemo/enemies/fractal_skirmisher.tscn" id="e_skirmisher"]
 
 [sub_resource type="Resource" id="Entry0"]
 script = ExtResource("2")
